@@ -23,7 +23,7 @@ public class MyMessageOrder extends MessageForm {
 
     @Override
     public String toString() {
-        return "MyMessageOrder{" +
+        return "MsgOrder{" +
                 "order=" + order +
                 '}';
     }

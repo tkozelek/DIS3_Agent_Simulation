@@ -1,9 +1,8 @@
 package agents.agentworkplace;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
-import simulation.Id;
-import simulation.Mc;
+import OSPABA.*;
+import simulation.*;
+
 
 
 //meta! id="3"
@@ -19,14 +18,16 @@ public class AgentWorkplace extends OSPABA.Agent {
         // Setup component for the next replication
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerWorkplace(Id.managerWorkplace, mySim(), this);
-        addOwnMessage(Mc.requestResponseOrderFreeWorkstation);
-        addOwnMessage(Mc.requestResponseWorkOnOrder);
-        addOwnMessage(Mc.noticeInitWorkplace);
-        addOwnMessage(Mc.requestResponseMoveWorker);
-        addOwnMessage(Mc.requestResponseFreeWorkstation);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerWorkplace(Id.managerWorkplace, mySim(), this);
+		addOwnMessage(Mc.requestResponseOrderFreeWorkstation);
+		addOwnMessage(Mc.requestResponseWorkOnOrder);
+		addOwnMessage(Mc.requestResponseOrderArrived);
+		addOwnMessage(Mc.noticeInitWorkplace);
+		addOwnMessage(Mc.requestResponseMoveWorker);
+		addOwnMessage(Mc.requestResponseFreeWorkstation);
+	}
+	//meta! tag="end"
 }

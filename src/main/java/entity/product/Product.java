@@ -6,7 +6,7 @@ import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.workstation.Workstation;
 
-public class Product {
+public class Product implements Comparable<Product> {
     private final int id;
     private final ProductType productType;
     private ProductActivity productActivity;
@@ -47,7 +47,7 @@ public class Product {
         return id;
     }
 
-    public ProductType getOrderType() {
+    public ProductType getProductType() {
         return productType;
     }
 
@@ -59,11 +59,11 @@ public class Product {
         this.workstation = workstation;
     }
 
-    public ProductActivity getOrderActivity() {
+    public ProductActivity getProductActivity() {
         return productActivity;
     }
 
-    public void setOrderActivity(ProductActivity productActivity) {
+    public void setProductActivity(ProductActivity productActivity) {
         this.productActivity = productActivity;
     }
 
@@ -158,5 +158,10 @@ public class Product {
     @Override
     public String toString() {
         return String.format("Product %d", id);
+    }
+
+    @Override
+    public int compareTo(Product o) {
+        return Integer.compare(this.id, o.id);
     }
 }

@@ -1,12 +1,14 @@
 package simulation;
 
-import agents.agentboss.AgentBoss;
-import agents.agentgroupa.AgentGroupA;
-import agents.agentmove.AgentMove;
-import agents.agentokolie.AgentOkolie;
-import agents.agentworker.AgentWorker;
-import agents.agentworkplace.AgentWorkplace;
-import agents.agentworkstation.AgentWorkstation;
+import agents.agentworkplace.*;
+import agents.agentworker.*;
+import agents.agentgroupa.*;
+import agents.agentboss.*;
+import agents.agentgroupb.*;
+import agents.agentmove.*;
+import agents.agentworkstation.*;
+import agents.agentokolie.*;
+import entity.worker.WorkerGroup;
 import generator.SeedGenerator;
 
 
@@ -20,13 +22,21 @@ public class MySimulation extends OSPABA.Simulation {
     private AgentGroupA _agentGroupA;
     private AgentOkolie _agentOkolie;
 
-    public MySimulation(Long seed) {
+	private int[] groups;
+
+    public MySimulation(Long seed, int[] groups) {
         seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
 
         init();
+
+		this.groups = groups;
     }
 
-    public SeedGenerator getSeedGenerator() {
+	public int getWorkerCountForGroup(WorkerGroup group) {
+		return groups[group.ordinal()];
+	}
+
+	public SeedGenerator getSeedGenerator() {
         return seedGen;
     }
 
@@ -66,6 +76,7 @@ public class MySimulation extends OSPABA.Simulation {
         setAgentMove(new AgentMove(Id.agentMove, this, agentWorkplace()));
         setAgentWorker(new AgentWorker(Id.agentWorker, this, agentWorkplace()));
         setAgentGroupA(new AgentGroupA(Id.agentGroupA, this, agentWorker()));
+        setAgentGroupB(new AgentGroupB(Id.agentGroupB, this, agentWorker()));
         setAgentOkolie(new AgentOkolie(Id.agentOkolie, this, agentBoss()));
     }
 
@@ -77,6 +88,7 @@ public class MySimulation extends OSPABA.Simulation {
         _agentBoss = agentBoss;
     }
 
+
     public AgentWorkplace agentWorkplace() {
         return _agentWorkplace;
     }
@@ -84,6 +96,7 @@ public class MySimulation extends OSPABA.Simulation {
     public void setAgentWorkplace(AgentWorkplace agentWorkplace) {
         _agentWorkplace = agentWorkplace;
     }
+
 
     public AgentWorkstation agentWorkstation() {
         return _agentWorkstation;
@@ -93,6 +106,7 @@ public class MySimulation extends OSPABA.Simulation {
         _agentWorkstation = agentWorkstation;
     }
 
+
     public AgentMove agentMove() {
         return _agentMove;
     }
@@ -100,6 +114,7 @@ public class MySimulation extends OSPABA.Simulation {
     public void setAgentMove(AgentMove agentMove) {
         _agentMove = agentMove;
     }
+
 
     public AgentWorker agentWorker() {
         return _agentWorker;
@@ -109,6 +124,7 @@ public class MySimulation extends OSPABA.Simulation {
         _agentWorker = agentWorker;
     }
 
+
     public AgentGroupA agentGroupA() {
         return _agentGroupA;
     }
@@ -116,6 +132,17 @@ public class MySimulation extends OSPABA.Simulation {
     public void setAgentGroupA(AgentGroupA agentGroupA) {
         _agentGroupA = agentGroupA;
     }
+
+    private AgentGroupB _agentGroupB;
+
+    public AgentGroupB agentGroupB() {
+        return _agentGroupB;
+    }
+
+    public void setAgentGroupB(AgentGroupB agentGroupB) {
+        _agentGroupB = agentGroupB;
+    }
+
 
     public AgentOkolie agentOkolie() {
         return _agentOkolie;

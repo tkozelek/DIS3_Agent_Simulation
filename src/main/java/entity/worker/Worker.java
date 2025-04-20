@@ -1,7 +1,6 @@
 package entity.worker;
 
 import entity.Ids;
-import entity.product.Product;
 import entity.workstation.Workstation;
 
 public class Worker {
@@ -10,7 +9,7 @@ public class Worker {
 
     private WorkerWork currentWork;
     private WorkerPosition currentPosition;
-    private Product currentProduct;
+    private entity.product.Product currentProduct;
     private Workstation currentWorkstation;
     private int finishedTasks = 0;
 
@@ -19,16 +18,16 @@ public class Worker {
         this.group = group;
         this.currentPosition = WorkerPosition.STORAGE;
         this.currentWork = WorkerWork.IDLE;
-        this.currentProduct = null;
+        this.currentWorkstation = null;
         this.currentWorkstation = null;
     }
 
-    public Product getCurrentProduct() {
-        return currentProduct;
+    public entity.product.Product getCurrentProduct() {
+        return currentWorkstation;
     }
 
-    public void setCurrentProduct(Product currentProduct) {
-        this.currentProduct = currentProduct;
+    public void setCurrentProduct(entity.product.Product currentProduct) {
+        this.currentWorkstation = currentProduct;
         if (currentProduct != null) finishedTasks++;
     }
 

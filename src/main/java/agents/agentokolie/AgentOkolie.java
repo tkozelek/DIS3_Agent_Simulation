@@ -1,20 +1,10 @@
 package agents.agentokolie;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
-import OSPRNG.UniformDiscreteRNG;
-import agents.agentokolie.continualassistants.SchedulerOrderArrival;
-import config.Constants;
-import entity.order.Order;
-import entity.product.ProductType;
-import generator.EnumGenerator;
-import simulation.Id;
-import simulation.Mc;
-import simulation.MySimulation;
+import OSPABA.*;
+import simulation.*;
+import agents.agentokolie.continualassistants.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 //meta! id="1"
 public class AgentOkolie extends OSPABA.Agent {
@@ -70,13 +60,14 @@ public class AgentOkolie extends OSPABA.Agent {
         // Setup component for the next replication
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerOkolie(Id.managerOkolie, mySim(), this);
-        new SchedulerOrderArrival(Id.schedulerOrderArrival, mySim(), this);
-        addOwnMessage(Mc.requestResponseOrderArrival);
-        addOwnMessage(Mc.noticeInitAgentOkolie);
-        addOwnMessage(Mc.noticeOrderArrival);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerOkolie(Id.managerOkolie, mySim(), this);
+		new SchedulerOrderArrival(Id.schedulerOrderArrival, mySim(), this);
+		addOwnMessage(Mc.requestResponseOrderArrival);
+		addOwnMessage(Mc.noticeInitAgentOkolie);
+		addOwnMessage(Mc.noticeOrderArrival);
+	}
+	//meta! tag="end"
 }

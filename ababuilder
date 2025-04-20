@@ -114,6 +114,14 @@
   </Agents>
   <Messages>
     <Message>
+      <SimId>1021</SimId>
+      <InternalId>65</InternalId>
+      <Name>RequestResponseMoveWorker</Name>
+      <Type>RequestResponse</Type>
+      <Source>61</Source>
+      <Destination>6</Destination>
+    </Message>
+    <Message>
       <SimId>1001</SimId>
       <InternalId>10</InternalId>
       <Name>NoticeInitAgentOkolie</Name>
@@ -304,5 +312,5 @@
       <Destination>61</Destination>
     </Message>
   </Messages>
-  <IID>64</IID>
+  <IID>67</IID>
 </ABAsim>

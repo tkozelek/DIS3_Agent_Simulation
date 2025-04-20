@@ -1,11 +1,9 @@
 package entity.workstation;
 
 
-import entity.product.Product;
-
 public class Workstation {
     private final int id;
-    private Product currentProduct;
+    private entity.product.Product currentProduct;
 
     public Workstation(int id) {
         this.id = id;
@@ -15,11 +13,11 @@ public class Workstation {
         return id;
     }
 
-    public Product getCurrentOrder() {
+    public entity.product.Product getCurrentOrder() {
         return currentProduct;
     }
 
-    public void setCurrentOrder(Product currentProduct) {
+    public void setCurrentOrder(entity.product.Product currentProduct) {
         this.currentProduct = currentProduct;
     }
 }
