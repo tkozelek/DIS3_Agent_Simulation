@@ -1,4 +1,4 @@
-package org.kozelek.entity.product;
+package entity.product;
 
 public enum ProductType {
     TABLE,

@@ -1,10 +1,10 @@
-package org.kozelek.entity.product;
+package entity.product;
 
 
-import org.kozelek.entity.Ids;
-import org.kozelek.entity.worker.Worker;
-import org.kozelek.entity.worker.WorkerGroup;
-import org.kozelek.entity.workstation.Workstation;
+import entity.Ids;
+import entity.worker.Worker;
+import entity.worker.WorkerGroup;
+import entity.workstation.Workstation;
 
 public class Product {
     private final int id;

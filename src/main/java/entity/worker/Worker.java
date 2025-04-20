@@ -1,9 +1,8 @@
-package org.kozelek.entity.worker;
+package entity.worker;
 
-import org.kozelek.entity.Ids;
-import org.kozelek.entity.order.Order;
-import org.kozelek.entity.product.Product;
-import org.kozelek.entity.workstation.Workstation;
+import entity.Ids;
+import entity.product.Product;
+import entity.workstation.Workstation;
 
 public class Worker {
     private final int id;

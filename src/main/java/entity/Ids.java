@@ -1,4 +1,4 @@
-package org.kozelek.entity;
+package entity;
 
 public class Ids {
     private static int productId = 0;

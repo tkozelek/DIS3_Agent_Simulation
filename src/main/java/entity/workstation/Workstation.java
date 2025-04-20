@@ -1,7 +1,7 @@
-package org.kozelek.entity.workstation;
+package entity.workstation;
 
 
-import org.kozelek.entity.product.Product;
+import entity.product.Product;
 
 public class Workstation {
     private final int id;

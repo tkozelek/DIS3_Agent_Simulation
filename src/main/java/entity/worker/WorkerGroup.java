@@ -1,4 +1,4 @@
-package org.kozelek.entity.worker;
+package entity.worker;
 
 public enum WorkerGroup {
     GROUP_A,

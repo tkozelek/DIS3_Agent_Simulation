@@ -1,7 +1,7 @@
-package org.kozelek.entity.order;
+package entity.order;
 
-import org.kozelek.entity.Ids;
-import org.kozelek.entity.product.Product;
+import entity.Ids;
+import entity.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,8 @@ public class Order {
 
     public Order() {
         this.id = Ids.getOrderId();
-        this.products = new ArrayList<Product>();
         this.arrivalTime = 0;
+        this.products = new ArrayList<>();
     }
 
     public double getFinishTime() {
@@ -37,6 +37,14 @@ public class Order {
 
     public List<Product> getProducts() {
         return products;
+    }
+
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public int getProductsCount() {
+        return products.size();
     }
 
     public int getId() {
