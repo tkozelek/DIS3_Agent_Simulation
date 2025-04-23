@@ -6,6 +6,8 @@ import OSPABA.Simulation;
 import agents.agentgroupa.AgentGroupA;
 import config.Constants;
 import entity.product.ProductActivity;
+import entity.worker.Worker;
+import entity.worker.WorkerWork;
 import generator.continuos.ContinuosTriangularGenerator;
 import simulation.Mc;
 import simulation.MySimulation;
@@ -34,6 +36,9 @@ public class ProcessPreparing extends OSPABA.Process {
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. preparing start\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct());
 
+		Worker worker = productMessage.getProduct().getCurrentWorker();
+		worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL, mySim().currentTime());
+
 		double offset = this.materialPreparationGenerator.sample();
 		message.setCode(Mc.holdPrepareMaterial);
 		this.hold(offset, message);
@@ -48,6 +53,9 @@ public class ProcessPreparing extends OSPABA.Process {
 
 				if (Constants.DEBUG_PROCESS)
 					System.out.printf("[%s] [%s] P. preparing finished\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct());
+
+				Worker worker = productMessage.getProduct().getCurrentWorker();
+				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
 
 				this.assistantFinished(message);
         }

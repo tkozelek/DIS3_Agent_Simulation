@@ -50,6 +50,10 @@ public class AgentGroupA extends OSPABA.Agent {
 		return workers.length;
 	}
 
+	public Worker[] getWorkers() {
+		return workers;
+	}
+
 	private void createWorkers() {
 		MySimulation sim = (MySimulation) mySim();
 		int amount = sim.getWorkerCountForGroup(WorkerGroup.GROUP_A);
@@ -84,6 +88,7 @@ public class AgentGroupA extends OSPABA.Agent {
         // Setup component for the next replication
 
 		this.createWorkers();
+		this.queue.clear();
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

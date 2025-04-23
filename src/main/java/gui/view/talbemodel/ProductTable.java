@@ -1,0 +1,29 @@
+package gui.view.talbemodel;
+
+import config.Helper;
+import entity.product.Product;
+
+import java.util.List;
+
+public class ProductTable extends Table<Product> {
+
+    public ProductTable() {
+        super(new String[]{"ID", "Type", "Wid", "Stat", "Arr", "S Cut", "E Cut", "S Paint", "E Paint", "S Ass", "E Ass", "S Fit", "E Fit", "Fin"},
+                List.of(
+                        Product::getId,
+                        Product::getProductType,
+                        Product::getCurrentWorker,
+                        Product::getProductActivity,
+                        w -> String.format("%s", Helper.timeToDateString(w.getArrivalTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getStartCuttingTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getFinishCuttingTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getStartPaintingTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getFinishPaintingTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getStartAssemblyTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getFinishAssemblyTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getStartFittingAssemblyTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getFinishFittingAssemblyTime(), 6)),
+                        w -> String.format("%s", Helper.timeToDateString(w.getFinishTime(), 6))
+                ));
+    }
+}

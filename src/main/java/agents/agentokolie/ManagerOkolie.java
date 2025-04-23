@@ -46,7 +46,7 @@ public class ManagerOkolie extends OSPABA.Manager {
 
 	//meta! sender="SchedulerOrderArrival", id="18", type="Finish"
 	public void processFinish(MessageForm message) {
-
+        mySim().stopReplication();
     }
 
 	//meta! sender="SchedulerOrderArrival", id="20", type="Notice"

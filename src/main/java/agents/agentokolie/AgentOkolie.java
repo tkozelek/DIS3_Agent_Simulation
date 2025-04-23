@@ -69,6 +69,8 @@ public class AgentOkolie extends OSPABA.Agent {
     public void prepareReplication() {
         super.prepareReplication();
         // Setup component for the next replication
+
+        this.ordersInSystem.clear();
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

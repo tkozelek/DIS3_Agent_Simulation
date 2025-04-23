@@ -11,6 +11,7 @@ import entity.product.ProductType;
 import generator.continuos.ContinuosExponentialGenerator;
 import simulation.Id;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
 import simulation.custommessage.MyMessageOrder;
 
@@ -22,7 +23,7 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
         super(id, mySim, myAgent);
 
         MySimulation sim = (MySimulation) mySim;
-        this.orderArrivalGenerator = new ContinuosExponentialGenerator(1 / 180000.0, sim.getSeedGenerator());
+        this.orderArrivalGenerator = new ContinuosExponentialGenerator(1 / 1800.0, sim.getSeedGenerator());
     }
 
     @Override
@@ -55,6 +56,8 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
             customMsg.setCode(Mc.holdOrderArrival);
 
             this.hold(offsetArrival, customMsg);
+        } else {
+            this.assistantFinished(new MyMessage(mySim()));
         }
     }
 

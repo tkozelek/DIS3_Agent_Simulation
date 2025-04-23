@@ -1,5 +1,8 @@
 package simulation;
 
+import OSPABA.ISimDelegate;
+import OSPABA.SimState;
+import OSPABA.Simulation;
 import agents.agentworkplace.*;
 import agents.agentworker.*;
 import agents.agentgroupa.*;
@@ -9,23 +12,38 @@ import agents.agentgroupc.*;
 import agents.agentmove.*;
 import agents.agentworkstation.*;
 import agents.agentokolie.*;
+import config.Constants;
 import config.Helper;
 import entity.Ids;
+import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import generator.SeedGenerator;
+import gui.interfaces.Observable;
+import gui.interfaces.Observer;
+import gui.model.SimulationData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class MySimulation extends OSPABA.Simulation {
+public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Observable {
     private SeedGenerator seedGen;
 
 	private int[] groups;
 	private int workstationCount;
+	private List<Observer> observers;
 
-    public MySimulation(Long seed, int[] groups, int wCount) {
+	private boolean isPaused;
+	private int speed;
+
+	public MySimulation(Long seed, int[] groups, int wCount) {
         seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
 
 		this.groups = groups;
 		this.workstationCount = wCount;
+		this.observers = new ArrayList<Observer>();
+		this.registerDelegate(this);
+
 
         init();
     }
@@ -46,7 +64,22 @@ public class MySimulation extends OSPABA.Simulation {
 		return Helper.timeToDateString(currentTime(), 6);
 	}
 
+	public void setSpeed(int newSpeed) {
+		this.speed = newSpeed;
+		if (newSpeed >= Constants.MAX_SPEED) {
+			this.setMaxSimSpeed();
+		} else {
+			this.setSimSpeed(newSpeed, Constants.TICK);
+		}
+	}
 
+	public void togglePauseSimulation() {
+		isPaused = !isPaused;
+		if (isPaused)
+			this.pauseSimulation();
+		else
+			this.resumeSimulation();
+	}
 
     @Override
     public void prepareSimulation() {
@@ -63,12 +96,17 @@ public class MySimulation extends OSPABA.Simulation {
 
         _agentBoss.initOkolie();
 		Ids.resetAll();
+		this.setSpeed(speed);
+		this.notifyObservers();
+
     }
 
     @Override
     public void replicationFinished() {
         // Collect local statistics into global, update UI, etc...
         super.replicationFinished();
+
+		this.notifyObservers();
     }
 
     @Override
@@ -161,5 +199,45 @@ public AgentGroupC agentGroupC()
 
 	public void setAgentGroupC(AgentGroupC agentGroupC)
 	{_agentGroupC = agentGroupC; }
+
+	@Override
+	public void simStateChanged(Simulation simulation, SimState simState) {
+	}
+
+	@Override
+	public void refresh(Simulation simulation) {
+		this.notifyObservers();
+	}
+
+	@Override
+	public void addObserver(Observer o) {
+		this.observers.add(o);
+	}
+
+	@Override
+	public void removeObserver(Observer o) {
+		this.observers.remove(o);
+	}
+
+	@Override
+	public void notifyObservers() {
+		for (Observer o : this.observers) {
+			o.update(getSimulationData());
+		}
+	}
+
+	public SimulationData getSimulationData() {
+		return new SimulationData(
+				currentTime(),
+				new Worker[][]{
+						_agentGroupA.getWorkers(),
+				},
+				List.of(_agentWorkstation.getWorkstations()),
+				_agentOkolie.getOrdersInSystem(),
+				currentReplication(),
+				new int[]{_agentGroupA.queueSize()},
+				false);
+
+	}
 	//meta! tag="end"
 }

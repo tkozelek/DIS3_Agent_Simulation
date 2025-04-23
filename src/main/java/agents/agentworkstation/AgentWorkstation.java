@@ -47,5 +47,9 @@ public class AgentWorkstation extends OSPABA.Agent {
 		new ManagerWorkstation(Id.managerWorkstation, mySim(), this);
 		addOwnMessage(Mc.requestResponseFreeWorkstation);
 	}
-	//meta! tag="end"
+
+    public Workstation[] getWorkstations() {
+        return workstations;
+    }
+    //meta! tag="end"
 }

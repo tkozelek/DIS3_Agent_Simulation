@@ -1,8 +1,6 @@
 package agents.agentgroupa;
 
-import OSPABA.Agent;
-import OSPABA.MessageForm;
-import OSPABA.Simulation;
+import OSPABA.*;
 import config.Constants;
 import entity.ILocation;
 import entity.Storage;
@@ -249,5 +247,4 @@ public class ManagerGroupA extends OSPABA.Manager {
     public AgentGroupA myAgent() {
         return (AgentGroupA) super.myAgent();
     }
-
 }
