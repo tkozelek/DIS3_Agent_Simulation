@@ -15,6 +15,7 @@ public class MainController implements Observer {
     private int replicationCount;
     private int[] groups;
     private boolean paused = false;
+    private int workstationCount;
 
     public MainController(MainWindow view) {
         this.view = view;
@@ -56,7 +57,7 @@ public class MainController implements Observer {
         if (!validateInput())
             return;
         this.view.getChart().resetChart();
-        simulationManager.startSimulation(replicationCount, groups);
+        simulationManager.startSimulation(replicationCount, groups, workstationCount);
         this.changeSpeed();
         paused = false;
         this.view.getPauseButton().setBackground(null);
@@ -67,13 +68,15 @@ public class MainController implements Observer {
         if (!view.getFieldReplicationCount().getText().isBlank()
                 && !view.getFieldWorkerA().getText().isBlank()
                 && !view.getFieldWorkerB().getText().isBlank()
-                && !view.getFieldWorkerC().getText().isBlank()) {
+                && !view.getFieldWorkerC().getText().isBlank()
+                && !view.getFieldWorkstation().getText().isBlank()) {
             replicationCount = Integer.parseInt(view.getFieldReplicationCount().getText());
             groups = new int[]{
                     Integer.parseInt(view.getFieldWorkerA().getText()),
                     Integer.parseInt(view.getFieldWorkerB().getText()),
                     Integer.parseInt(view.getFieldWorkerC().getText())
             };
+            workstationCount = Integer.parseInt(view.getFieldWorkstation().getText());
             return true;
         } else {
             showError("Fields cannot be empty");

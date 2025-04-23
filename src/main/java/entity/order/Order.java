@@ -33,6 +33,9 @@ public class Order {
 
     public void setArrivalTime(double arrivalTime) {
         this.arrivalTime = arrivalTime;
+        for (Product product : products) {
+            product.setArrivalTime(arrivalTime);
+        }
     }
 
     public List<Product> getProducts() {
@@ -40,6 +43,7 @@ public class Order {
     }
 
     public void addProduct(Product product) {
+        product.addOrder(this);
         this.products.add(product);
     }
 

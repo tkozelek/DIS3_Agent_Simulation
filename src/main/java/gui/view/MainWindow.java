@@ -56,6 +56,7 @@ public class MainWindow extends JFrame {
     private JLabel labelGraph;
     private JList list1;
     private JCheckBox showStatsCheckBox;
+    private JTextField fieldWorkstation;
     private JFreeChart chart1;
     private Chart chart;
 
@@ -310,6 +311,10 @@ public class MainWindow extends JFrame {
 
     public JTextField getFieldWorkerC() {
         return fieldWorkerC;
+    }
+
+    public JTextField getFieldWorkstation() {
+        return fieldWorkstation;
     }
 
     public JButton getStartButton() {

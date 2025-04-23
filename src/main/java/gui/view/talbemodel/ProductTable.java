@@ -8,8 +8,9 @@ import java.util.List;
 public class ProductTable extends Table<Product> {
 
     public ProductTable() {
-        super(new String[]{"ID", "Type", "Wid", "Stat", "Arr", "S Cut", "E Cut", "S Paint", "E Paint", "S Ass", "E Ass", "S Fit", "E Fit", "Fin"},
+        super(new String[]{"OID", "ID", "Type", "Wid", "Stat", "Arr", "S Cut", "E Cut", "S Paint", "E Paint", "S Ass", "E Ass", "S Fit", "E Fit", "Fin"},
                 List.of(
+                        p -> p.getOrder().getId(),
                         Product::getId,
                         Product::getProductType,
                         Product::getCurrentWorker,

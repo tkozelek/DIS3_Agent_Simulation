@@ -4,7 +4,6 @@ import gui.interfaces.Observer;
 import simulation.MySimulation;
 
 import javax.swing.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SimulationManager {
@@ -17,11 +16,11 @@ public class SimulationManager {
         this.observer = observer;
     }
 
-    public void startSimulation(int replicationCount, int[] groups) {
+    public void startSimulation(int replicationCount, int[] groups, int workstationCount) {
         if (isRunning.get()) return;
         isRunning.set(true);
 
-        this.simulation = new MySimulation((long)replicationCount, groups, 100);
+        this.simulation = new MySimulation(null, groups, workstationCount);
         this.simulation.addObserver(observer);
 
         worker = new SwingWorker<>() {
@@ -35,26 +34,16 @@ public class SimulationManager {
             protected void done() {
                 isRunning.set(false);
                 try {
-                    // Calling get() will re‑throw any exception from doInBackground()
                     get();
                     System.out.println("Simulation finished!");
-                } catch (InterruptedException ie) {
+                } catch (Exception e) {
                     Thread.currentThread().interrupt();
                     JOptionPane.showMessageDialog(
                             null,
-                            "Simulation was interrupted.",
-                            "Interrupted",
+                            "Error " + e.getMessage(),
+                            "Exception",
                             JOptionPane.WARNING_MESSAGE
                     );
-                } catch (ExecutionException ee) {
-                    Throwable cause = ee.getCause();
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "An error occurred: " + cause.getMessage(),
-                            "Simulation Error",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    cause.printStackTrace();
                 }
             }
         };

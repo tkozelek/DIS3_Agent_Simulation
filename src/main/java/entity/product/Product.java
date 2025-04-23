@@ -2,6 +2,7 @@ package entity.product;
 
 
 import entity.Ids;
+import entity.order.Order;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.workstation.Workstation;
@@ -27,6 +28,7 @@ public class Product implements Comparable<Product> {
 
     private double startFittingAssemblyTime;
     private double finishFittingAssemblyTime;
+    private Order order;
 
     public Product(ProductType productType) {
         this.id = Ids.getProductId();
@@ -163,5 +165,13 @@ public class Product implements Comparable<Product> {
     @Override
     public int compareTo(Product o) {
         return Integer.compare(this.id, o.id);
+    }
+
+    public void addOrder(Order order) {
+        this.order = order;
+    }
+
+    public Order getOrder() {
+        return order;
     }
 }
