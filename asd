@@ -53,7 +53,7 @@
       <SimId>8</SimId>
       <InternalId>61</InternalId>
       <Name>AgentGroupB</Name>
-      <Bounds>876,1511,180,180</Bounds>
+      <Bounds>591,1302,180,180</Bounds>
       <Reasoner>ManagerGroupB</Reasoner>
       <UsePetriNet>false</UsePetriNet>
     </Agent>
@@ -86,7 +86,7 @@
       <SimId>7</SimId>
       <InternalId>7</InternalId>
       <Name>AgentGroupA</Name>
-      <Bounds>151,1285,180,180</Bounds>
+      <Bounds>-424,1205,180,180</Bounds>
       <Reasoner>ManagerGroupA</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -115,7 +115,7 @@
       <SimId>10</SimId>
       <InternalId>67</InternalId>
       <Name>AgentGroupC</Name>
-      <Bounds>1469,1379,180,180</Bounds>
+      <Bounds>1680,1249,180,180</Bounds>
       <Reasoner>ManagerGroupC</Reasoner>
       <UsePetriNet>false</UsePetriNet>
     </Agent>
@@ -165,6 +165,14 @@
       <Name>NoticeInitWorkplace</Name>
       <Type>Notice</Type>
       <Source>2</Source>
+      <Destination>3</Destination>
+    </Message>
+    <Message>
+      <SimId>1025</SimId>
+      <InternalId>75</InternalId>
+      <Name>RequestResponseMoveWorker</Name>
+      <Type>RequestResponse</Type>
+      <Source>6</Source>
       <Destination>3</Destination>
     </Message>
     <Message>
@@ -334,5 +342,5 @@
       <Destination>61</Destination>
     </Message>
   </Messages>
-  <IID>74</IID>
+  <IID>76</IID>
 </ABAsim>

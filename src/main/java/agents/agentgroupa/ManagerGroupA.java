@@ -119,13 +119,17 @@ public class ManagerGroupA extends OSPABA.Manager {
 
 		// je to nova objednávka ked prišla agentovi A
 		// ak je free worker, skús vyžiadať workstation
+		this.startWork(message);
+    }
+
+	private void startWork(MessageForm message) {
 		List<Worker> freeWorkers = this.myAgent().getFreeWorkers();
 		if (freeWorkers == null) return;
 
 		int amount = Math.min(freeWorkers.size(), myAgent().queueSize());
 
 		this.requestWorkstation(message, amount);
-    }
+	}
 
 	private void requestWorkstation(MessageForm message, int amount) {
 		MyMessageWorkstation msg = new MyMessageWorkstation(message);
@@ -159,6 +163,10 @@ public class ManagerGroupA extends OSPABA.Manager {
 		product.setCurrentWorker(null);
 		worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
 		worker.setCurrentProduct(null);
+
+		if (myAgent().queueSize() > 0) {
+			this.startWork(message);
+		}
 
 		msgProduct.setCode(Mc.requestResponseWorkAgentA);
 		msgProduct.setAddressee(Id.agentWorker);
