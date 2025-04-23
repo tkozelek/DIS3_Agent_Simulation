@@ -35,6 +35,14 @@ public class ManagerGroupC extends OSPABA.Manager {
 		}
 	}
 
+	//meta! sender="ProcessLakovanie", id="84", type="Finish"
+	public void processFinishProcessLakovanie(MessageForm message) {
+	}
+
+	//meta! sender="ProcessMorenie", id="82", type="Finish"
+	public void processFinishProcessMorenie(MessageForm message) {
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -42,12 +50,24 @@ public class ManagerGroupC extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.requestResponseWorkAgentC:
+			processRequestResponseWorkAgentC(message);
+		break;
+
 		case Mc.requestResponseMoveWorker:
 			processRequestResponseMoveWorker(message);
 		break;
 
-		case Mc.requestResponseWorkAgentC:
-			processRequestResponseWorkAgentC(message);
+		case Mc.finish:
+			switch (message.sender().id()) {
+			case Id.processLakovanie:
+				processFinishProcessLakovanie(message);
+			break;
+
+			case Id.processMorenie:
+				processFinishProcessMorenie(message);
+			break;
+			}
 		break;
 
 		default:

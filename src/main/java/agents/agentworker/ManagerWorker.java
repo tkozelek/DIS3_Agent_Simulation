@@ -132,16 +132,16 @@ public class ManagerWorker extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.requestResponseWorkAgentC:
+			processRequestResponseWorkAgentC(message);
+		break;
+
 		case Mc.requestResponseWorkAgentB:
 			processRequestResponseWorkAgentB(message);
 		break;
 
 		case Mc.requestResponseMoveWorker:
 			switch (message.sender().id()) {
-			case Id.agentGroupC:
-				processRequestResponseMoveWorkerAgentGroupC(message);
-			break;
-
 			case Id.agentGroupB:
 				processRequestResponseMoveWorkerAgentGroupB(message);
 			break;
@@ -153,11 +153,11 @@ public class ManagerWorker extends OSPABA.Manager {
 			case Id.agentWorkplace:
 				processRequestResponseMoveWorkerAgentWorkplace(message);
 			break;
-			}
-		break;
 
-		case Mc.requestResponseWorkOnOrderWorkplace:
-			processRequestResponseWorkOnOrderWorkplace(message);
+			case Id.agentGroupC:
+				processRequestResponseMoveWorkerAgentGroupC(message);
+			break;
+			}
 		break;
 
 		case Mc.requestResponseOrderFreeWorkstation:
@@ -168,12 +168,12 @@ public class ManagerWorker extends OSPABA.Manager {
 			processRequestResponseWorkerFreeWorkstation(message);
 		break;
 
-		case Mc.requestResponseWorkAgentA:
-			processRequestResponseWorkAgentA(message);
+		case Mc.requestResponseWorkOnOrderWorkplace:
+			processRequestResponseWorkOnOrderWorkplace(message);
 		break;
 
-		case Mc.requestResponseWorkAgentC:
-			processRequestResponseWorkAgentC(message);
+		case Mc.requestResponseWorkAgentA:
+			processRequestResponseWorkAgentA(message);
 		break;
 
 		default:

@@ -4,10 +4,9 @@ public class Mc extends OSPABA.IdList {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public static final int requestResponseMoveWorker = 1021;
 	public static final int requestResponseWorkAgentC = 1024;
-	public static final int noticeInitAgentOkolie = 1001;
-	public static final int noticeInitWorkplace = 1002;
 	public static final int noticeOrderArrival = 1007;
 	public static final int requestResponseOrderArrival = 1008;
+	public static final int noticeInitAgentOkolie = 1026;
 	public static final int requestResponseOrderArrived = 1009;
 	public static final int requestResponseFreeWorkstation = 1013;
 	public static final int requestResponseWorkAgentA = 1015;

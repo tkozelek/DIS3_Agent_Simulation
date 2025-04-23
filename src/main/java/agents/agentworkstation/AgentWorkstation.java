@@ -42,11 +42,11 @@ public class AgentWorkstation extends OSPABA.Agent {
         }
     }
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	private void init() {
-		new ManagerWorkstation(Id.managerWorkstation, mySim(), this);
-		addOwnMessage(Mc.requestResponseFreeWorkstation);
-	}
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    private void init() {
+        new ManagerWorkstation(Id.managerWorkstation, mySim(), this);
+        addOwnMessage(Mc.requestResponseFreeWorkstation);
+    }
 
     public Workstation[] getWorkstations() {
         return workstations;

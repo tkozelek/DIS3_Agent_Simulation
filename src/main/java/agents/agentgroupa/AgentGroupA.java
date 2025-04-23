@@ -19,16 +19,16 @@ public class AgentGroupA extends OSPABA.Agent {
 
 	public Worker[] workers;
 
-    public AgentGroupA(int id, Simulation mySim, Agent parent) {
-        super(id, mySim, parent);
-        init();
+	public AgentGroupA(int id, Simulation mySim, Agent parent) {
+		super(id, mySim, parent);
+		init();
 
 		this.addOwnMessage(Mc.holdCutting);
 		this.addOwnMessage(Mc.holdFitting);
 		this.addOwnMessage(Mc.holdPrepareMaterial);
 
 		this.queue = new SimQueue<>();
-    }
+	}
 
 	public void addToQueue(Product p) {
 		queue.add(p);
@@ -83,13 +83,13 @@ public class AgentGroupA extends OSPABA.Agent {
 	}
 
 	@Override
-    public void prepareReplication() {
-        super.prepareReplication();
-        // Setup component for the next replication
+	public void prepareReplication() {
+		super.prepareReplication();
+		// Setup component for the next replication
 
 		this.createWorkers();
 		this.queue.clear();
-    }
+	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {

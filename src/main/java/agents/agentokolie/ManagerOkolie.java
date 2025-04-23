@@ -37,13 +37,6 @@ public class ManagerOkolie extends OSPABA.Manager {
         this.myAgent().removeOrder(orderMessage.getOrder());
     }
 
-	//meta! sender="AgentBoss", id="10", type="Notice"
-	public void processNoticeInitAgentOkolie(MessageForm message) {
-        MyMessage myMessage = new MyMessage(this.mySim());
-        myMessage.setAddressee(myAgent().findAssistant(Id.schedulerOrderArrival));
-        startContinualAssistant(myMessage);
-    }
-
 	//meta! sender="SchedulerOrderArrival", id="18", type="Finish"
 	public void processFinish(MessageForm message) {
         mySim().stopReplication();
@@ -74,6 +67,13 @@ public class ManagerOkolie extends OSPABA.Manager {
         }
     }
 
+	//meta! sender="AgentBoss", id="86", type="Notice"
+	public void processNoticeInitAgentOkolie(MessageForm message) {
+        MyMessage myMessage = new MyMessage(this.mySim());
+        myMessage.setAddressee(myAgent().findAssistant(Id.schedulerOrderArrival));
+        startContinualAssistant(myMessage);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -81,20 +81,20 @@ public class ManagerOkolie extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.noticeOrderArrival:
-			processNoticeOrderArrival(message);
-		break;
-
 		case Mc.requestResponseOrderArrival:
 			processRequestResponseOrderArrival(message);
+		break;
+
+		case Mc.noticeInitAgentOkolie:
+			processNoticeInitAgentOkolie(message);
 		break;
 
 		case Mc.finish:
 			processFinish(message);
 		break;
 
-		case Mc.noticeInitAgentOkolie:
-			processNoticeInitAgentOkolie(message);
+		case Mc.noticeOrderArrival:
+			processNoticeOrderArrival(message);
 		break;
 
 		default:

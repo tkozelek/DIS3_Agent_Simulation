@@ -2,22 +2,20 @@ package agents.agentokolie;
 
 import OSPABA.*;
 import OSPRNG.UniformDiscreteRNG;
+import config.Constants;
+import entity.order.Order;
+import entity.product.ProductType;
+import generator.EnumGenerator;
 import simulation.*;
 import agents.agentokolie.continualassistants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import config.Constants;
-import entity.order.Order;
-import entity.product.ProductType;
-import generator.EnumGenerator;
 
 
 //meta! id="1"
 public class AgentOkolie extends OSPABA.Agent {
-    private List<Order> ordersInSystem;
+    private ArrayList<Order> ordersInSystem;
 
     private final UniformDiscreteRNG productAmountGenerator;
     private EnumGenerator productTypeGenerator;
@@ -51,7 +49,7 @@ public class AgentOkolie extends OSPABA.Agent {
         ordersInSystem.remove(order);
     }
 
-    public List<Order> getOrdersInSystem() {
+    public ArrayList<Order> getOrdersInSystem() {
         return ordersInSystem;
     }
 

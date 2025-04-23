@@ -2,20 +2,43 @@
 <ABAsim>
   <Agents>
     <Agent>
-      <SimId>6</SimId>
-      <InternalId>6</InternalId>
-      <Name>AgentWorker</Name>
-      <Bounds>259,456,180,180</Bounds>
-      <Reasoner>ManagerWorker</Reasoner>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
       <SimId>4</SimId>
       <InternalId>4</InternalId>
       <Name>AgentWorkstation</Name>
       <Bounds>2192,31,180,180</Bounds>
       <Reasoner>ManagerWorkstation</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>10</SimId>
+      <InternalId>67</InternalId>
+      <Name>AgentGroupC</Name>
+      <Bounds>1289,1191,180,180</Bounds>
+      <Reasoner>ManagerGroupC</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1011</SimId>
+          <InternalId>83</InternalId>
+          <Name>ProcessLakovanie</Name>
+          <Bounds>117,122,35,18</Bounds>
+        </Process>
+        <Process>
+          <SimId>1010</SimId>
+          <InternalId>81</InternalId>
+          <Name>ProcessMorenie</Name>
+          <Bounds>25,122,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>6</SimId>
+      <InternalId>6</InternalId>
+      <Name>AgentWorker</Name>
+      <Bounds>259,456,180,180</Bounds>
+      <Reasoner>ManagerWorker</Reasoner>
       <UsePetriNet>false</UsePetriNet>
     </Agent>
     <Agent>
@@ -45,31 +68,15 @@
       <SimId>2</SimId>
       <InternalId>2</InternalId>
       <Name>AgentBoss</Name>
-      <Bounds>638,-289,180,180</Bounds>
+      <Bounds>370,-190,180,180</Bounds>
       <Reasoner>ManagerBoss</Reasoner>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>8</SimId>
-      <InternalId>61</InternalId>
-      <Name>AgentGroupB</Name>
-      <Bounds>591,1302,180,180</Bounds>
-      <Reasoner>ManagerGroupB</Reasoner>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>3</SimId>
-      <InternalId>3</InternalId>
-      <Name>AgentWorkplace</Name>
-      <Bounds>1300,78,180,180</Bounds>
-      <Reasoner>ManagerWorkplace</Reasoner>
       <UsePetriNet>false</UsePetriNet>
     </Agent>
     <Agent>
       <SimId>1</SimId>
       <InternalId>1</InternalId>
       <Name>AgentOkolie</Name>
-      <Bounds>-111,92,180,180</Bounds>
+      <Bounds>-312,162,180,180</Bounds>
       <Reasoner>ManagerOkolie</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -92,6 +99,12 @@
       <UsePetriNet>false</UsePetriNet>
       <Components>
         <Process>
+          <SimId>1007</SimId>
+          <InternalId>49</InternalId>
+          <Name>ProcessPreparing</Name>
+          <Bounds>123,119,35,18</Bounds>
+        </Process>
+        <Process>
           <SimId>1002</SimId>
           <InternalId>26</InternalId>
           <Name>ProcessCutting</Name>
@@ -103,20 +116,31 @@
           <Name>ProcessFitting</Name>
           <Bounds>26,119,35,18</Bounds>
         </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>8</SimId>
+      <InternalId>61</InternalId>
+      <Name>AgentGroupB</Name>
+      <Bounds>528,1274,180,180</Bounds>
+      <Reasoner>ManagerGroupB</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
         <Process>
-          <SimId>1007</SimId>
-          <InternalId>49</InternalId>
-          <Name>ProcessPreparing</Name>
-          <Bounds>123,119,35,18</Bounds>
+          <SimId>1009</SimId>
+          <InternalId>78</InternalId>
+          <Name>ProcessAssembly</Name>
+          <Bounds>73,135,35,18</Bounds>
         </Process>
       </Components>
     </Agent>
     <Agent>
-      <SimId>10</SimId>
-      <InternalId>67</InternalId>
-      <Name>AgentGroupC</Name>
-      <Bounds>1680,1249,180,180</Bounds>
-      <Reasoner>ManagerGroupC</Reasoner>
+      <SimId>3</SimId>
+      <InternalId>3</InternalId>
+      <Name>AgentWorkplace</Name>
+      <Bounds>1300,78,180,180</Bounds>
+      <Reasoner>ManagerWorkplace</Reasoner>
       <UsePetriNet>false</UsePetriNet>
     </Agent>
   </Agents>
@@ -152,22 +176,6 @@
       <Destination>67</Destination>
     </Message>
     <Message>
-      <SimId>1001</SimId>
-      <InternalId>10</InternalId>
-      <Name>NoticeInitAgentOkolie</Name>
-      <Type>Notice</Type>
-      <Source>2</Source>
-      <Destination>1</Destination>
-    </Message>
-    <Message>
-      <SimId>1002</SimId>
-      <InternalId>11</InternalId>
-      <Name>NoticeInitWorkplace</Name>
-      <Type>Notice</Type>
-      <Source>2</Source>
-      <Destination>3</Destination>
-    </Message>
-    <Message>
       <SimId>1025</SimId>
       <InternalId>75</InternalId>
       <Name>RequestResponseMoveWorker</Name>
@@ -176,10 +184,22 @@
       <Destination>3</Destination>
     </Message>
     <Message>
+      <InternalId>79</InternalId>
+      <Type>StartFinish</Type>
+      <Source>61</Source>
+      <Destination>78</Destination>
+    </Message>
+    <Message>
       <InternalId>18</InternalId>
       <Type>StartFinish</Type>
       <Source>1</Source>
       <Destination>17</Destination>
+    </Message>
+    <Message>
+      <InternalId>82</InternalId>
+      <Type>StartFinish</Type>
+      <Source>67</Source>
+      <Destination>81</Destination>
     </Message>
     <Message>
       <SimId>1007</SimId>
@@ -190,12 +210,26 @@
       <Destination>1</Destination>
     </Message>
     <Message>
+      <InternalId>84</InternalId>
+      <Type>StartFinish</Type>
+      <Source>67</Source>
+      <Destination>83</Destination>
+    </Message>
+    <Message>
       <SimId>1008</SimId>
       <InternalId>21</InternalId>
       <Name>RequestResponseOrderArrival</Name>
       <Type>RequestResponse</Type>
       <Source>1</Source>
       <Destination>2</Destination>
+    </Message>
+    <Message>
+      <SimId>1026</SimId>
+      <InternalId>86</InternalId>
+      <Name>NoticeInitAgentOkolie</Name>
+      <Type>Notice</Type>
+      <Source>2</Source>
+      <Destination>1</Destination>
     </Message>
     <Message>
       <SimId>1009</SimId>
@@ -342,5 +376,5 @@
       <Destination>61</Destination>
     </Message>
   </Messages>
-  <IID>76</IID>
+  <IID>87</IID>
 </ABAsim>

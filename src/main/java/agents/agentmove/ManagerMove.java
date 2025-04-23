@@ -68,10 +68,6 @@ public class ManagerMove extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.requestResponseMoveWorker:
-			processRequestResponseMoveWorker(message);
-		break;
-
 		case Mc.finish:
 			switch (message.sender().id()) {
 			case Id.processAgentMoveStorage:
@@ -82,6 +78,10 @@ public class ManagerMove extends OSPABA.Manager {
 				processFinishProcessAgentMove(message);
 			break;
 			}
+		break;
+
+		case Mc.requestResponseMoveWorker:
+			processRequestResponseMoveWorker(message);
 		break;
 
 		default:

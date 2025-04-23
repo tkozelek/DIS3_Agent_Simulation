@@ -2,6 +2,7 @@ package agents.agentgroupb;
 
 import OSPABA.*;
 import simulation.*;
+import agents.agentgroupb.continualassistants.*;
 
 
 
@@ -24,6 +25,7 @@ public class AgentGroupB extends OSPABA.Agent
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerGroupB(Id.managerGroupB, mySim(), this);
+		new ProcessAssembly(Id.processAssembly, mySim(), this);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 		addOwnMessage(Mc.requestResponseWorkAgentB);
 	}

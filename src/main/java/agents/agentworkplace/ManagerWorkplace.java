@@ -47,7 +47,7 @@ public class ManagerWorkplace extends OSPABA.Manager {
 		this.request(message);
     }
 
-	//meta! sender="AgentBoss", id="11", type="Notice"
+	//meta! userInfo="Removed from model"
 	public void processNoticeInitWorkplace(MessageForm message) {
     }
 
@@ -88,16 +88,8 @@ public class ManagerWorkplace extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.noticeInitWorkplace:
-			processNoticeInitWorkplace(message);
-		break;
-
-		case Mc.requestResponseWorkOnOrderWorkplace:
-			processRequestResponseWorkOnOrderWorkplace(message);
-		break;
-
-		case Mc.requestResponseOrderFreeWorkstation:
-			processRequestResponseOrderFreeWorkstation(message);
+		case Mc.requestResponseOrderArrived:
+			processRequestResponseOrderArrived(message);
 		break;
 
 		case Mc.requestResponseMoveWorker:
@@ -112,12 +104,16 @@ public class ManagerWorkplace extends OSPABA.Manager {
 			}
 		break;
 
-		case Mc.requestResponseOrderArrived:
-			processRequestResponseOrderArrived(message);
-		break;
-
 		case Mc.requestResponseFreeWorkstation:
 			processRequestResponseFreeWorkstation(message);
+		break;
+
+		case Mc.requestResponseOrderFreeWorkstation:
+			processRequestResponseOrderFreeWorkstation(message);
+		break;
+
+		case Mc.requestResponseWorkOnOrderWorkplace:
+			processRequestResponseWorkOnOrderWorkplace(message);
 		break;
 
 		default:

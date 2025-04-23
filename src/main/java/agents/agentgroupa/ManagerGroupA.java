@@ -210,12 +210,12 @@ public class ManagerGroupA extends OSPABA.Manager {
 		switch (message.code()) {
 		case Mc.finish:
 			switch (message.sender().id()) {
-			case Id.processPreparing:
-				processFinishProcessPreparing(message);
-			break;
-
 			case Id.processFitting:
 				processFinishProcessFitting(message);
+			break;
+
+			case Id.processPreparing:
+				processFinishProcessPreparing(message);
 			break;
 
 			case Id.processCutting:
@@ -228,12 +228,12 @@ public class ManagerGroupA extends OSPABA.Manager {
 			processRequestResponseMoveWorker(message);
 		break;
 
-		case Mc.requestResponseWorkAgentA:
-			processRequestResponseWorkAgentA(message);
-		break;
-
 		case Mc.requestResponseWorkerFreeWorkstation:
 			processRequestResponseWorkerFreeWorkstation(message);
+		break;
+
+		case Mc.requestResponseWorkAgentA:
+			processRequestResponseWorkAgentA(message);
 		break;
 
 		default:

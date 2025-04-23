@@ -27,7 +27,7 @@ import java.util.List;
 
 
 public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Observable {
-    private SeedGenerator seedGen;
+	private SeedGenerator seedGen;
 
 	private int[] groups;
 	private int workstationCount;
@@ -37,7 +37,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	private int speed;
 
 	public MySimulation(Long seed, int[] groups, int wCount) {
-        seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
+		seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
 
 		this.groups = groups;
 		this.workstationCount = wCount;
@@ -45,8 +45,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		this.registerDelegate(this);
 
 
-        init();
-    }
+		init();
+	}
 
 	public int getWorkstationCount() {
 		return this.workstationCount;
@@ -57,8 +57,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	}
 
 	public SeedGenerator getSeedGenerator() {
-        return seedGen;
-    }
+		return seedGen;
+	}
 
 	public String workdayTime() {
 		return Helper.timeToDateString(currentTime(), 6);
@@ -81,39 +81,39 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 			this.resumeSimulation();
 	}
 
-    @Override
-    public void prepareSimulation() {
-        super.prepareSimulation();
-        // Create global statistcis
+	@Override
+	public void prepareSimulation() {
+		super.prepareSimulation();
+		// Create global statistcis
 
-        this.seedGen = new SeedGenerator();
-    }
+		this.seedGen = new SeedGenerator();
+	}
 
-    @Override
-    public void prepareReplication() {
-        super.prepareReplication();
-        // Reset entities, queues, local statistics, etc...
+	@Override
+	public void prepareReplication() {
+		super.prepareReplication();
+		// Reset entities, queues, local statistics, etc...
 
-        _agentBoss.initOkolie();
+		_agentBoss.initOkolie();
 		Ids.resetAll();
 		this.setSpeed(speed);
 		this.notifyObservers();
 
-    }
+	}
 
-    @Override
-    public void replicationFinished() {
-        // Collect local statistics into global, update UI, etc...
-        super.replicationFinished();
+	@Override
+	public void replicationFinished() {
+		// Collect local statistics into global, update UI, etc...
+		super.replicationFinished();
 
 		this.notifyObservers();
-    }
+	}
 
-    @Override
-    public void simulationFinished() {
-        // Display simulation results
-        super.simulationFinished();
-    }
+	@Override
+	public void simulationFinished() {
+		// Display simulation results
+		super.simulationFinished();
+	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
@@ -130,7 +130,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentBoss _agentBoss;
 
-public AgentBoss agentBoss()
+	public AgentBoss agentBoss()
 	{ return _agentBoss; }
 
 	public void setAgentBoss(AgentBoss agentBoss)
@@ -138,7 +138,7 @@ public AgentBoss agentBoss()
 
 	private AgentWorkplace _agentWorkplace;
 
-public AgentWorkplace agentWorkplace()
+	public AgentWorkplace agentWorkplace()
 	{ return _agentWorkplace; }
 
 	public void setAgentWorkplace(AgentWorkplace agentWorkplace)
@@ -146,7 +146,7 @@ public AgentWorkplace agentWorkplace()
 
 	private AgentWorkstation _agentWorkstation;
 
-public AgentWorkstation agentWorkstation()
+	public AgentWorkstation agentWorkstation()
 	{ return _agentWorkstation; }
 
 	public void setAgentWorkstation(AgentWorkstation agentWorkstation)
@@ -154,7 +154,7 @@ public AgentWorkstation agentWorkstation()
 
 	private AgentMove _agentMove;
 
-public AgentMove agentMove()
+	public AgentMove agentMove()
 	{ return _agentMove; }
 
 	public void setAgentMove(AgentMove agentMove)
@@ -162,7 +162,7 @@ public AgentMove agentMove()
 
 	private AgentWorker _agentWorker;
 
-public AgentWorker agentWorker()
+	public AgentWorker agentWorker()
 	{ return _agentWorker; }
 
 	public void setAgentWorker(AgentWorker agentWorker)
@@ -170,7 +170,7 @@ public AgentWorker agentWorker()
 
 	private AgentGroupA _agentGroupA;
 
-public AgentGroupA agentGroupA()
+	public AgentGroupA agentGroupA()
 	{ return _agentGroupA; }
 
 	public void setAgentGroupA(AgentGroupA agentGroupA)
@@ -178,7 +178,7 @@ public AgentGroupA agentGroupA()
 
 	private AgentGroupB _agentGroupB;
 
-public AgentGroupB agentGroupB()
+	public AgentGroupB agentGroupB()
 	{ return _agentGroupB; }
 
 	public void setAgentGroupB(AgentGroupB agentGroupB)
@@ -186,7 +186,7 @@ public AgentGroupB agentGroupB()
 
 	private AgentOkolie _agentOkolie;
 
-public AgentOkolie agentOkolie()
+	public AgentOkolie agentOkolie()
 	{ return _agentOkolie; }
 
 	public void setAgentOkolie(AgentOkolie agentOkolie)
@@ -194,7 +194,7 @@ public AgentOkolie agentOkolie()
 
 	private AgentGroupC _agentGroupC;
 
-public AgentGroupC agentGroupC()
+	public AgentGroupC agentGroupC()
 	{ return _agentGroupC; }
 
 	public void setAgentGroupC(AgentGroupC agentGroupC)

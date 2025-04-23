@@ -41,6 +41,10 @@ public class ManagerGroupB extends OSPABA.Manager
 	public void processRequestResponseMoveWorker(MessageForm message) {
 	}
 
+	//meta! sender="ProcessAssembly", id="79", type="Finish"
+	public void processFinish(MessageForm message) {
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -54,6 +58,10 @@ public class ManagerGroupB extends OSPABA.Manager
 
 		case Mc.requestResponseMoveWorker:
 			processRequestResponseMoveWorker(message);
+		break;
+
+		case Mc.finish:
+			processFinish(message);
 		break;
 
 		default:
