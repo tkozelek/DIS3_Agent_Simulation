@@ -2,10 +2,74 @@
 <ABAsim>
   <Agents>
     <Agent>
+      <SimId>6</SimId>
+      <InternalId>6</InternalId>
+      <Name>AgentWorker</Name>
+      <Bounds>259,456,180,180</Bounds>
+      <Reasoner>ManagerWorker</Reasoner>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>4</SimId>
+      <InternalId>4</InternalId>
+      <Name>AgentWorkstation</Name>
+      <Bounds>2192,31,180,180</Bounds>
+      <Reasoner>ManagerWorkstation</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>5</SimId>
+      <InternalId>5</InternalId>
+      <Name>AgentMove</Name>
+      <Bounds>1931,610,180,180</Bounds>
+      <Reasoner>ManagerMove</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1005</SimId>
+          <InternalId>42</InternalId>
+          <Name>ProcessAgentMove</Name>
+          <Bounds>38,136,35,18</Bounds>
+        </Process>
+        <Process>
+          <SimId>1006</SimId>
+          <InternalId>47</InternalId>
+          <Name>ProcessAgentMoveStorage</Name>
+          <Bounds>110,136,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>2</SimId>
+      <InternalId>2</InternalId>
+      <Name>AgentBoss</Name>
+      <Bounds>638,-289,180,180</Bounds>
+      <Reasoner>ManagerBoss</Reasoner>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>8</SimId>
+      <InternalId>61</InternalId>
+      <Name>AgentGroupB</Name>
+      <Bounds>876,1511,180,180</Bounds>
+      <Reasoner>ManagerGroupB</Reasoner>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>3</SimId>
+      <InternalId>3</InternalId>
+      <Name>AgentWorkplace</Name>
+      <Bounds>1300,78,180,180</Bounds>
+      <Reasoner>ManagerWorkplace</Reasoner>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
       <SimId>1</SimId>
       <InternalId>1</InternalId>
       <Name>AgentOkolie</Name>
-      <Bounds>280,63,180,180</Bounds>
+      <Bounds>-111,92,180,180</Bounds>
       <Reasoner>ManagerOkolie</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -19,18 +83,10 @@
       </Components>
     </Agent>
     <Agent>
-      <SimId>2</SimId>
-      <InternalId>2</InternalId>
-      <Name>AgentBoss</Name>
-      <Bounds>790,-349,180,180</Bounds>
-      <Reasoner>ManagerBoss</Reasoner>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
       <SimId>7</SimId>
       <InternalId>7</InternalId>
       <Name>AgentGroupA</Name>
-      <Bounds>260,1251,180,180</Bounds>
+      <Bounds>151,1285,180,180</Bounds>
       <Reasoner>ManagerGroupA</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
@@ -51,68 +107,50 @@
           <SimId>1007</SimId>
           <InternalId>49</InternalId>
           <Name>ProcessPreparing</Name>
-          <Bounds>121,119,35,18</Bounds>
+          <Bounds>123,119,35,18</Bounds>
         </Process>
       </Components>
     </Agent>
     <Agent>
-      <SimId>6</SimId>
-      <InternalId>6</InternalId>
-      <Name>AgentWorker</Name>
-      <Bounds>887,692,180,180</Bounds>
-      <Reasoner>ManagerWorker</Reasoner>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>4</SimId>
-      <InternalId>4</InternalId>
-      <Name>AgentWorkstation</Name>
-      <Bounds>2089,70,180,180</Bounds>
-      <Reasoner>ManagerWorkstation</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>5</SimId>
-      <InternalId>5</InternalId>
-      <Name>AgentMove</Name>
-      <Bounds>1831,536,180,180</Bounds>
-      <Reasoner>ManagerMove</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1006</SimId>
-          <InternalId>47</InternalId>
-          <Name>ProcessAgentMoveStorage</Name>
-          <Bounds>110,136,35,18</Bounds>
-        </Process>
-        <Process>
-          <SimId>1005</SimId>
-          <InternalId>42</InternalId>
-          <Name>ProcessAgentMove</Name>
-          <Bounds>38,136,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>3</SimId>
-      <InternalId>3</InternalId>
-      <Name>AgentWorkplace</Name>
-      <Bounds>1300,78,180,180</Bounds>
-      <Reasoner>ManagerWorkplace</Reasoner>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>8</SimId>
-      <InternalId>61</InternalId>
-      <Name>AgentGroupB</Name>
-      <Bounds>881,1358,180,180</Bounds>
-      <Reasoner>ManagerGroupB</Reasoner>
+      <SimId>10</SimId>
+      <InternalId>67</InternalId>
+      <Name>AgentGroupC</Name>
+      <Bounds>1469,1379,180,180</Bounds>
+      <Reasoner>ManagerGroupC</Reasoner>
       <UsePetriNet>false</UsePetriNet>
     </Agent>
   </Agents>
   <Messages>
+    <Message>
+      <SimId>1021</SimId>
+      <InternalId>66</InternalId>
+      <Name>RequestResponseMoveWorker</Name>
+      <Type>RequestResponse</Type>
+      <Source>61</Source>
+      <Destination>6</Destination>
+    </Message>
+    <Message>
+      <InternalId>68</InternalId>
+      <Type>Parent</Type>
+      <Source>67</Source>
+      <Destination>6</Destination>
+    </Message>
+    <Message>
+      <SimId>1023</SimId>
+      <InternalId>71</InternalId>
+      <Name>RequestResponseMoveWorker</Name>
+      <Type>RequestResponse</Type>
+      <Source>67</Source>
+      <Destination>6</Destination>
+    </Message>
+    <Message>
+      <SimId>1024</SimId>
+      <InternalId>72</InternalId>
+      <Name>RequestResponseWorkAgentC</Name>
+      <Type>RequestResponse</Type>
+      <Source>6</Source>
+      <Destination>67</Destination>
+    </Message>
     <Message>
       <SimId>1001</SimId>
       <InternalId>10</InternalId>
@@ -128,14 +166,6 @@
       <Type>Notice</Type>
       <Source>2</Source>
       <Destination>3</Destination>
-    </Message>
-    <Message>
-      <SimId>1004</SimId>
-      <InternalId>13</InternalId>
-      <Name>NoticeInitWorker</Name>
-      <Type>Notice</Type>
-      <Source>3</Source>
-      <Destination>6</Destination>
     </Message>
     <Message>
       <InternalId>18</InternalId>
@@ -192,7 +222,7 @@
     <Message>
       <SimId>1015</SimId>
       <InternalId>39</InternalId>
-      <Name>RequestResponseWorkOnOrder</Name>
+      <Name>RequestResponseWorkAgentA</Name>
       <Type>RequestResponse</Type>
       <Source>6</Source>
       <Destination>7</Destination>
@@ -200,7 +230,7 @@
     <Message>
       <SimId>1016</SimId>
       <InternalId>40</InternalId>
-      <Name>RequestResponseWorkOnOrder</Name>
+      <Name>RequestResponseWorkOnOrderWorkplace</Name>
       <Type>RequestResponse</Type>
       <Source>3</Source>
       <Destination>6</Destination>
@@ -298,11 +328,11 @@
     <Message>
       <SimId>1020</SimId>
       <InternalId>63</InternalId>
-      <Name>RequestResponseWorkOnOrder</Name>
+      <Name>RequestResponseWorkAgentB</Name>
       <Type>RequestResponse</Type>
       <Source>6</Source>
       <Destination>61</Destination>
     </Message>
   </Messages>
-  <IID>64</IID>
+  <IID>74</IID>
 </ABAsim>

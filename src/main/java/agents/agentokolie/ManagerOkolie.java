@@ -4,6 +4,7 @@ import OSPABA.Agent;
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import config.Constants;
+import config.Helper;
 import simulation.Id;
 import simulation.Mc;
 import simulation.MyMessage;
@@ -31,7 +32,7 @@ public class ManagerOkolie extends OSPABA.Manager {
         // response na prichod objednavky
         // tzn. objednavka hotova cela
         if (Constants.DEBUG_MANAGER)
-            System.out.printf("[%.2f] Manazer okolie: odchod objednavky");
+            System.out.printf("[%s] Manazer okolie: odchod objednavky", Helper.timeToDateString(mySim().currentTime(), 6));
         MyMessageOrder orderMessage = (MyMessageOrder) message;
         this.myAgent().removeOrder(orderMessage.getOrder());
     }
@@ -51,7 +52,7 @@ public class ManagerOkolie extends OSPABA.Manager {
 	//meta! sender="SchedulerOrderArrival", id="20", type="Notice"
 	public void processNoticeOrderArrival(MessageForm message) {
         if (Constants.DEBUG_MANAGER)
-            System.out.printf("[%.2f]: Manazer objednávka prišla\n", message.deliveryTime());
+            System.out.printf("[%s] M. okolie objednávka prišla\n", Helper.timeToDateString(mySim().currentTime(), 6));
 
         MyMessageOrder orderMessage = (MyMessageOrder) message;
 
@@ -74,15 +75,12 @@ public class ManagerOkolie extends OSPABA.Manager {
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
+	public void init() {
 	}
 
 	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
+	public void processMessage(MessageForm message) {
+		switch (message.code()) {
 		case Mc.noticeOrderArrival:
 			processNoticeOrderArrival(message);
 		break;

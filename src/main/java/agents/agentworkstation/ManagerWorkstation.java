@@ -3,7 +3,12 @@ package agents.agentworkstation;
 import OSPABA.Agent;
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
+import entity.workstation.Workstation;
+import simulation.Id;
 import simulation.Mc;
+import simulation.custommessage.MyMessageWorkstation;
+
+import java.util.List;
 
 //meta! id="4"
 public class ManagerWorkstation extends OSPABA.Manager {
@@ -24,6 +29,13 @@ public class ManagerWorkstation extends OSPABA.Manager {
 
 	//meta! sender="AgentWorkplace", id="37", type="Request"
 	public void processRequestResponseFreeWorkstation(MessageForm message) {
+        MyMessageWorkstation msgWorkstation = (MyMessageWorkstation) message;
+        List<Workstation> workstation = myAgent().getFreeWorkstations(msgWorkstation.getAmount());
+        msgWorkstation.setWorkstation(workstation);
+
+        msgWorkstation.setCode(Mc.requestResponseFreeWorkstation);
+        msgWorkstation.setAddressee(Id.agentWorkplace);
+        this.response(msgWorkstation);
     }
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -33,15 +45,12 @@ public class ManagerWorkstation extends OSPABA.Manager {
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
+	public void init() {
 	}
 
 	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
+	public void processMessage(MessageForm message) {
+		switch (message.code()) {
 		case Mc.requestResponseFreeWorkstation:
 			processRequestResponseFreeWorkstation(message);
 		break;

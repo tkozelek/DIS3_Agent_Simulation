@@ -12,7 +12,7 @@ public class MyMessageProduct extends MessageForm {
         this.product = product;
     }
 
-    protected MyMessageProduct(MessageForm original) {
+    public MyMessageProduct(MessageForm original) {
         super(original);
     }
 
@@ -31,4 +31,9 @@ public class MyMessageProduct extends MessageForm {
     public Product getProduct() {
         return product;
     }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
 }

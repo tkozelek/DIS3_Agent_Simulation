@@ -26,16 +26,16 @@ public class ManagerWorkplace extends OSPABA.Manager {
 	//meta! sender="AgentBoss", id="24", type="Request"
 	public void processRequestResponseOrderArrived(MessageForm message) {
         // nova objednavka, poslal workboss, posli workerovi
-        message.setCode(Mc.requestResponseWorkOnOrder);
-		message.setAddressee(Id.agentGroupA);
+        message.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+		message.setAddressee(Id.agentWorker);
 		this.request(message);
     }
 
 	//meta! sender="AgentWorker", id="40", type="Response"
-	public void processRequestResponseWorkOnOrder(MessageForm message) {
+	public void processRequestResponseWorkOnOrderWorkplace(MessageForm message) {
     	// objednavka dokoncena, posli vyssie na vymazanie zo systemu
-		message.setCode(Mc.requestResponseWorkOnOrder);
-		message.setAddressee(Id.agentWorkplace);
+		message.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+		message.setAddressee(Id.agentBoss);
 		this.response(message);
 	}
 
@@ -43,7 +43,7 @@ public class ManagerWorkplace extends OSPABA.Manager {
 	public void processRequestResponseOrderFreeWorkstation(MessageForm message) {
 		// worker A vyziadal workstation pre objednavku
 		message.setCode(Mc.requestResponseFreeWorkstation);
-		message.setAddressee(Id.agentBoss);
+		message.setAddressee(Id.agentWorkstation);
 		this.request(message);
     }
 
@@ -52,7 +52,7 @@ public class ManagerWorkplace extends OSPABA.Manager {
     }
 
 	//meta! sender="AgentMove", id="38", type="Response"
-	public void processRequestResponseMoveWorker(MessageForm message) {
+	public void processRequestResponseMoveWorkerAgentMove(MessageForm message) {
 		// agent bol presunuty posli response dalej agentovi workerovi
 		message.setCode(Mc.requestResponseMoveWorker);
 		message.setAddressee(Id.agentWorker);
@@ -62,7 +62,7 @@ public class ManagerWorkplace extends OSPABA.Manager {
 	//meta! sender="AgentWorkstation", id="37", type="Response"
 	public void processRequestResponseFreeWorkstation(MessageForm message) {
 		// free workstation bol prideleny
-		message.setCode(Mc.requestResponseFreeWorkstation);
+		message.setCode(Mc.requestResponseOrderFreeWorkstation);
 		message.setAddressee(Id.agentWorker);
 		this.response(message);
     }
@@ -73,38 +73,51 @@ public class ManagerWorkplace extends OSPABA.Manager {
         }
     }
 
+	//meta! sender="AgentWorker", id="75", type="Request"
+	public void processRequestResponseMoveWorkerAgentWorker(MessageForm message) {
+		// agent dal request na move
+		message.setCode(Mc.requestResponseMoveWorker);
+		message.setAddressee(Id.agentMove);
+		this.request(message);
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
+	public void init() {
 	}
 
 	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
-		case Mc.requestResponseOrderFreeWorkstation:
-			processRequestResponseOrderFreeWorkstation(message);
-		break;
-
+	public void processMessage(MessageForm message) {
+		switch (message.code()) {
 		case Mc.noticeInitWorkplace:
 			processNoticeInitWorkplace(message);
 		break;
 
-		case Mc.requestResponseFreeWorkstation:
-			processRequestResponseFreeWorkstation(message);
+		case Mc.requestResponseWorkOnOrderWorkplace:
+			processRequestResponseWorkOnOrderWorkplace(message);
+		break;
+
+		case Mc.requestResponseOrderFreeWorkstation:
+			processRequestResponseOrderFreeWorkstation(message);
 		break;
 
 		case Mc.requestResponseMoveWorker:
-			processRequestResponseMoveWorker(message);
-		break;
+			switch (message.sender().id()) {
+			case Id.agentMove:
+				processRequestResponseMoveWorkerAgentMove(message);
+			break;
 
-		case Mc.requestResponseWorkOnOrder:
-			processRequestResponseWorkOnOrder(message);
+			case Id.agentWorker:
+				processRequestResponseMoveWorkerAgentWorker(message);
+			break;
+			}
 		break;
 
 		case Mc.requestResponseOrderArrived:
 			processRequestResponseOrderArrived(message);
+		break;
+
+		case Mc.requestResponseFreeWorkstation:
+			processRequestResponseFreeWorkstation(message);
 		break;
 
 		default:

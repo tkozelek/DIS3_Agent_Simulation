@@ -1,6 +1,9 @@
 package entity.worker;
 
+import entity.ILocation;
 import entity.Ids;
+import entity.Storage;
+import entity.product.Product;
 import entity.workstation.Workstation;
 
 public class Worker {
@@ -8,26 +11,25 @@ public class Worker {
     private final WorkerGroup group;
 
     private WorkerWork currentWork;
-    private WorkerPosition currentPosition;
-    private entity.product.Product currentProduct;
+    private ILocation location;
+    private Product currentProduct;
     private Workstation currentWorkstation;
     private int finishedTasks = 0;
 
     public Worker(WorkerGroup group) {
         this.id = Ids.getWorkerId();
         this.group = group;
-        this.currentPosition = WorkerPosition.STORAGE;
         this.currentWork = WorkerWork.IDLE;
         this.currentWorkstation = null;
-        this.currentWorkstation = null;
+        this.location = Storage.STORAGE;
     }
 
-    public entity.product.Product getCurrentProduct() {
-        return currentWorkstation;
+    public Product getCurrentProduct() {
+        return currentProduct;
     }
 
-    public void setCurrentProduct(entity.product.Product currentProduct) {
-        this.currentWorkstation = currentProduct;
+    public void setCurrentProduct(Product currentProduct) {
+        this.currentProduct = currentProduct;
         if (currentProduct != null) finishedTasks++;
     }
 
@@ -37,6 +39,14 @@ public class Worker {
 
     public void setCurrentWorkstation(Workstation currentWorkstation) {
         this.currentWorkstation = currentWorkstation;
+    }
+
+    public ILocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(ILocation location) {
+        this.location = location;
     }
 
     public int getFinishedTasks() {
@@ -53,14 +63,6 @@ public class Worker {
 
     public void setCurrentWork(WorkerWork currentWork, double time) {
         this.currentWork = currentWork;
-    }
-
-    public WorkerPosition getCurrentPosition() {
-        return currentPosition;
-    }
-
-    public void setCurrentPosition(WorkerPosition currentPosition) {
-        this.currentPosition = currentPosition;
     }
 
     public int getId() {

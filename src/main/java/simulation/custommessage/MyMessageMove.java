@@ -2,17 +2,21 @@ package simulation.custommessage;
 
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
+import entity.ILocation;
+import entity.worker.Worker;
 import entity.workstation.Workstation;
 
 public class MyMessageMove extends MessageForm {
-    private Workstation targetWorkstation;
+    private ILocation targetLocation;
+    private Worker worker;
 
-    public MyMessageMove(Simulation mySim, Workstation workstation) {
+    public MyMessageMove(Simulation mySim, Worker worker, ILocation targetLocation) {
         super(mySim);
-        this.targetWorkstation = workstation;
+        this.targetLocation = targetLocation;
+        this.worker = worker;
     }
 
-    protected MyMessageMove(MessageForm original) {
+    public MyMessageMove(MessageForm original) {
         super(original);
     }
 
@@ -24,11 +28,23 @@ public class MyMessageMove extends MessageForm {
     @Override
     public String toString() {
         return "MyMessageMove{" +
-                "targetWorkstation=" + targetWorkstation +
+                "target=" + targetLocation +
                 '}';
     }
 
-    public Workstation getTargetWorkstation() {
-        return targetWorkstation;
+    public ILocation getTargetLocation() {
+        return targetLocation;
+    }
+
+    public Worker getWorker() {
+        return worker;
+    }
+
+    public void setTargetLocation(ILocation targetLocation) {
+        this.targetLocation = targetLocation;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 }

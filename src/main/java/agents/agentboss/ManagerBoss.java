@@ -36,7 +36,7 @@ public class ManagerBoss extends OSPABA.Manager {
 	public void processRequestResponseOrderArrival(MessageForm message) {
         // manazer okolia poslal request objednavku
         // posli dalej do dielne
-        message.setCode(Mc.requestResponseWorkOnOrder);
+        message.setCode(Mc.requestResponseOrderArrived);
         message.setAddressee(Id.agentWorkplace);
         this.request(message);
     }
@@ -48,15 +48,12 @@ public class ManagerBoss extends OSPABA.Manager {
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
+	public void init() {
 	}
 
 	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
+	public void processMessage(MessageForm message) {
+		switch (message.code()) {
 		case Mc.requestResponseOrderArrival:
 			processRequestResponseOrderArrival(message);
 		break;

@@ -157,7 +157,7 @@ public class Product implements Comparable<Product> {
 
     @Override
     public String toString() {
-        return String.format("Product %d", id);
+        return String.format("%sPr %d: %s", currentWorker != null ? currentWorker + " - " : "", id, productType);
     }
 
     @Override

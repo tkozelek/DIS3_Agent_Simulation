@@ -1,23 +1,31 @@
 package entity.workstation;
 
+import entity.ILocation;
+import entity.Ids;
+import entity.product.Product;
 
-public class Workstation {
+public class Workstation implements ILocation {
     private final int id;
-    private entity.product.Product currentProduct;
+    private Product currentProduct;
 
-    public Workstation(int id) {
-        this.id = id;
+    public Workstation() {
+        this.id = Ids.getWorkstationId();
     }
 
     public int getId() {
         return id;
     }
 
-    public entity.product.Product getCurrentOrder() {
+    public Product getCurrentOrder() {
         return currentProduct;
     }
 
-    public void setCurrentOrder(entity.product.Product currentProduct) {
+    public void setCurrentOrder(Product currentProduct) {
         this.currentProduct = currentProduct;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Workstation %d: %s]", id, currentProduct);
     }
 }

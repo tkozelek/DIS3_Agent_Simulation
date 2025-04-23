@@ -3,13 +3,12 @@ package agents.agentokolie.continualassistants;
 import OSPABA.CommonAgent;
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
-import OSPRNG.ExponentialRNG;
 import agents.agentokolie.AgentOkolie;
 import config.Constants;
-import config.Generators;
 import entity.order.Order;
 import entity.product.Product;
 import entity.product.ProductType;
+import generator.continuos.ContinuosExponentialGenerator;
 import simulation.Id;
 import simulation.Mc;
 import simulation.MySimulation;
@@ -17,13 +16,13 @@ import simulation.custommessage.MyMessageOrder;
 
 //meta! id="17"
 public class SchedulerOrderArrival extends OSPABA.Scheduler {
-    private final ExponentialRNG orderArrivalGenerator;
+    private final ContinuosExponentialGenerator orderArrivalGenerator;
 
     public SchedulerOrderArrival(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
 
         MySimulation sim = (MySimulation) mySim;
-        this.orderArrivalGenerator = new ExponentialRNG(Generators.ORDER_ARRIVAL, sim.getSeedGenerator().getRandom());
+        this.orderArrivalGenerator = new ContinuosExponentialGenerator(1 / 180000.0, sim.getSeedGenerator());
     }
 
     @Override
@@ -54,6 +53,7 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
             MyMessageOrder customMsg
                     = new MyMessageOrder(this.mySim(), order);
             customMsg.setCode(Mc.holdOrderArrival);
+
             this.hold(offsetArrival, customMsg);
         }
     }
@@ -85,10 +85,8 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
+	public void processMessage(MessageForm message) {
+		switch (message.code()) {
 		case Mc.start:
 			processStart(message);
 		break;

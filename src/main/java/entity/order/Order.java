@@ -53,6 +53,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return String.format("Order %d: arr time: %.2f\n", id, arrivalTime);
+        return String.format("Order %d: products: %s", id, products);
     }
 }

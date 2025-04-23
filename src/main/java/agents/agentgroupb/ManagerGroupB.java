@@ -1,7 +1,7 @@
 package agents.agentgroupb;
 
 import OSPABA.*;
-import simulation.*;
+import simulation.Mc;
 
 //meta! id="61"
 public class ManagerGroupB extends OSPABA.Manager
@@ -25,7 +25,7 @@ public class ManagerGroupB extends OSPABA.Manager
 	}
 
 	//meta! sender="AgentWorker", id="63", type="Request"
-	public void processRequestResponseWorkOnOrder(MessageForm message)
+	public void processRequestResponseWorkAgentB(MessageForm message)
 	{
 	}
 
@@ -37,18 +37,23 @@ public class ManagerGroupB extends OSPABA.Manager
 		}
 	}
 
+	//meta! sender="AgentWorker", id="66", type="Response"
+	public void processRequestResponseMoveWorker(MessageForm message) {
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init()
-	{
+	public void init() {
 	}
 
 	@Override
-	public void processMessage(MessageForm message)
-	{
-		switch (message.code())
-		{
-		case Mc.requestResponseWorkOnOrder:
-			processRequestResponseWorkOnOrder(message);
+	public void processMessage(MessageForm message) {
+		switch (message.code()) {
+		case Mc.requestResponseWorkAgentB:
+			processRequestResponseWorkAgentB(message);
+		break;
+
+		case Mc.requestResponseMoveWorker:
+			processRequestResponseMoveWorker(message);
 		break;
 
 		default:

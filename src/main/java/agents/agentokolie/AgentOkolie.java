@@ -1,9 +1,18 @@
 package agents.agentokolie;
 
 import OSPABA.*;
+import OSPRNG.UniformDiscreteRNG;
 import simulation.*;
 import agents.agentokolie.continualassistants.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import config.Constants;
+import entity.order.Order;
+import entity.product.ProductType;
+import generator.EnumGenerator;
 
 
 //meta! id="1"
@@ -17,6 +26,8 @@ public class AgentOkolie extends OSPABA.Agent {
         super(id, mySim, parent);
         init();
         addOwnMessage(Mc.holdOrderArrival);
+
+        this.ordersInSystem = new ArrayList<>();
 
         this.productAmountGenerator = new UniformDiscreteRNG(Constants.PRODUCT_AMOUNT_MIN, Constants.PRODUCT_AMOUNT_MAX);
         createEnumGenerator(mySim);
@@ -45,7 +56,7 @@ public class AgentOkolie extends OSPABA.Agent {
     }
 
     private void createEnumGenerator(Simulation mySim) {
-        Map<ProductType, Double> probabilities = new HashMap<>();
+        HashMap<ProductType, Double> probabilities = new HashMap<>();
         probabilities.put(ProductType.TABLE, 0.5);
         probabilities.put(ProductType.CHAIR, 0.15);
         probabilities.put(ProductType.CUPBOARD, 0.35);
@@ -61,8 +72,7 @@ public class AgentOkolie extends OSPABA.Agent {
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	private void init()
-	{
+	private void init() {
 		new ManagerOkolie(Id.managerOkolie, mySim(), this);
 		new SchedulerOrderArrival(Id.schedulerOrderArrival, mySim(), this);
 		addOwnMessage(Mc.requestResponseOrderArrival);

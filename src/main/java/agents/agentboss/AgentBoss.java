@@ -26,8 +26,7 @@ public class AgentBoss extends OSPABA.Agent {
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	private void init()
-	{
+	private void init() {
 		new ManagerBoss(Id.managerBoss, mySim(), this);
 		addOwnMessage(Mc.requestResponseOrderArrival);
 		addOwnMessage(Mc.requestResponseOrderArrived);

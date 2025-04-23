@@ -2,39 +2,30 @@ package agents.agentgroupa;
 
 import OSPABA.*;
 import OSPDataStruct.SimQueue;
-import OSPRNG.EmpiricPair;
-import OSPRNG.EmpiricRNG;
-import OSPRNG.UniformContinuousRNG;
-import entity.product.Product;
-import entity.product.ProductType;
-import entity.worker.Worker;
-import entity.worker.WorkerGroup;
 import simulation.*;
 import agents.agentgroupa.continualassistants.*;
 
+import entity.product.Product;
+import entity.worker.Worker;
+import entity.worker.WorkerGroup;
+import entity.worker.WorkerWork;
 
+import java.util.ArrayList;
+import java.util.List;
 
 //meta! id="7"
 public class AgentGroupA extends OSPABA.Agent {
 	private final SimQueue<Product> queue;
-
-	private EmpiricRNG cuttingTableGenerator;
-	private UniformContinuousRNG cuttingChairGenerator;
-	private UniformContinuousRNG cuttingcupboardGenerator;
 
 	public Worker[] workers;
 
     public AgentGroupA(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
         init();
-		int times = 60;
-		MySimulation sim = (MySimulation) mySim;
-		this.cuttingTableGenerator = new EmpiricRNG(sim.getSeedGenerator().getRandom(),
-				new EmpiricPair(new UniformContinuousRNG(10.0 * times, 25.0 * times), 0.6),
-				new EmpiricPair(new UniformContinuousRNG(25.0 * times, 50.0 * times), 0.4)
-		);
-		this.cuttingChairGenerator = new UniformContinuousRNG(12.0 * times, 24.0 * times);
-		this.cuttingcupboardGenerator = new UniformContinuousRNG(15.0 * times, 80.0 * times);
+
+		this.addOwnMessage(Mc.holdCutting);
+		this.addOwnMessage(Mc.holdFitting);
+		this.addOwnMessage(Mc.holdPrepareMaterial);
 
 		this.queue = new SimQueue<>();
     }
@@ -43,33 +34,20 @@ public class AgentGroupA extends OSPABA.Agent {
 		queue.add(p);
 	}
 
-	public Product removeFromQueue() {
+	public Product pollQueue() {
 		return queue.poll();
+	}
+
+	public Product peekFromQueue() {
+		return queue.peek();
 	}
 
 	public int queueSize() {
 		return queue.size();
 	}
 
-	public EmpiricRNG getCuttingTableGenerator() {
-		return cuttingTableGenerator;
-	}
-
-	public UniformContinuousRNG getCuttingChairGenerator() {
-		return cuttingChairGenerator;
-	}
-
-	public UniformContinuousRNG getCuttingcupboardGenerator() {
-		return cuttingcupboardGenerator;
-	}
-
-	public Double getSampleFromGeneratorBasedOnProductType(ProductType type) {
-		return switch (type) {
-			case ProductType.CHAIR -> this.cuttingChairGenerator.sample();
-			case ProductType.TABLE -> this.cuttingTableGenerator.sample().doubleValue();
-			case ProductType.CUPBOARD -> this.cuttingcupboardGenerator.sample();
-			default -> throw new IllegalStateException("Unexpected value: " + type);
-		};
+	public int workersSize() {
+		return workers.length;
 	}
 
 	private void createWorkers() {
@@ -81,6 +59,25 @@ public class AgentGroupA extends OSPABA.Agent {
 		}
 	}
 
+	public List<Worker> getFreeWorkers() {
+		List<Worker> freeWorkers = new ArrayList<>();
+		for (Worker w : workers) {
+			if (w.getCurrentWork() == WorkerWork.IDLE && w.getCurrentWork() != WorkerWork.MOVING) {
+				freeWorkers.add(w);
+			}
+		}
+		return freeWorkers;
+	}
+
+	public Worker getFreeWorker() {
+		for (Worker worker : workers) {
+			if (worker.getCurrentWork() == WorkerWork.IDLE && worker.getCurrentWork() != WorkerWork.MOVING) {
+				return worker;
+			}
+		}
+		return null;
+	}
+
 	@Override
     public void prepareReplication() {
         super.prepareReplication();
@@ -90,15 +87,14 @@ public class AgentGroupA extends OSPABA.Agent {
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
-	private void init()
-	{
+	private void init() {
 		new ManagerGroupA(Id.managerGroupA, mySim(), this);
 		new ProcessCutting(Id.processCutting, mySim(), this);
 		new ProcessFitting(Id.processFitting, mySim(), this);
 		new ProcessPreparing(Id.processPreparing, mySim(), this);
 		addOwnMessage(Mc.requestResponseWorkerFreeWorkstation);
-		addOwnMessage(Mc.requestResponseWorkOnOrder);
 		addOwnMessage(Mc.requestResponseMoveWorker);
+		addOwnMessage(Mc.requestResponseWorkAgentA);
 	}
 	//meta! tag="end"
 }

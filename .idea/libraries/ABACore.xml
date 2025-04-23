@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="ABACore">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/ABACore_4.0/ABACore_4.0/ABACore/ABACore.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Downloads/ABACore_4.0/ABACore_4.0/ABACore/Materiály/javadoc.zip!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
