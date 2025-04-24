@@ -18,9 +18,19 @@ public class Mc extends OSPABA.IdList {
 
     // 1..1000 range reserved for user
     public static final int holdOrderArrival = 1;
+
+	// agent A
 	public static final int holdPrepareMaterial = 2;
 	public static final int holdCutting = 3;
 	public static final int holdFitting = 4;
+
+	// agent B
+	public static final int holdAssembly = 9;
+
+	// agent C
+	public static final int holdMorenie = 7;
+	public static final int holdLakovanie = 8;
+
 
 	public static final int holdMove = 5;
 	public static final int holdMoveStorage = 6;

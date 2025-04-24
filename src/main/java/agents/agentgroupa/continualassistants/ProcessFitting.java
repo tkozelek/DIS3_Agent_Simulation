@@ -5,7 +5,6 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import agents.agentgroupa.AgentGroupA;
 import config.Constants;
-import entity.product.Product;
 import entity.product.ProductActivity;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosUniformGenerator;
@@ -39,7 +38,7 @@ public class ProcessFitting extends OSPABA.Process {
 			System.out.printf("[%s] P. fitting start\n", ((MySimulation)mySim()).workdayTime());
 
 		MyMessageProduct productMessage = (MyMessageProduct) message;
-		productMessage.getProduct().setProductActivity(ProductActivity.Fitting);
+		productMessage.getProduct().setProductActivity(ProductActivity.FITTING);
 
 		double offset = this.fittingAssemblyGenerator.sample();
 		productMessage.setCode(Mc.holdFitting);
@@ -54,7 +53,7 @@ public class ProcessFitting extends OSPABA.Process {
 					System.out.printf("[%s] P. fitting finished\n", ((MySimulation)mySim()).workdayTime());
 
 				MyMessageProduct productMessage = (MyMessageProduct) message;
-				productMessage.getProduct().setProductActivity(ProductActivity.Fitting);
+				productMessage.getProduct().setProductActivity(ProductActivity.FITTING);
 
 				this.assistantFinished(message);
         }

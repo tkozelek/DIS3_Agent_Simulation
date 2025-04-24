@@ -3,11 +3,19 @@ package agents.agentgroupc;
 import OSPABA.*;
 import simulation.*;
 
+import java.util.Random;
+
 //meta! id="67"
 public class ManagerGroupC extends OSPABA.Manager {
+
+	private Random randomStaining;
+
 	public ManagerGroupC(int id, Simulation mySim, Agent myAgent) {
 		super(id, mySim, myAgent);
 		init();
+
+		MySimulation sim = (MySimulation) mySim;
+		this.randomStaining = new Random(sim.getSeedGenerator().sample());
 	}
 
 	@Override
@@ -26,6 +34,7 @@ public class ManagerGroupC extends OSPABA.Manager {
 
 	//meta! sender="AgentWorker", id="72", type="Request"
 	public void processRequestResponseWorkAgentC(MessageForm message) {
+		// žiadosť o obslhuu od agentaworkera -> A dokončené
 		System.out.println(message);
 	}
 
@@ -41,6 +50,7 @@ public class ManagerGroupC extends OSPABA.Manager {
 
 	//meta! sender="ProcessMorenie", id="82", type="Finish"
 	public void processFinishProcessMorenie(MessageForm message) {
+		// je nalakovany
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

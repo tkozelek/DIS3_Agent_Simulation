@@ -1,11 +1,12 @@
 package entity.product;
 
 public enum ProductActivity {
-    Empty,
-    Cutting, Cut,
-    Painting, Painted,
-    Assembling, Assembled,
+    EMTPY,
+    CUTTING, CUT,
+    STAINING, STAINED,
+    PAINTING, PAINTED,
+    ASSEMBLING, ASSEMBLED,
     PREPARING, PREPARED,
-    Fitting,
-    Finished
+    FITTING,
+    DONE
 }

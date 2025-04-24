@@ -1,14 +1,47 @@
 package agents.agentgroupc.continualassistants;
 
 import OSPABA.*;
+import config.Constants;
+import entity.product.Product;
+import entity.product.ProductActivity;
+import entity.product.ProductType;
+import entity.worker.Worker;
+import entity.worker.WorkerWork;
+import generator.Distribution;
+import generator.continuos.ContinuosEmpiricGenerator;
+import generator.continuos.ContinuosUniformGenerator;
 import simulation.*;
 import agents.agentgroupc.*;
 import OSPABA.Process;
+import simulation.custommessage.MyMessageProduct;
 
 //meta! id="83"
 public class ProcessLakovanie extends OSPABA.Process {
+
+	private ContinuosEmpiricGenerator lakovanieTableGenerator;
+	private ContinuosUniformGenerator lakovanieChairGenerator;
+	private ContinuosUniformGenerator lakovanieCupboardGenerator;
+
 	public ProcessLakovanie(int id, Simulation mySim, CommonAgent myAgent) {
 		super(id, mySim, myAgent);
+		int times = 60;
+		MySimulation sim = (MySimulation) mySim;
+
+		this.lakovanieTableGenerator = new ContinuosEmpiricGenerator(new Distribution[]{
+				new Distribution(50 * times, 70 * times, 0.1),
+				new Distribution(70 * times, 150 * times, 0.6),
+				new Distribution(150 * times, 200 * times, 0.3)
+		}, sim.getSeedGenerator());
+		this.lakovanieChairGenerator = new ContinuosUniformGenerator(40 * times, 200 * times, sim.getSeedGenerator());
+		this.lakovanieCupboardGenerator = new ContinuosUniformGenerator(250 * times, 560 * times, sim.getSeedGenerator());
+	}
+
+	private Double getSampleBasedOnProductType(ProductType productType) {
+		return switch (productType) {
+			case ProductType.TABLE -> this.lakovanieTableGenerator.sample();
+			case ProductType.CHAIR -> this.lakovanieChairGenerator.sample();
+			case ProductType.CUPBOARD -> this.lakovanieCupboardGenerator.sample();
+		};
 	}
 
 	@Override
@@ -19,11 +52,41 @@ public class ProcessLakovanie extends OSPABA.Process {
 
 	//meta! sender="AgentGroupC", id="84", type="Start"
 	public void processStart(MessageForm message) {
+		MyMessageProduct productMessage = (MyMessageProduct) message;
+		Product product = productMessage.getProduct();
+
+		if (Constants.DEBUG_PROCESS)
+			System.out.printf("[%s] [%s] P. painting start\n", ((MySimulation)mySim()).workdayTime(), product);
+
+		product.setProductActivity(ProductActivity.PAINTING);
+		product.setStartCuttingTime(mySim().currentTime());
+
+		Worker worker = product.getCurrentWorker();
+		worker.setCurrentWork(WorkerWork.PAINTING, mySim().currentTime());
+
+		double offset = this.getSampleBasedOnProductType(product.getProductType());
+		productMessage.setCode(Mc.holdLakovanie);
+		this.hold(offset, productMessage);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message) {
 		switch (message.code()) {
+			case Mc.holdLakovanie:
+				MyMessageProduct productMessage = (MyMessageProduct) message;
+				Product product = productMessage.getProduct();
+
+				if (Constants.DEBUG_PROCESS)
+					System.out.printf("[%s] [%s] P. painting finished\n", ((MySimulation)mySim()).workdayTime(), product);
+
+				product.setProductActivity(ProductActivity.PAINTED);
+				product.setFinishCuttingTime(mySim().currentTime());
+
+				Worker worker = product.getCurrentWorker();
+				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
+
+				this.assistantFinished(message);
+				break;
 		}
 	}
 

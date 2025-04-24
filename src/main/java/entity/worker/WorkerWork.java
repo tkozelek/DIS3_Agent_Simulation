@@ -6,5 +6,5 @@ public enum WorkerWork {
     ASSEMBLING,
     PREPARING_MATERIAL,
     PAINTING,
-    FITTING, MOVING,
+    FITTING, MOVING, STAINING,
 }

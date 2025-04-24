@@ -3,8 +3,6 @@ package agents.agentgroupa.continualassistants;
 import OSPABA.CommonAgent;
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
-import OSPRNG.EmpiricRNG;
-import OSPRNG.UniformContinuousRNG;
 import agents.agentgroupa.AgentGroupA;
 import config.Constants;
 import entity.product.Product;
@@ -55,7 +53,7 @@ public class ProcessCutting extends OSPABA.Process {
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. cutting start\n", ((MySimulation)mySim()).workdayTime(), product);
 
-		product.setProductActivity(ProductActivity.Cutting);
+		product.setProductActivity(ProductActivity.CUTTING);
 		product.setStartCuttingTime(mySim().currentTime());
 
 		Worker worker = product.getCurrentWorker();
@@ -85,15 +83,14 @@ public class ProcessCutting extends OSPABA.Process {
 				if (Constants.DEBUG_PROCESS)
 					System.out.printf("[%s] [%s] P. cutting finished\n", ((MySimulation)mySim()).workdayTime(), product);
 
-				product.setProductActivity(ProductActivity.Cut);
+				product.setProductActivity(ProductActivity.CUT);
 				product.setFinishCuttingTime(mySim().currentTime());
 
 				Worker worker = product.getCurrentWorker();
 				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
 
-
-
 				this.assistantFinished(message);
+				break;
         }
     }
 

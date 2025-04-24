@@ -33,14 +33,14 @@ public class Product implements Comparable<Product> {
     public Product(ProductType productType) {
         this.id = Ids.getProductId();
         this.productType = productType;
-        this.productActivity = ProductActivity.Empty;
+        this.productActivity = ProductActivity.EMTPY;
     }
 
     public WorkerGroup getNextNeededGroup() {
         return switch (productActivity) {
-            case Empty -> WorkerGroup.GROUP_A;
-            case Cut, Assembled -> WorkerGroup.GROUP_C;
-            case Painted -> WorkerGroup.GROUP_B;
+            case EMTPY -> WorkerGroup.GROUP_A;
+            case CUT, ASSEMBLED -> WorkerGroup.GROUP_C;
+            case PAINTED -> WorkerGroup.GROUP_B;
             default -> throw new IllegalStateException("Unexpected value: " + productActivity);
         };
     }
