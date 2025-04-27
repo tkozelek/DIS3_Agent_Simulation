@@ -5,11 +5,12 @@ import entity.product.Product;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.worker.WorkerWork;
+import simulation.custommessage.MyMessageProduct;
 
 import java.util.ArrayList;
 
 public class Group {
-    private final SimQueue<Product> queue;
+    private final SimQueue<MyMessageProduct> queue;
     private Worker[] workers;
     private final WorkerGroup workerGroup;
     private final int amount;
@@ -21,11 +22,11 @@ public class Group {
         this.amount = workerAmount;
     }
 
-    public void addQueue(Product p) {
+    public void addQueue(MyMessageProduct p) {
         queue.add(p);
     }
 
-    public Product pollQueue() {
+    public MyMessageProduct pollQueue() {
         return queue.poll();
     }
 

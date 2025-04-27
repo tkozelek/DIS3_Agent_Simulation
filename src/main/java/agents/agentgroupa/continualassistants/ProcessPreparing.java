@@ -34,7 +34,7 @@ public class ProcessPreparing extends OSPABA.Process {
 		productMessage.getProduct().setProductActivity(ProductActivity.PREPARING);
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. preparing start\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct());
+			System.out.printf("[%s] [%s] P. preparing start\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct().getCurrentWorker());
 
 		Worker worker = productMessage.getProduct().getCurrentWorker();
 		worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL, mySim().currentTime());
@@ -52,7 +52,7 @@ public class ProcessPreparing extends OSPABA.Process {
 				productMessage.getProduct().setProductActivity(ProductActivity.PREPARED);
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. preparing finished\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct());
+					System.out.printf("[%s] [%s] P. preparing finished\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct().getCurrentWorker());
 
 				Worker worker = productMessage.getProduct().getCurrentWorker();
 				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());

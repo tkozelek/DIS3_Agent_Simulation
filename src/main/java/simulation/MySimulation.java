@@ -1,8 +1,6 @@
 package simulation;
 
-import OSPABA.ISimDelegate;
-import OSPABA.SimState;
-import OSPABA.Simulation;
+import OSPABA.*;
 import agents.agentworkplace.*;
 import agents.agentworker.*;
 import agents.agentgroupa.*;
@@ -23,15 +21,14 @@ import gui.interfaces.Observer;
 import gui.model.SimulationData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Observable {
 	private SeedGenerator seedGen;
 
-	private int[] groups;
-	private int workstationCount;
-	private List<Observer> observers;
+	private final int[] groups;
+	private final int workstationCount;
+	private final ArrayList<Observer> observers;
 
 	private boolean isPaused;
 	private int speed;
@@ -41,9 +38,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 		this.groups = groups;
 		this.workstationCount = wCount;
-		this.observers = new ArrayList<Observer>();
+		this.observers = new ArrayList<>();
 		this.registerDelegate(this);
-
 
 		init();
 	}
@@ -130,7 +126,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentBoss _agentBoss;
 
-	public AgentBoss agentBoss()
+public AgentBoss agentBoss()
 	{ return _agentBoss; }
 
 	public void setAgentBoss(AgentBoss agentBoss)
@@ -138,7 +134,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentWorkplace _agentWorkplace;
 
-	public AgentWorkplace agentWorkplace()
+public AgentWorkplace agentWorkplace()
 	{ return _agentWorkplace; }
 
 	public void setAgentWorkplace(AgentWorkplace agentWorkplace)
@@ -146,7 +142,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentWorkstation _agentWorkstation;
 
-	public AgentWorkstation agentWorkstation()
+public AgentWorkstation agentWorkstation()
 	{ return _agentWorkstation; }
 
 	public void setAgentWorkstation(AgentWorkstation agentWorkstation)
@@ -154,7 +150,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentMove _agentMove;
 
-	public AgentMove agentMove()
+public AgentMove agentMove()
 	{ return _agentMove; }
 
 	public void setAgentMove(AgentMove agentMove)
@@ -162,7 +158,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentWorker _agentWorker;
 
-	public AgentWorker agentWorker()
+public AgentWorker agentWorker()
 	{ return _agentWorker; }
 
 	public void setAgentWorker(AgentWorker agentWorker)
@@ -170,7 +166,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentGroupA _agentGroupA;
 
-	public AgentGroupA agentGroupA()
+public AgentGroupA agentGroupA()
 	{ return _agentGroupA; }
 
 	public void setAgentGroupA(AgentGroupA agentGroupA)
@@ -178,7 +174,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentGroupB _agentGroupB;
 
-	public AgentGroupB agentGroupB()
+public AgentGroupB agentGroupB()
 	{ return _agentGroupB; }
 
 	public void setAgentGroupB(AgentGroupB agentGroupB)
@@ -186,7 +182,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentOkolie _agentOkolie;
 
-	public AgentOkolie agentOkolie()
+public AgentOkolie agentOkolie()
 	{ return _agentOkolie; }
 
 	public void setAgentOkolie(AgentOkolie agentOkolie)
@@ -194,11 +190,12 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private AgentGroupC _agentGroupC;
 
-	public AgentGroupC agentGroupC()
+public AgentGroupC agentGroupC()
 	{ return _agentGroupC; }
 
 	public void setAgentGroupC(AgentGroupC agentGroupC)
 	{_agentGroupC = agentGroupC; }
+	//meta! tag="end"
 
 	@Override
 	public void simStateChanged(Simulation simulation, SimState simState) {
@@ -230,14 +227,15 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		return new SimulationData(
 				currentTime(),
 				new Worker[][]{
-						_agentGroupA.getWorkers(),
+						_agentGroupA.group().getWorkers(),
+						_agentGroupB.group().getWorkers(),
+						_agentGroupC.group().getWorkers(),
 				},
-				List.of(_agentWorkstation.getWorkstations()),
+				_agentWorkstation.getWorkstations(),
 				_agentOkolie.getOrdersInSystem(),
 				currentReplication(),
-				new int[]{_agentGroupA.queueSize()},
+				new int[]{_agentGroupA.group().queueSize()},
 				false);
 
 	}
-	//meta! tag="end"
 }

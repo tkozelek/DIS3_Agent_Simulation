@@ -4,11 +4,10 @@ import entity.Ids;
 import entity.product.Product;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Order {
     private final int id;
-    private List<Product> products;
+    private ArrayList<Product> products;
 
     private double arrivalTime;
     private double finishTime;
@@ -38,7 +37,7 @@ public class Order {
         }
     }
 
-    public List<Product> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 

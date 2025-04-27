@@ -4,11 +4,12 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import entity.workstation.Workstation;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyMessageWorkstation extends MessageForm {
-    private List<Workstation> workstations;
+    private ArrayList<Workstation> workstations;
     private int amount;
 
     public MyMessageWorkstation(MessageForm original) {
@@ -27,11 +28,11 @@ public class MyMessageWorkstation extends MessageForm {
                 '}';
     }
 
-    public List<Workstation> getWorkstations() {
+    public ArrayList<Workstation> getWorkstations() {
         return workstations;
     }
 
-    public void setWorkstation(List<Workstation> workstations) {
+    public void setWorkstation(ArrayList<Workstation> workstations) {
         this.workstations = workstations;
     }
 

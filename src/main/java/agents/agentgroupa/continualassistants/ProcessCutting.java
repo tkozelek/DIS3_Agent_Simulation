@@ -51,7 +51,7 @@ public class ProcessCutting extends OSPABA.Process {
 		Product product = productMessage.getProduct();
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. cutting start\n", ((MySimulation)mySim()).workdayTime(), product);
+			System.out.printf("[%s] [%s] P. cutting start\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker());
 
 		product.setProductActivity(ProductActivity.CUTTING);
 		product.setStartCuttingTime(mySim().currentTime());
@@ -81,7 +81,7 @@ public class ProcessCutting extends OSPABA.Process {
 				Product product = productMessage.getProduct();
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. cutting finished\n", ((MySimulation)mySim()).workdayTime(), product);
+					System.out.printf("[%s] [%s] P. cutting finished\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker());
 
 				product.setProductActivity(ProductActivity.CUT);
 				product.setFinishCuttingTime(mySim().currentTime());

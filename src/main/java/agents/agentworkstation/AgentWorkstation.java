@@ -1,28 +1,31 @@
 package agents.agentworkstation;
 
 import OSPABA.*;
+import entity.workstation.Workstation;
 import simulation.*;
 
-import entity.workstation.Workstation;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 //meta! id="4"
 public class AgentWorkstation extends OSPABA.Agent {
 
-    private Workstation[] workstations;
+    private ArrayList<Workstation> workstations;
+    private int count;
 
     public AgentWorkstation(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
         init();
-        int count = ((MySimulation)mySim()).getWorkstationCount();
-        workstations = new Workstation[count];
+        count = ((MySimulation)mySim()).getWorkstationCount();
+        workstations = new ArrayList<>();
     }
 
-    public List<Workstation> getFreeWorkstations(int amount) {
-        List<Workstation> freeWorkstations = new ArrayList<>();
+    public ArrayList<Workstation> getWorkstations() {
+        return this.workstations;
+    }
+
+    public ArrayList<Workstation> getFreeWorkstations(int amount) {
+        ArrayList<Workstation> freeWorkstations = new ArrayList<>();
         for (Workstation w : workstations) {
             if (w.getCurrentOrder() == null)
                 freeWorkstations.add(w);
@@ -37,19 +40,16 @@ public class AgentWorkstation extends OSPABA.Agent {
         super.prepareReplication();
         // Setup component for the next replication
 
-        for (int i = 0; i < workstations.length; i++) {
-            workstations[i] = new Workstation();
+        workstations.clear();
+        for (int i = 0; i < count; i++) {
+            workstations.add(new Workstation());
         }
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerWorkstation(Id.managerWorkstation, mySim(), this);
-        addOwnMessage(Mc.requestResponseFreeWorkstation);
-    }
-
-    public Workstation[] getWorkstations() {
-        return workstations;
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init() {
+		new ManagerWorkstation(Id.managerWorkstation, mySim(), this);
+		addOwnMessage(Mc.requestResponseFreeWorkstation);
+	}
+	//meta! tag="end"
 }

@@ -2,36 +2,12 @@
 <ABAsim>
   <Agents>
     <Agent>
-      <SimId>4</SimId>
-      <InternalId>4</InternalId>
-      <Name>AgentWorkstation</Name>
-      <Bounds>2192,31,180,180</Bounds>
-      <Reasoner>ManagerWorkstation</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <SimId>2</SimId>
+      <InternalId>2</InternalId>
+      <Name>AgentBoss</Name>
+      <Bounds>370,-190,180,180</Bounds>
+      <Reasoner>ManagerBoss</Reasoner>
       <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>10</SimId>
-      <InternalId>67</InternalId>
-      <Name>AgentGroupC</Name>
-      <Bounds>1289,1191,180,180</Bounds>
-      <Reasoner>ManagerGroupC</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1011</SimId>
-          <InternalId>83</InternalId>
-          <Name>ProcessLakovanie</Name>
-          <Bounds>117,122,35,18</Bounds>
-        </Process>
-        <Process>
-          <SimId>1010</SimId>
-          <InternalId>81</InternalId>
-          <Name>ProcessMorenie</Name>
-          <Bounds>25,122,35,18</Bounds>
-        </Process>
-      </Components>
     </Agent>
     <Agent>
       <SimId>6</SimId>
@@ -39,37 +15,6 @@
       <Name>AgentWorker</Name>
       <Bounds>259,456,180,180</Bounds>
       <Reasoner>ManagerWorker</Reasoner>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
-      <SimId>5</SimId>
-      <InternalId>5</InternalId>
-      <Name>AgentMove</Name>
-      <Bounds>1931,610,180,180</Bounds>
-      <Reasoner>ManagerMove</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1005</SimId>
-          <InternalId>42</InternalId>
-          <Name>ProcessAgentMove</Name>
-          <Bounds>38,136,35,18</Bounds>
-        </Process>
-        <Process>
-          <SimId>1006</SimId>
-          <InternalId>47</InternalId>
-          <Name>ProcessAgentMoveStorage</Name>
-          <Bounds>110,136,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>2</SimId>
-      <InternalId>2</InternalId>
-      <Name>AgentBoss</Name>
-      <Bounds>370,-190,180,180</Bounds>
-      <Reasoner>ManagerBoss</Reasoner>
       <UsePetriNet>false</UsePetriNet>
     </Agent>
     <Agent>
@@ -99,6 +44,12 @@
       <UsePetriNet>false</UsePetriNet>
       <Components>
         <Process>
+          <SimId>1008</SimId>
+          <InternalId>51</InternalId>
+          <Name>ProcessFitting</Name>
+          <Bounds>26,119,35,18</Bounds>
+        </Process>
+        <Process>
           <SimId>1007</SimId>
           <InternalId>49</InternalId>
           <Name>ProcessPreparing</Name>
@@ -110,11 +61,37 @@
           <Name>ProcessCutting</Name>
           <Bounds>73,119,35,18</Bounds>
         </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>4</SimId>
+      <InternalId>4</InternalId>
+      <Name>AgentWorkstation</Name>
+      <Bounds>2192,31,180,180</Bounds>
+      <Reasoner>ManagerWorkstation</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>5</SimId>
+      <InternalId>5</InternalId>
+      <Name>AgentMove</Name>
+      <Bounds>1931,610,180,180</Bounds>
+      <Reasoner>ManagerMove</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
         <Process>
-          <SimId>1008</SimId>
-          <InternalId>51</InternalId>
-          <Name>ProcessFitting</Name>
-          <Bounds>26,119,35,18</Bounds>
+          <SimId>1005</SimId>
+          <InternalId>42</InternalId>
+          <Name>ProcessAgentMove</Name>
+          <Bounds>38,136,35,18</Bounds>
+        </Process>
+        <Process>
+          <SimId>1006</SimId>
+          <InternalId>47</InternalId>
+          <Name>ProcessAgentMoveStorage</Name>
+          <Bounds>110,136,35,18</Bounds>
         </Process>
       </Components>
     </Agent>
@@ -132,6 +109,29 @@
           <InternalId>78</InternalId>
           <Name>ProcessAssembly</Name>
           <Bounds>73,135,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>10</SimId>
+      <InternalId>67</InternalId>
+      <Name>AgentGroupC</Name>
+      <Bounds>1289,1191,180,180</Bounds>
+      <Reasoner>ManagerGroupC</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1011</SimId>
+          <InternalId>83</InternalId>
+          <Name>ProcessLakovanie</Name>
+          <Bounds>117,122,35,18</Bounds>
+        </Process>
+        <Process>
+          <SimId>1010</SimId>
+          <InternalId>81</InternalId>
+          <Name>ProcessMorenie</Name>
+          <Bounds>25,122,35,18</Bounds>
         </Process>
       </Components>
     </Agent>
@@ -238,6 +238,22 @@
       <Type>RequestResponse</Type>
       <Source>2</Source>
       <Destination>3</Destination>
+    </Message>
+    <Message>
+      <SimId>1028</SimId>
+      <InternalId>89</InternalId>
+      <Name>NoticeAgentGroupAFreed</Name>
+      <Type>Notice</Type>
+      <Source>7</Source>
+      <Destination>6</Destination>
+    </Message>
+    <Message>
+      <SimId>1029</SimId>
+      <InternalId>90</InternalId>
+      <Name>NoticeAgentGroupCFreed</Name>
+      <Type>Notice</Type>
+      <Source>67</Source>
+      <Destination>6</Destination>
     </Message>
     <Message>
       <InternalId>27</InternalId>
@@ -376,5 +392,5 @@
       <Destination>61</Destination>
     </Message>
   </Messages>
-  <IID>87</IID>
+  <IID>92</IID>
 </ABAsim>

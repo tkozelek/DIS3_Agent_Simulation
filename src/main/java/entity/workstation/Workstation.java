@@ -26,6 +26,6 @@ public class Workstation implements ILocation {
 
     @Override
     public String toString() {
-        return String.format("Workstation %d: %s]", id, currentProduct);
+        return String.format("Workstation %d]", id);
     }
 }

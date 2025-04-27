@@ -20,6 +20,9 @@ public class Product implements Comparable<Product> {
     private double startCuttingTime;
     private double finishCuttingTime;
 
+    private double startStainingTime;
+    private double finishStainingTime;
+
     private double startPaintingTime;
     private double finishPaintingTime;
 
@@ -155,6 +158,22 @@ public class Product implements Comparable<Product> {
 
     public void setFinishFittingAssemblyTime(double finishFittingAssemblyTime) {
         this.finishFittingAssemblyTime = finishFittingAssemblyTime;
+    }
+
+    public double getStartStainingTime() {
+        return startStainingTime;
+    }
+
+    public void setStartStainingTime(double startStainingTime) {
+        this.startStainingTime = startStainingTime;
+    }
+
+    public double getFinishStainingTime() {
+        return finishStainingTime;
+    }
+
+    public void setFinishStainingTime(double finishStainingTime) {
+        this.finishStainingTime = finishStainingTime;
     }
 
     @Override

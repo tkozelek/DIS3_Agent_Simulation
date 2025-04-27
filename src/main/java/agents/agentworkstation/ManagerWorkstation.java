@@ -8,6 +8,7 @@ import simulation.Id;
 import simulation.Mc;
 import simulation.custommessage.MyMessageWorkstation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //meta! id="4"
@@ -30,7 +31,7 @@ public class ManagerWorkstation extends OSPABA.Manager {
 	//meta! sender="AgentWorkplace", id="37", type="Request"
 	public void processRequestResponseFreeWorkstation(MessageForm message) {
         MyMessageWorkstation msgWorkstation = (MyMessageWorkstation) message;
-        List<Workstation> workstation = myAgent().getFreeWorkstations(msgWorkstation.getAmount());
+        ArrayList<Workstation> workstation = myAgent().getFreeWorkstations(msgWorkstation.getAmount());
         msgWorkstation.setWorkstation(workstation);
 
         msgWorkstation.setCode(Mc.requestResponseFreeWorkstation);

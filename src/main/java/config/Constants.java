@@ -7,7 +7,7 @@ public class Constants {
     public static final int PRODUCT_AMOUNT_MAX = 5;
 
     public static final boolean DEBUG_SCHEDULER = false;
-    public static final boolean DEBUG_MANAGER = true;
+    public static final boolean DEBUG_MANAGER = false;
     public static final boolean DEBUG_PROCESS = true;
 
     public static final int MAX_SPEED = 100_000;

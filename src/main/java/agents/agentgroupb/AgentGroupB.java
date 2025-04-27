@@ -1,6 +1,8 @@
 package agents.agentgroupb;
 
 import OSPABA.*;
+import config.Group;
+import entity.worker.WorkerGroup;
 import simulation.*;
 import agents.agentgroupb.continualassistants.*;
 
@@ -9,10 +11,20 @@ import agents.agentgroupb.continualassistants.*;
 //meta! id="61"
 public class AgentGroupB extends OSPABA.Agent
 {
+	private final Group group;
 	public AgentGroupB(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
 		init();
+
+		this.addOwnMessage(Mc.holdAssembly);
+
+		MySimulation sim = (MySimulation)mySim;
+		this.group = new Group(sim.getWorkerCountForGroup(WorkerGroup.GROUP_B), WorkerGroup.GROUP_B);
+	}
+
+	public Group group() {
+		return group;
 	}
 
 	@Override
@@ -20,6 +32,8 @@ public class AgentGroupB extends OSPABA.Agent
 	{
 		super.prepareReplication();
 		// Setup component for the next replication
+
+		this.group.reset();
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

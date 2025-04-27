@@ -45,24 +45,25 @@ public class ManagerGroupA extends OSPABA.Manager {
 
 	private void firstWorkOnOrder(MessageForm message) {
 		MyMessageWorkstation myMessage = (MyMessageWorkstation) message;
-		List<Workstation> workstations = myMessage.getWorkstations();
+		ArrayList<Workstation> workstations = myMessage.getWorkstations();
 
-		List<Worker> workers = myAgent().getFreeWorkers();
-		List<Product> products = new ArrayList<>();
+		ArrayList<Worker> workers = myAgent().group().getFreeWorkers();
+		ArrayList<MyMessageProduct> msgProducts = new ArrayList<>();
 		int b = Math.min(workstations.size(), workers.size());
-		int amount = Math.min(b, myAgent().queueSize());
+		int amount = Math.min(b, myAgent().group().queueSize());
 
 		for (int i = 0; i < amount; i++) {
-			products.add(myAgent().pollQueue());
+			msgProducts.add(myAgent().group().pollQueue());
 		}
 
-		if (workers.isEmpty() || workstations.isEmpty() || products.isEmpty()) return;
+		if (workers.isEmpty() || workstations.isEmpty() || msgProducts.isEmpty()) return;
 
 		// nastavime produktu workstation
 		for (int i = 0; i < amount; i++) {
 			Workstation workstation = workstations.get(i);
 			Worker worker = workers.get(i);
-			Product product = products.get(i);
+			MyMessageProduct msgProduct = msgProducts.get(i);
+			Product product = msgProduct.getProduct();
 
 			worker.setCurrentWorkstation(workstation);
 			worker.setCurrentProduct(product);
@@ -76,7 +77,7 @@ public class ManagerGroupA extends OSPABA.Manager {
 			if (worker.getLocation() != Storage.STORAGE) {
 				// nie je v sklade, musi ist do skladu
 				// presun -> sklad
-				this.moveWorkerRequest(message, worker, Storage.STORAGE);
+				moveWorkerRequest(message, worker, Storage.STORAGE);
 			} else {
 				// je v sklade
 				// priprav veci
@@ -113,7 +114,12 @@ public class ManagerGroupA extends OSPABA.Manager {
 		if (Constants.DEBUG_MANAGER)
 			System.out.printf("[%s] M. group A objednávka prišla: %s\n", ((MySimulation)mySim()).workdayTime(), order);
 		// vlozime do queue
-		order.getProducts().forEach(product -> myAgent().addToQueue(product));
+		ArrayList<Product> products = order.getProducts();
+		for (Product product : products) {
+			MyMessageProduct msgProduct = new MyMessageProduct(message);
+			msgProduct.setProduct(product);
+			myAgent().group().addQueue(msgProduct);
+		}
 
 		// je to nova objednávka ked prišla agentovi A
 		// ak je free worker, skús vyžiadať workstation
@@ -121,10 +127,10 @@ public class ManagerGroupA extends OSPABA.Manager {
     }
 
 	private void startWork(MessageForm message) {
-		List<Worker> freeWorkers = this.myAgent().getFreeWorkers();
+		List<Worker> freeWorkers = this.myAgent().group().getFreeWorkers();
 		if (freeWorkers == null) return;
 
-		int amount = Math.min(freeWorkers.size(), myAgent().queueSize());
+		int amount = Math.min(freeWorkers.size(), myAgent().group().queueSize());
 
 		this.requestWorkstation(message, amount);
 	}
@@ -162,7 +168,7 @@ public class ManagerGroupA extends OSPABA.Manager {
 		worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
 		worker.setCurrentProduct(null);
 
-		if (myAgent().queueSize() > 0) {
+		if (myAgent().group().queueSize() > 0) {
 			this.startWork(message);
 		}
 
@@ -208,32 +214,32 @@ public class ManagerGroupA extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.requestResponseMoveWorker:
+			processRequestResponseMoveWorker(message);
+		break;
+
 		case Mc.finish:
 			switch (message.sender().id()) {
 			case Id.processFitting:
 				processFinishProcessFitting(message);
 			break;
 
-			case Id.processPreparing:
-				processFinishProcessPreparing(message);
-			break;
-
 			case Id.processCutting:
 				processFinishProcessCutting(message);
+			break;
+
+			case Id.processPreparing:
+				processFinishProcessPreparing(message);
 			break;
 			}
 		break;
 
-		case Mc.requestResponseMoveWorker:
-			processRequestResponseMoveWorker(message);
+		case Mc.requestResponseWorkAgentA:
+			processRequestResponseWorkAgentA(message);
 		break;
 
 		case Mc.requestResponseWorkerFreeWorkstation:
 			processRequestResponseWorkerFreeWorkstation(message);
-		break;
-
-		case Mc.requestResponseWorkAgentA:
-			processRequestResponseWorkAgentA(message);
 		break;
 
 		default:

@@ -59,7 +59,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 			System.out.printf("[%s] [%s] P. painting start\n", ((MySimulation)mySim()).workdayTime(), product);
 
 		product.setProductActivity(ProductActivity.PAINTING);
-		product.setStartCuttingTime(mySim().currentTime());
+		product.setStartPaintingTime(mySim().currentTime());
 
 		Worker worker = product.getCurrentWorker();
 		worker.setCurrentWork(WorkerWork.PAINTING, mySim().currentTime());
@@ -80,7 +80,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 					System.out.printf("[%s] [%s] P. painting finished\n", ((MySimulation)mySim()).workdayTime(), product);
 
 				product.setProductActivity(ProductActivity.PAINTED);
-				product.setFinishCuttingTime(mySim().currentTime());
+				product.setFinishStainingTime(mySim().currentTime());
 
 				Worker worker = product.getCurrentWorker();
 				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
