@@ -54,12 +54,12 @@ public class ManagerBoss extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.requestResponseOrderArrived:
-			processRequestResponseOrderArrived(message);
-		break;
-
 		case Mc.requestResponseOrderArrival:
 			processRequestResponseOrderArrival(message);
+		break;
+
+		case Mc.requestResponseOrderArrived:
+			processRequestResponseOrderArrived(message);
 		break;
 
 		default:

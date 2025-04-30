@@ -50,7 +50,7 @@ public class ProcessMorenie extends OSPABA.Process {
 		Product product = productMessage.getProduct();
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. staining start\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker());
+			System.out.printf("[%s] [%s] P. staining start %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 		product.setProductActivity(ProductActivity.STAINING);
 		product.setStartStainingTime(mySim().currentTime());
@@ -71,13 +71,10 @@ public class ProcessMorenie extends OSPABA.Process {
 				Product product = productMessage.getProduct();
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. staining finished\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker());
+					System.out.printf("[%s] [%s] P. staining finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 				product.setProductActivity(ProductActivity.STAINED);
 				product.setFinishStainingTime(mySim().currentTime());
-
-				Worker worker = product.getCurrentWorker();
-				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
 
 				this.assistantFinished(message);
 				break;

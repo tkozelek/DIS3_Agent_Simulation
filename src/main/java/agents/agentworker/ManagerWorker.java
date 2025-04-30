@@ -5,12 +5,18 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 
 import config.Constants;
+import entity.product.Product;
+import entity.product.ProductActivity;
+import entity.product.ProductType;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
+import entity.workstation.Workstation;
 import simulation.Id;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
 import simulation.custommessage.MyMessageMove;
+import simulation.custommessage.MyMessageProduct;
 
 
 //meta! id="6"
@@ -84,8 +90,26 @@ public class ManagerWorker extends OSPABA.Manager {
 	public void processRequestResponseWorkAgentB(MessageForm message)
 	{
 		// worker B dokoncil pracu
-		// request worker C začiatok práce
-		// TODO
+		MyMessageProduct msgProduct = (MyMessageProduct) message;
+		Product product = msgProduct.getProduct();
+		if (product.getProductType() == ProductType.CUPBOARD) {
+			// fitting assembly
+			// skus
+
+		} else {
+			// finished
+			product.setFinishTime(mySim().currentTime());
+			product.setProductActivity(ProductActivity.DONE);
+
+			Workstation workstation = product.getWorkstation();
+			workstation.setCurrentProduct(null);
+
+			MyMessage msg = new MyMessage(mySim());
+
+			msg.setCode(Mc.noticeWorkstationFreed);
+			msg.setAddressee(Id.agentGroupA);
+			this.notice(msg);
+		}
 	}
 
 	//meta! sender="AgentGroupC", id="71", type="Request"
@@ -107,6 +131,9 @@ public class ManagerWorker extends OSPABA.Manager {
 	public void processRequestResponseWorkAgentC(MessageForm message) {
 		// worker C dokoncil pracu
 		// zacni B
+		if (Constants.DEBUG_MANAGER)
+			System.out.printf("[%s] M. worker C finished\n", ((MySimulation)mySim()).workdayTime());
+
 		message.setCode(Mc.requestResponseWorkAgentB);
 		message.setAddressee(Id.agentGroupB);
 		this.request(message);
@@ -133,6 +160,14 @@ public class ManagerWorker extends OSPABA.Manager {
 	public void processNoticeAgentGroupCFreed(MessageForm message) {
 	}
 
+	//meta! sender="AgentGroupA", id="96", type="Response"
+	public void processRequestResponseFittingAssemblyAgentGroupA(MessageForm message) {
+	}
+
+	//meta! sender="AgentGroupC", id="97", type="Response"
+	public void processRequestResponseFittingAssemblyAgentGroupC(MessageForm message) {
+	}
+
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	public void init() {
 	}
@@ -140,26 +175,46 @@ public class ManagerWorker extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.requestResponseWorkAgentB:
+			processRequestResponseWorkAgentB(message);
+		break;
+
+		case Mc.requestResponseOrderFreeWorkstation:
+			processRequestResponseOrderFreeWorkstation(message);
+		break;
+
 		case Mc.noticeAgentGroupCFreed:
 			processNoticeAgentGroupCFreed(message);
 		break;
 
 		case Mc.requestResponseMoveWorker:
 			switch (message.sender().id()) {
-			case Id.agentWorkplace:
-				processRequestResponseMoveWorkerAgentWorkplace(message);
-			break;
-
-			case Id.agentGroupB:
-				processRequestResponseMoveWorkerAgentGroupB(message);
+			case Id.agentGroupC:
+				processRequestResponseMoveWorkerAgentGroupC(message);
 			break;
 
 			case Id.agentGroupA:
 				processRequestResponseMoveWorkerAgentGroupA(message);
 			break;
 
+			case Id.agentGroupB:
+				processRequestResponseMoveWorkerAgentGroupB(message);
+			break;
+
+			case Id.agentWorkplace:
+				processRequestResponseMoveWorkerAgentWorkplace(message);
+			break;
+			}
+		break;
+
+		case Mc.requestResponseFittingAssembly:
+			switch (message.sender().id()) {
+			case Id.agentGroupA:
+				processRequestResponseFittingAssemblyAgentGroupA(message);
+			break;
+
 			case Id.agentGroupC:
-				processRequestResponseMoveWorkerAgentGroupC(message);
+				processRequestResponseFittingAssemblyAgentGroupC(message);
 			break;
 			}
 		break;
@@ -168,28 +223,20 @@ public class ManagerWorker extends OSPABA.Manager {
 			processNoticeAgentGroupAFreed(message);
 		break;
 
-		case Mc.requestResponseWorkAgentB:
-			processRequestResponseWorkAgentB(message);
-		break;
-
-		case Mc.requestResponseWorkerFreeWorkstation:
-			processRequestResponseWorkerFreeWorkstation(message);
-		break;
-
-		case Mc.requestResponseWorkAgentC:
-			processRequestResponseWorkAgentC(message);
+		case Mc.requestResponseWorkOnOrderWorkplace:
+			processRequestResponseWorkOnOrderWorkplace(message);
 		break;
 
 		case Mc.requestResponseWorkAgentA:
 			processRequestResponseWorkAgentA(message);
 		break;
 
-		case Mc.requestResponseOrderFreeWorkstation:
-			processRequestResponseOrderFreeWorkstation(message);
+		case Mc.requestResponseWorkAgentC:
+			processRequestResponseWorkAgentC(message);
 		break;
 
-		case Mc.requestResponseWorkOnOrderWorkplace:
-			processRequestResponseWorkOnOrderWorkplace(message);
+		case Mc.requestResponseWorkerFreeWorkstation:
+			processRequestResponseWorkerFreeWorkstation(message);
 		break;
 
 		default:

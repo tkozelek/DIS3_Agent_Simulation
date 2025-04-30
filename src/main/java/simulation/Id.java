@@ -23,11 +23,12 @@ public class Id extends OSPABA.IdList {
 	public static final int processAgentMove = 1005;
 	public static final int processAssembly = 1009;
 	public static final int processAgentMoveStorage = 1006;
-	public static final int processMorenie = 1010;
 	public static final int schedulerOrderArrival = 1001;
 	public static final int processPreparing = 1007;
+	public static final int processMorenie = 1010;
+	public static final int processFittingGroupA = 1008;
 	public static final int processLakovanie = 1011;
-	public static final int processFitting = 1008;
 	public static final int processCutting = 1002;
+	public static final int processFittingGroupC = 1012;
 	//meta! tag="end"
 }

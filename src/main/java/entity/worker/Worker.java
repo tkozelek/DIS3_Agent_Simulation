@@ -69,6 +69,11 @@ public class Worker {
         return id;
     }
 
+    public String toStringGroupId() {
+        String gr = group.toString();
+        return String.format("%s%d", gr.charAt(gr.length() - 1), this.id);
+    }
+
     @Override
     public String toString() {
         String gr = group.toString();

@@ -10,6 +10,8 @@ public class Mc extends OSPABA.IdList {
 	public static final int requestResponseOrderArrived = 1009;
 	public static final int noticeAgentGroupAFreed = 1028;
 	public static final int noticeAgentGroupCFreed = 1029;
+	public static final int requestResponseFittingAssembly = 1030;
+	public static final int noticeWorkstationFreed = 1032;
 	public static final int requestResponseFreeWorkstation = 1013;
 	public static final int requestResponseWorkAgentA = 1015;
 	public static final int requestResponseWorkOnOrderWorkplace = 1016;

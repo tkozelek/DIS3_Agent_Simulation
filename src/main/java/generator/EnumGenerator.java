@@ -1,13 +1,12 @@
 package generator;
 
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
 
 public class EnumGenerator implements IGenerator<Enum<?>> {
 
-    private final NavigableMap<Double, Enum<?>> probabilityMap = new TreeMap<>();
+    private final TreeMap<Double, Enum<?>> probabilityMap = new TreeMap<>();
     private final Random random;
     private double totalWeight = 0.0;
 

@@ -1,10 +1,13 @@
 package agents.agentgroupb;
 
-import OSPABA.*;
+import OSPABA.Agent;
+import OSPABA.Simulation;
+import agents.agentgroupb.continualassistants.ProcessAssembly;
 import config.Group;
 import entity.worker.WorkerGroup;
-import simulation.*;
-import agents.agentgroupb.continualassistants.*;
+import simulation.Id;
+import simulation.Mc;
+import simulation.MySimulation;
 
 
 

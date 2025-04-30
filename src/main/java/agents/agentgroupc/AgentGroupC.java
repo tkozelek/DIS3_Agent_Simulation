@@ -40,7 +40,9 @@ public class AgentGroupC extends OSPABA.Agent {
 	private void init() {
 		new ManagerGroupC(Id.managerGroupC, mySim(), this);
 		new ProcessLakovanie(Id.processLakovanie, mySim(), this);
+		new ProcessFittingGroupC(Id.processFittingGroupC, mySim(), this);
 		new ProcessMorenie(Id.processMorenie, mySim(), this);
+		addOwnMessage(Mc.requestResponseFittingAssembly);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 		addOwnMessage(Mc.requestResponseWorkAgentC);
 	}

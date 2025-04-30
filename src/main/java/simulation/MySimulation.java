@@ -1,15 +1,17 @@
 package simulation;
 
-import OSPABA.*;
-import agents.agentworkplace.*;
-import agents.agentworker.*;
-import agents.agentgroupa.*;
-import agents.agentboss.*;
-import agents.agentgroupb.*;
-import agents.agentgroupc.*;
-import agents.agentmove.*;
-import agents.agentworkstation.*;
-import agents.agentokolie.*;
+import OSPABA.ISimDelegate;
+import OSPABA.SimState;
+import OSPABA.Simulation;
+import agents.agentboss.AgentBoss;
+import agents.agentgroupa.AgentGroupA;
+import agents.agentgroupb.AgentGroupB;
+import agents.agentgroupc.AgentGroupC;
+import agents.agentmove.AgentMove;
+import agents.agentokolie.AgentOkolie;
+import agents.agentworker.AgentWorker;
+import agents.agentworkplace.AgentWorkplace;
+import agents.agentworkstation.AgentWorkstation;
 import config.Constants;
 import config.Helper;
 import entity.Ids;

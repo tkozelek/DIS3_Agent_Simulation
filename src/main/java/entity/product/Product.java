@@ -31,7 +31,10 @@ public class Product implements Comparable<Product> {
 
     private double startFittingAssemblyTime;
     private double finishFittingAssemblyTime;
+
     private Order order;
+
+    private boolean shouldBePainted;
 
     public Product(ProductType productType) {
         this.id = Ids.getProductId();
@@ -46,6 +49,14 @@ public class Product implements Comparable<Product> {
             case PAINTED -> WorkerGroup.GROUP_B;
             default -> throw new IllegalStateException("Unexpected value: " + productActivity);
         };
+    }
+
+    public boolean getShouldBePainted() {
+        return shouldBePainted;
+    }
+
+    public void setShouldBePainted(boolean shouldBePainted) {
+        this.shouldBePainted = shouldBePainted;
     }
 
     public int getId() {
@@ -178,12 +189,13 @@ public class Product implements Comparable<Product> {
 
     @Override
     public String toString() {
-        return String.format("%sPr %d: %s", currentWorker != null ? currentWorker + " - " : "", id, productType);
+        return String.format("%d - %s", id, productType);
     }
 
     @Override
     public int compareTo(Product o) {
-        return Integer.compare(this.id, o.id);
+        int en = this.productActivity.compareTo(o.productActivity);
+        return en == 0 ? Integer.compare(id, o.id) : en;
     }
 
     public void addOrder(Order order) {

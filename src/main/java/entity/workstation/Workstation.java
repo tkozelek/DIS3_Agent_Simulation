@@ -20,12 +20,12 @@ public class Workstation implements ILocation {
         return currentProduct;
     }
 
-    public void setCurrentOrder(Product currentProduct) {
+    public void setCurrentProduct(Product currentProduct) {
         this.currentProduct = currentProduct;
     }
 
     @Override
     public String toString() {
-        return String.format("Workstation %d]", id);
+        return String.format("Workstation %d", id);
     }
 }

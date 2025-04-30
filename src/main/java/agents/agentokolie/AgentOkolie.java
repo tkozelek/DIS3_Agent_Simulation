@@ -11,6 +11,7 @@ import agents.agentokolie.continualassistants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 
 //meta! id="1"
@@ -20,15 +21,22 @@ public class AgentOkolie extends OSPABA.Agent {
     private final UniformDiscreteRNG productAmountGenerator;
     private EnumGenerator productTypeGenerator;
 
+    private Random randPaintingGenerator;
+
     public AgentOkolie(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
         init();
         addOwnMessage(Mc.holdOrderArrival);
 
+        MySimulation sim = (MySimulation) mySim;
+
+
         this.ordersInSystem = new ArrayList<>();
 
-        this.productAmountGenerator = new UniformDiscreteRNG(Constants.PRODUCT_AMOUNT_MIN, Constants.PRODUCT_AMOUNT_MAX);
-        createEnumGenerator(mySim);
+        this.randPaintingGenerator = new Random(sim.getSeedGenerator().sample());
+
+        this.productAmountGenerator = new UniformDiscreteRNG(Constants.PRODUCT_AMOUNT_MIN, Constants.PRODUCT_AMOUNT_MAX, sim.getSeedGenerator().getRandom());
+        createEnumGenerator(sim);
     }
 
     public UniformDiscreteRNG getProductAmountGenerator() {
@@ -53,13 +61,16 @@ public class AgentOkolie extends OSPABA.Agent {
         return ordersInSystem;
     }
 
-    private void createEnumGenerator(Simulation mySim) {
+    public boolean shouldBePainted() {
+        return this.randPaintingGenerator.nextDouble() < Constants.PAINT_CHANCE;
+    }
+
+    private void createEnumGenerator(MySimulation sim) {
         HashMap<ProductType, Double> probabilities = new HashMap<>();
         probabilities.put(ProductType.TABLE, 0.5);
         probabilities.put(ProductType.CHAIR, 0.15);
         probabilities.put(ProductType.CUPBOARD, 0.35);
 
-        MySimulation sim = (MySimulation) mySim;
         this.productTypeGenerator = new EnumGenerator(probabilities, sim.getSeedGenerator());
     }
 

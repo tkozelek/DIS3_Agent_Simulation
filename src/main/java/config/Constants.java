@@ -17,4 +17,7 @@ public class Constants {
     public static final double OFFSET_FACTOR = 0.2;
     public static final double PERCENTAGE_UPDATE_DATA = 0.005;
     public static final double PERCENTAGE_CUT_DATA = 0.2;
+
+    public static final double PAINT_CHANCE = 0.15;
+
 }

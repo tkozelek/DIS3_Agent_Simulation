@@ -4,6 +4,7 @@ import OSPABA.*;
 import entity.ILocation;
 import entity.product.Product;
 import entity.worker.Worker;
+import entity.worker.WorkerWork;
 import simulation.*;
 import simulation.custommessage.MyMessageMove;
 import simulation.custommessage.MyMessageProduct;
@@ -95,11 +96,40 @@ public class ManagerGroupC extends OSPABA.Manager {
 
 	//meta! sender="ProcessLakovanie", id="84", type="Finish"
 	public void processFinishProcessLakovanie(MessageForm message) {
+		message.setCode(Mc.requestResponseWorkAgentC);
+		message.setAddressee(Id.agentWorker);
+		this.response(message);
 	}
 
 	//meta! sender="ProcessMorenie", id="82", type="Finish"
 	public void processFinishProcessMorenie(MessageForm message) {
 		// je nalakovany
+		MyMessageProduct msgProduct = (MyMessageProduct) message;
+		Product product = msgProduct.getProduct();
+
+		if (product.getShouldBePainted()) {
+			// treba aj nalakovat
+			message.setAddressee(myAgent().findAssistant(Id.processLakovanie));
+			this.startContinualAssistant(message);
+		} else {
+			Worker worker = product.getCurrentWorker();
+			worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
+			product.setCurrentWorker(null);
+
+			message.setCode(Mc.requestResponseWorkAgentC);
+			message.setAddressee(Id.agentWorker);
+			this.response(message);
+		}
+		if (myAgent().group().queueSize() > 0)
+			this.tryStartWorkOnOrder();
+	}
+
+	//meta! sender="AgentWorker", id="97", type="Request"
+	public void processRequestResponseFittingAssembly(MessageForm message) {
+	}
+
+	//meta! sender="ProcessFittingGroupC", id="95", type="Finish"
+	public void processFinishProcessFittingGroupC(MessageForm message) {
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -111,6 +141,10 @@ public class ManagerGroupC extends OSPABA.Manager {
 		switch (message.code()) {
 		case Mc.finish:
 			switch (message.sender().id()) {
+			case Id.processFittingGroupC:
+				processFinishProcessFittingGroupC(message);
+			break;
+
 			case Id.processMorenie:
 				processFinishProcessMorenie(message);
 			break;
@@ -121,12 +155,16 @@ public class ManagerGroupC extends OSPABA.Manager {
 			}
 		break;
 
+		case Mc.requestResponseWorkAgentC:
+			processRequestResponseWorkAgentC(message);
+		break;
+
 		case Mc.requestResponseMoveWorker:
 			processRequestResponseMoveWorker(message);
 		break;
 
-		case Mc.requestResponseWorkAgentC:
-			processRequestResponseWorkAgentC(message);
+		case Mc.requestResponseFittingAssembly:
+			processRequestResponseFittingAssembly(message);
 		break;
 
 		default:

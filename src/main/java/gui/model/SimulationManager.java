@@ -37,13 +37,15 @@ public class SimulationManager {
                     get();
                     System.out.println("Simulation finished!");
                 } catch (Exception e) {
-                    Thread.currentThread().interrupt();
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Error " + e.getMessage(),
-                            "Exception",
-                            JOptionPane.WARNING_MESSAGE
-                    );
+                    if (e.getMessage() != null) {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Error " + e.getMessage(),
+                                "Exception",
+                                JOptionPane.WARNING_MESSAGE
+                        );
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -53,6 +55,7 @@ public class SimulationManager {
     public void stopSimulation() {
         if (simulation != null) {
             simulation.stopSimulation();
+            isRunning.set(false);
         }
         if (worker != null) {
             worker.cancel(true);
@@ -69,5 +72,9 @@ public class SimulationManager {
         if (simulation != null) {
             simulation.setSpeed(speed);
         }
+    }
+
+    public AtomicBoolean getIsRunning() {
+        return isRunning;
     }
 }

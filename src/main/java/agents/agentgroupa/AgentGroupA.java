@@ -1,16 +1,11 @@
 package agents.agentgroupa;
 
 import OSPABA.*;
-import OSPDataStruct.SimQueue;
 import config.Group;
-import entity.product.Product;
-import entity.worker.Worker;
 import entity.worker.WorkerGroup;
-import entity.worker.WorkerWork;
 import simulation.*;
 import agents.agentgroupa.continualassistants.*;
 
-import java.util.ArrayList;
 
 
 //meta! id="7"
@@ -45,10 +40,12 @@ public class AgentGroupA extends OSPABA.Agent {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerGroupA(Id.managerGroupA, mySim(), this);
-		new ProcessFitting(Id.processFitting, mySim(), this);
 		new ProcessPreparing(Id.processPreparing, mySim(), this);
+		new ProcessFittingGroupA(Id.processFittingGroupA, mySim(), this);
 		new ProcessCutting(Id.processCutting, mySim(), this);
 		addOwnMessage(Mc.requestResponseWorkerFreeWorkstation);
+		addOwnMessage(Mc.noticeWorkstationFreed);
+		addOwnMessage(Mc.requestResponseFittingAssembly);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 		addOwnMessage(Mc.requestResponseWorkAgentA);
 	}

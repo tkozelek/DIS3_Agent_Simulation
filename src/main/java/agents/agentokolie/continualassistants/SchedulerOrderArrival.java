@@ -48,6 +48,7 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
             Order order = new Order();
             for (int i = 0; i < productAmount; i++) {
                 Product product = new Product((ProductType) this.myAgent().getProductTypeGenerator().sample());
+                product.setShouldBePainted(myAgent().shouldBePainted());
                 order.addProduct(product);
             }
             //

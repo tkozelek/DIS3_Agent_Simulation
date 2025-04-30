@@ -32,6 +32,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 				new Distribution(70 * times, 150 * times, 0.6),
 				new Distribution(150 * times, 200 * times, 0.3)
 		}, sim.getSeedGenerator());
+
 		this.lakovanieChairGenerator = new ContinuosUniformGenerator(40 * times, 200 * times, sim.getSeedGenerator());
 		this.lakovanieCupboardGenerator = new ContinuosUniformGenerator(250 * times, 560 * times, sim.getSeedGenerator());
 	}
@@ -56,7 +57,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 		Product product = productMessage.getProduct();
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. painting start\n", ((MySimulation)mySim()).workdayTime(), product);
+			System.out.printf("[%s] [%s] P. painting start %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 		product.setProductActivity(ProductActivity.PAINTING);
 		product.setStartPaintingTime(mySim().currentTime());
@@ -77,13 +78,15 @@ public class ProcessLakovanie extends OSPABA.Process {
 				Product product = productMessage.getProduct();
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. painting finished\n", ((MySimulation)mySim()).workdayTime(), product);
+					System.out.printf("[%s] [%s] P. painting finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 				product.setProductActivity(ProductActivity.PAINTED);
-				product.setFinishStainingTime(mySim().currentTime());
+				product.setFinishPaintingTime(mySim().currentTime());
 
 				Worker worker = product.getCurrentWorker();
 				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
+
+				product.setCurrentWorker(null);
 
 				this.assistantFinished(message);
 				break;

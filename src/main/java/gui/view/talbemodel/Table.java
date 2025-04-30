@@ -48,22 +48,9 @@ public class Table<T> extends AbstractTableModel {
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
-    public void addRow(T rowData) {
-        int rowIndex = data.size();
-        data.add(rowData);
-        fireTableRowsInserted(rowIndex, rowIndex);
-    }
-
     public void addRows(List<T> rows) {
         if (rows == null || rows.isEmpty()) return;
         data = rows;
         fireTableDataChanged();
-    }
-
-    public void removeRow(int rowIndex) {
-        if (rowIndex >= 0 && rowIndex < data.size()) {
-            data.remove(rowIndex);
-            fireTableRowsDeleted(rowIndex, rowIndex);
-        }
     }
 }

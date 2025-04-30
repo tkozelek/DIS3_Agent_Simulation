@@ -5,6 +5,7 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import agents.agentgroupa.AgentGroupA;
 import config.Constants;
+import entity.product.Product;
 import entity.product.ProductActivity;
 import entity.worker.Worker;
 import entity.worker.WorkerWork;
@@ -31,10 +32,11 @@ public class ProcessPreparing extends OSPABA.Process {
 	//meta! sender="AgentGroupA", id="50", type="Start"
 	public void processStart(MessageForm message) {
 		MyMessageProduct productMessage = (MyMessageProduct) message;
-		productMessage.getProduct().setProductActivity(ProductActivity.PREPARING);
+		Product product = productMessage.getProduct();
+		product.setProductActivity(ProductActivity.PREPARING);
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. preparing start\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct().getCurrentWorker());
+			System.out.printf("[%s] [%s] P. preparing start %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 		Worker worker = productMessage.getProduct().getCurrentWorker();
 		worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL, mySim().currentTime());
@@ -49,13 +51,11 @@ public class ProcessPreparing extends OSPABA.Process {
         switch (message.code()) {
 			case Mc.holdPrepareMaterial:
 				MyMessageProduct productMessage = (MyMessageProduct) message;
-				productMessage.getProduct().setProductActivity(ProductActivity.PREPARED);
+				Product product = productMessage.getProduct();
+				product.setProductActivity(ProductActivity.PREPARED);
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. preparing finished\n", ((MySimulation)mySim()).workdayTime(), productMessage.getProduct().getCurrentWorker());
-
-				Worker worker = productMessage.getProduct().getCurrentWorker();
-				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
+					System.out.printf("[%s] [%s] P. preparing finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 				this.assistantFinished(message);
         }

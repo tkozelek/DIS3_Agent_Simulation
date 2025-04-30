@@ -90,30 +90,30 @@ public class ManagerWorkplace extends OSPABA.Manager {
 		switch (message.code()) {
 		case Mc.requestResponseMoveWorker:
 			switch (message.sender().id()) {
-			case Id.agentWorker:
-				processRequestResponseMoveWorkerAgentWorker(message);
-			break;
-
 			case Id.agentMove:
 				processRequestResponseMoveWorkerAgentMove(message);
 			break;
+
+			case Id.agentWorker:
+				processRequestResponseMoveWorkerAgentWorker(message);
+			break;
 			}
-		break;
-
-		case Mc.requestResponseOrderFreeWorkstation:
-			processRequestResponseOrderFreeWorkstation(message);
-		break;
-
-		case Mc.requestResponseOrderArrived:
-			processRequestResponseOrderArrived(message);
 		break;
 
 		case Mc.requestResponseWorkOnOrderWorkplace:
 			processRequestResponseWorkOnOrderWorkplace(message);
 		break;
 
+		case Mc.requestResponseOrderFreeWorkstation:
+			processRequestResponseOrderFreeWorkstation(message);
+		break;
+
 		case Mc.requestResponseFreeWorkstation:
 			processRequestResponseFreeWorkstation(message);
+		break;
+
+		case Mc.requestResponseOrderArrived:
+			processRequestResponseOrderArrived(message);
 		break;
 
 		default:

@@ -10,7 +10,6 @@ import entity.worker.WorkerWork;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.*;
 import agents.agentgroupb.*;
-import OSPABA.Process;
 import simulation.custommessage.MyMessageProduct;
 
 //meta! id="78"
@@ -53,10 +52,10 @@ public class ProcessAssembly extends OSPABA.Process {
 		Product product = productMessage.getProduct();
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. assembling start\n", ((MySimulation)mySim()).workdayTime(), product);
+			System.out.printf("[%s] [%s] P. assembling start %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 		product.setProductActivity(ProductActivity.ASSEMBLING);
-		product.setStartCuttingTime(mySim().currentTime());
+		product.setStartAssemblyTime(mySim().currentTime());
 
 		Worker worker = product.getCurrentWorker();
 		worker.setCurrentWork(WorkerWork.ASSEMBLING, mySim().currentTime());
@@ -72,14 +71,15 @@ public class ProcessAssembly extends OSPABA.Process {
 			case Mc.holdAssembly:
 				MyMessageProduct productMessage = (MyMessageProduct) message;
 				Product product = productMessage.getProduct();
+				Worker worker = product.getCurrentWorker();
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. assembling finished\n", ((MySimulation)mySim()).workdayTime(), product);
+					System.out.printf("[%s] [%s] P. assembling finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
 
 				product.setProductActivity(ProductActivity.ASSEMBLED);
-				product.setFinishCuttingTime(mySim().currentTime());
+				product.setFinishAssemblyTime(mySim().currentTime());
+				product.setCurrentWorker(null);
 
-				Worker worker = product.getCurrentWorker();
 				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
 
 				this.assistantFinished(message);
