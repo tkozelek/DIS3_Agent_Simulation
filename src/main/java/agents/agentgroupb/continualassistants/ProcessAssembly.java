@@ -54,6 +54,9 @@ public class ProcessAssembly extends OSPABA.Process {
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. assembling start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
+		if (product.getProductActivity() != ProductActivity.PAINTED && product.getProductActivity() != ProductActivity.STAINED)
+			throw new IllegalStateException("Product activity not painted or stained");
+
 		product.setProductActivity(ProductActivity.ASSEMBLING);
 		product.setStartAssemblyTime(mySim().currentTime());
 

@@ -95,6 +95,11 @@ public class ManagerWorker extends OSPABA.Manager {
 		if (product.getProductType() == ProductType.CUPBOARD) {
 			// fitting assembly
 			// skus A
+			if (this.myAgent().group().queueSize() > 0) {
+				// uz su v queue pridaj len
+				this.myAgent().group().addQueue(msgProduct);
+				return;
+			}
 			message.setCode(Mc.requestResponseFittingAssembly);
 			message.setAddressee(Id.agentGroupA);
 			this.request(message);
@@ -181,14 +186,29 @@ public class ManagerWorker extends OSPABA.Manager {
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
 		if (product.getProductActivity() == ProductActivity.DONE) {
-			Workstation workstation = product.getWorkstation();
-
+			message.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+			message.setAddressee(Id.agentWorkplace);
+			this.response(message);
+		} else {
+			// skús C
+			msgProduct.setCode(Mc.requestResponseFittingAssembly);
+			msgProduct.setAddressee(Id.agentGroupC);
+			this.request(msgProduct);
 		}
 	}
 
 	//meta! sender="AgentGroupC", id="97", type="Response"
 	public void processRequestResponseFittingAssemblyAgentGroupC(MessageForm message) {
-
+		// skončená práca na produkte, keďže aj skúšame či je voľný, produkt nemusí byť done
+		MyMessageProduct msgProduct = (MyMessageProduct) message;
+		Product product = msgProduct.getProduct();
+		if (product.getProductActivity() == ProductActivity.DONE) {
+			message.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+			message.setAddressee(Id.agentWorkplace);
+			this.response(message);
+		} else {
+			this.myAgent().group().addQueue(msgProduct);
+		}
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

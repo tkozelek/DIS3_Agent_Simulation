@@ -32,12 +32,12 @@ public class ProcessFittingGroupC extends OSPABA.Process {
 	//meta! sender="AgentGroupC", id="95", type="Start"
 	public void processStart(MessageForm message) {
 		// zacne fittovat
-		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] P. fitting C start\n", ((MySimulation)mySim()).workdayTime());
-
 		MyMessageProduct productMessage = (MyMessageProduct) message;
 		Product product = productMessage.getProduct();
 		Worker worker = product.getWorker();
+
+		if (Constants.DEBUG_PROCESS)
+			System.out.printf("[%s] [%s] P. fitting C start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
 		product.setProductActivity(ProductActivity.FITTING);
 		product.setStartFittingAssemblyTime(mySim().currentTime());
@@ -54,11 +54,11 @@ public class ProcessFittingGroupC extends OSPABA.Process {
 	public void processDefault(MessageForm message) {
 		switch (message.code()) {
 			case Mc.holdFitting:
-				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] P. fitting C finished\n", ((MySimulation)mySim()).workdayTime());
-
 				MyMessageProduct productMessage = (MyMessageProduct) message;
 				Product product = productMessage.getProduct();
+
+				if (Constants.DEBUG_PROCESS)
+					System.out.printf("[%s] [%s] P. fitting C finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
 				product.setProductAsDone(mySim().currentTime());
 

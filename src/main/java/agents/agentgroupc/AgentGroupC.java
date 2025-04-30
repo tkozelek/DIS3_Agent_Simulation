@@ -19,6 +19,8 @@ public class AgentGroupC extends OSPABA.Agent {
 		this.addOwnMessage(Mc.holdMorenie);
 		this.addOwnMessage(Mc.holdLakovanie);
 
+		this.addOwnMessage(Mc.holdFitting);
+
 		MySimulation sim = (MySimulation) mySim;
 
 		this.group = new Group(sim.getWorkerCountForGroup(WorkerGroup.GROUP_C), WorkerGroup.GROUP_C);
