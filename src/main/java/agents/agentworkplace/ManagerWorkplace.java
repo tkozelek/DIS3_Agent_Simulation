@@ -34,7 +34,7 @@ public class ManagerWorkplace extends OSPABA.Manager {
 	//meta! sender="AgentWorker", id="40", type="Response"
 	public void processRequestResponseWorkOnOrderWorkplace(MessageForm message) {
     	// objednavka dokoncena, posli vyssie na vymazanie zo systemu
-		message.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+		message.setCode(Mc.requestResponseOrderArrived);
 		message.setAddressee(Id.agentBoss);
 		this.response(message);
 	}

@@ -83,8 +83,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	public void prepareSimulation() {
 		super.prepareSimulation();
 		// Create global statistcis
-
-		this.seedGen = new SeedGenerator();
 	}
 
 	@Override

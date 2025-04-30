@@ -12,7 +12,7 @@ public class WorkstationTable extends Table<Workstation> {
                         Workstation::getId,
                         Workstation::getCurrentOrder,
                         w -> (w.getCurrentOrder() != null) ? w.getCurrentOrder().getProductActivity() : "",
-                        w -> (w.getCurrentOrder() != null) ? w.getCurrentOrder().getCurrentWorker() : ""
+                        w -> (w.getCurrentOrder() != null) ? w.getCurrentOrder().getWorker() : ""
                 ));
     }
 }

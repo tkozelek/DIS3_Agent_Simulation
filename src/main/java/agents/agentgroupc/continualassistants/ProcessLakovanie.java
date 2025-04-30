@@ -12,7 +12,6 @@ import generator.continuos.ContinuosEmpiricGenerator;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.*;
 import agents.agentgroupc.*;
-import OSPABA.Process;
 import simulation.custommessage.MyMessageProduct;
 
 //meta! id="83"
@@ -57,12 +56,12 @@ public class ProcessLakovanie extends OSPABA.Process {
 		Product product = productMessage.getProduct();
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. painting start %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
+			System.out.printf("[%s] [%s] P. painting start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
 		product.setProductActivity(ProductActivity.PAINTING);
 		product.setStartPaintingTime(mySim().currentTime());
 
-		Worker worker = product.getCurrentWorker();
+		Worker worker = product.getWorker();
 		worker.setCurrentWork(WorkerWork.PAINTING, mySim().currentTime());
 
 		double offset = this.getSampleBasedOnProductType(product.getProductType());
@@ -78,15 +77,12 @@ public class ProcessLakovanie extends OSPABA.Process {
 				Product product = productMessage.getProduct();
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. painting finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
+					System.out.printf("[%s] [%s] P. painting finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
 				product.setProductActivity(ProductActivity.PAINTED);
 				product.setFinishPaintingTime(mySim().currentTime());
 
-				Worker worker = product.getCurrentWorker();
-				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
-
-				product.setCurrentWorker(null);
+				product.clearWorker(mySim().currentTime());
 
 				this.assistantFinished(message);
 				break;

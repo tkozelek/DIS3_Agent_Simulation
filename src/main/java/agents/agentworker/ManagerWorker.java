@@ -94,15 +94,17 @@ public class ManagerWorker extends OSPABA.Manager {
 		Product product = msgProduct.getProduct();
 		if (product.getProductType() == ProductType.CUPBOARD) {
 			// fitting assembly
-			// skus
-
+			// skus A
+			message.setCode(Mc.requestResponseFittingAssembly);
+			message.setAddressee(Id.agentGroupA);
+			this.request(message);
 		} else {
 			// finished
-			product.setFinishTime(mySim().currentTime());
-			product.setProductActivity(ProductActivity.DONE);
+			product.setProductAsDone(mySim().currentTime());
 
-			Workstation workstation = product.getWorkstation();
-			workstation.setCurrentProduct(null);
+			message.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+			message.setAddressee(Id.agentWorkplace);
+			this.response(message);
 
 			MyMessage msg = new MyMessage(mySim());
 
@@ -154,18 +156,39 @@ public class ManagerWorker extends OSPABA.Manager {
 
 	//meta! sender="AgentGroupA", id="89", type="Notice"
 	public void processNoticeAgentGroupAFreed(MessageForm message) {
+		// worker A sa uvolnil
+		if (this.myAgent().group().queueSize() > 0) {
+			MyMessageProduct msgProduct = this.myAgent().group().pollQueue();
+			msgProduct.setCode(Mc.requestResponseFittingAssembly);
+			msgProduct.setAddressee(Id.agentGroupA);
+			this.request(msgProduct);
+		}
 	}
 
 	//meta! sender="AgentGroupC", id="90", type="Notice"
 	public void processNoticeAgentGroupCFreed(MessageForm message) {
+		if (this.myAgent().group().queueSize() > 0) {
+			MyMessageProduct msgProduct = this.myAgent().group().pollQueue();
+			msgProduct.setCode(Mc.requestResponseFittingAssembly);
+			msgProduct.setAddressee(Id.agentGroupC);
+			this.request(msgProduct);
+		}
 	}
 
 	//meta! sender="AgentGroupA", id="96", type="Response"
 	public void processRequestResponseFittingAssemblyAgentGroupA(MessageForm message) {
+		// skončená práca na produkte, keďže aj skúšame či je voľný, produkt nemusí byť done
+		MyMessageProduct msgProduct = (MyMessageProduct) message;
+		Product product = msgProduct.getProduct();
+		if (product.getProductActivity() == ProductActivity.DONE) {
+			Workstation workstation = product.getWorkstation();
+
+		}
 	}
 
 	//meta! sender="AgentGroupC", id="97", type="Response"
 	public void processRequestResponseFittingAssemblyAgentGroupC(MessageForm message) {
+
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

@@ -52,12 +52,12 @@ public class ProcessAssembly extends OSPABA.Process {
 		Product product = productMessage.getProduct();
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. assembling start %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
+			System.out.printf("[%s] [%s] P. assembling start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
 		product.setProductActivity(ProductActivity.ASSEMBLING);
 		product.setStartAssemblyTime(mySim().currentTime());
 
-		Worker worker = product.getCurrentWorker();
+		Worker worker = product.getWorker();
 		worker.setCurrentWork(WorkerWork.ASSEMBLING, mySim().currentTime());
 
 		double offset = this.getSampleBasedOnProductType(product.getProductType());
@@ -71,16 +71,21 @@ public class ProcessAssembly extends OSPABA.Process {
 			case Mc.holdAssembly:
 				MyMessageProduct productMessage = (MyMessageProduct) message;
 				Product product = productMessage.getProduct();
-				Worker worker = product.getCurrentWorker();
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. assembling finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
+					System.out.printf("[%s] [%s] P. assembling finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
-				product.setProductActivity(ProductActivity.ASSEMBLED);
+				if (product.getProductType() != ProductType.CUPBOARD) {
+					// nie je cupboard
+					// produkt je hotovy
+					product.setProductAsDone(mySim().currentTime());
+				} else {
+					// je to cupboard, este nie je hotovy
+					// nechame workstation
+					product.setProductActivity(ProductActivity.ASSEMBLED);
+					product.clearWorker(mySim().currentTime());
+				}
 				product.setFinishAssemblyTime(mySim().currentTime());
-				product.setCurrentWorker(null);
-
-				worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
 
 				this.assistantFinished(message);
 				break;

@@ -13,7 +13,7 @@ public class ProductTable extends Table<Product> {
                         p -> p.getOrder().getId(),
                         Product::getId,
                         Product::getProductType,
-                        p -> p.getCurrentWorker() != null ? p.getCurrentWorker().toStringGroupId() : null,
+                        p -> p.getWorker() != null ? p.getWorker().toStringGroupId() : null,
                         Product::getProductActivity,
                         w -> String.format("%s", Helper.timeToDateString(w.getArrivalTime(), 6)),
                         w -> String.format("%s", Helper.timeToDateString(w.getStartCuttingTime(), 6)),

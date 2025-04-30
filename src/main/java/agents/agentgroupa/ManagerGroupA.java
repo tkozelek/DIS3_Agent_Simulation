@@ -7,10 +7,10 @@ import entity.Storage;
 import entity.order.Order;
 import entity.product.Product;
 import entity.worker.Worker;
-import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
 import simulation.Id;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
 import simulation.custommessage.MyMessageMove;
 import simulation.custommessage.MyMessageOrder;
@@ -69,7 +69,7 @@ public class ManagerGroupA extends OSPABA.Manager {
 			worker.setCurrentProduct(product);
 
 			product.setWorkstation(workstation);
-			product.setCurrentWorker(worker);
+			product.setWorker(worker);
 
 			workstation.setCurrentProduct(product);
 
@@ -77,11 +77,11 @@ public class ManagerGroupA extends OSPABA.Manager {
 			if (worker.getLocation() != Storage.STORAGE) {
 				// nie je v sklade, musi ist do skladu
 				// presun -> sklad
-				moveWorkerRequest(message, worker, Storage.STORAGE);
+				moveWorkerRequest(msgProducts.get(i), worker, Storage.STORAGE);
 			} else {
 				// je v sklade
 				// priprav veci
-				startProcess(message, product, Id.processPreparing);
+				startProcess(msgProducts.get(i), product, Id.processPreparing);
 			}
 		}
 	}
@@ -128,7 +128,7 @@ public class ManagerGroupA extends OSPABA.Manager {
 
 	private void startWork(MessageForm message) {
 		List<Worker> freeWorkers = this.myAgent().group().getFreeWorkers();
-		if (freeWorkers == null) return;
+		if (freeWorkers.isEmpty()) return;
 
 		int amount = Math.min(freeWorkers.size(), myAgent().group().queueSize());
 
@@ -161,19 +161,22 @@ public class ManagerGroupA extends OSPABA.Manager {
 	public void processFinishProcessCutting(MessageForm message) {
 		// skončilo rezanie, agent A končí robotu na produkte
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
-		if (myAgent().group().queueSize() > 0) {
-			this.startWork(message);
-		}
 
 		msgProduct.setCode(Mc.requestResponseWorkAgentA);
 		msgProduct.setAddressee(Id.agentWorker);
 		this.response(msgProduct);
+
+		this.sendNoticeToWorker();
+
+		if (myAgent().group().queueSize() > 0) {
+			this.startWork(message);
+		}
     }
 
 	//meta! sender="ProcessPreparing", id="50", type="Finish"
 	public void processFinishProcessPreparing(MessageForm message) {
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
-		Worker worker = msgProduct.getProduct().getCurrentWorker();
+		Worker worker = msgProduct.getProduct().getWorker();
 
 		// skoncil pracu v sklade -> move to workstation
 		this.moveWorkerRequest(message, worker, worker.getCurrentWorkstation());
@@ -181,17 +184,13 @@ public class ManagerGroupA extends OSPABA.Manager {
 
 	//meta! sender="ProcessFittingGroupA", id="52", type="Finish"
 	public void processFinishProcessFittingGroupA(MessageForm message) {
-		MyMessageProduct msgProduct = (MyMessageProduct) message;
-		Product product = msgProduct.getProduct();
-		Worker worker = product.getCurrentWorker();
+		message.setCode(Mc.requestResponseFittingAssembly);
+		message.setAddressee(Id.agentWorker);
+		this.response(message);
 
-		product.setCurrentWorker(null);
-		worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
-		worker.setCurrentProduct(null);
-
-		msgProduct.setCode(Mc.requestResponseWorkAgentA);
-		msgProduct.setAddressee(Id.agentWorker);
-		this.response(msgProduct);
+		if (myAgent().group().queueSize() > 0) {
+			this.startWork(new MyMessageProduct(message));
+		}
     }
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -213,11 +212,18 @@ public class ManagerGroupA extends OSPABA.Manager {
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
 
-		product.setCurrentWorker(worker);
+		product.setWorker(worker);
 		worker.setCurrentProduct(product);
 
 		msgProduct.setAddressee(myAgent().findAssistant(Id.processFittingGroupA));
 		this.startContinualAssistant(msgProduct);
+	}
+
+	public void sendNoticeToWorker() {
+		MyMessage msg = new MyMessage(mySim());
+		msg.setCode(Mc.noticeAgentGroupAFreed);
+		msg.setAddressee(Id.agentWorker);
+		this.notice(msg);
 	}
 
 	//meta! sender="AgentWorker", id="99", type="Notice"

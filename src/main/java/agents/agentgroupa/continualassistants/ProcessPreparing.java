@@ -36,9 +36,9 @@ public class ProcessPreparing extends OSPABA.Process {
 		product.setProductActivity(ProductActivity.PREPARING);
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. preparing start %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
+			System.out.printf("[%s] [%s] P. preparing start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
-		Worker worker = productMessage.getProduct().getCurrentWorker();
+		Worker worker = productMessage.getProduct().getWorker();
 		worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL, mySim().currentTime());
 
 		double offset = this.materialPreparationGenerator.sample();
@@ -55,7 +55,7 @@ public class ProcessPreparing extends OSPABA.Process {
 				product.setProductActivity(ProductActivity.PREPARED);
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. preparing finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getCurrentWorker(), product);
+					System.out.printf("[%s] [%s] P. preparing finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
 				this.assistantFinished(message);
         }

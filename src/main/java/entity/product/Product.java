@@ -5,6 +5,7 @@ import entity.Ids;
 import entity.order.Order;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
+import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
 
 public class Product implements Comparable<Product> {
@@ -12,7 +13,7 @@ public class Product implements Comparable<Product> {
     private final ProductType productType;
     private ProductActivity productActivity;
     private Workstation workstation;
-    private Worker currentWorker;
+    private Worker worker;
 
     private double arrivalTime;
     private double finishTime;
@@ -83,12 +84,12 @@ public class Product implements Comparable<Product> {
         this.productActivity = productActivity;
     }
 
-    public Worker getCurrentWorker() {
-        return currentWorker;
+    public Worker getWorker() {
+        return worker;
     }
 
-    public void setCurrentWorker(Worker currentWorker) {
-        this.currentWorker = currentWorker;
+    public void setWorker(Worker newWorker) {
+        this.worker = newWorker;
     }
 
     public double getArrivalTime() {
@@ -185,6 +186,32 @@ public class Product implements Comparable<Product> {
 
     public void setFinishStainingTime(double finishStainingTime) {
         this.finishStainingTime = finishStainingTime;
+    }
+
+    public void setProductAsDone(double time) {
+        this.productActivity = ProductActivity.DONE;
+        this.finishTime = time;
+
+        // vyčisti workstation
+        if (workstation != null) {
+            this.clearWorkstation(time);
+        }
+
+        // vyčisti workera
+        if (worker != null) {
+            this.clearWorker(time);
+        }
+    }
+
+    public void clearWorker(double time) {
+        this.worker.setCurrentWork(WorkerWork.IDLE, time);
+        this.worker.setCurrentProduct(null);
+        this.worker = null;
+    }
+
+    public void clearWorkstation(double time) {
+        this.workstation.setCurrentProduct(null);
+        this.workstation = null;
     }
 
     @Override

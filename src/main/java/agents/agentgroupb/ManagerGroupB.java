@@ -4,9 +4,7 @@ import OSPABA.*;
 import config.Constants;
 import entity.ILocation;
 import entity.product.Product;
-import entity.product.ProductType;
 import entity.worker.Worker;
-import entity.workstation.Workstation;
 import simulation.Id;
 import simulation.Mc;
 import simulation.custommessage.MyMessageMove;
@@ -55,7 +53,7 @@ public class ManagerGroupB extends OSPABA.Manager
 		worker.setCurrentWorkstation(product.getWorkstation());
 		worker.setCurrentProduct(product);
 
-		product.setCurrentWorker(worker);
+		product.setWorker(worker);
 
 		if (worker.getLocation() != product.getWorkstation()) {
 			this.moveWorkerRequest(messageProduct, worker, product.getWorkstation());

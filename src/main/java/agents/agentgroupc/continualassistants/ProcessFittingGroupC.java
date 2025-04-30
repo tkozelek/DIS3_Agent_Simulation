@@ -2,12 +2,14 @@ package agents.agentgroupc.continualassistants;
 
 import OSPABA.*;
 import config.Constants;
+import entity.product.Product;
 import entity.product.ProductActivity;
+import entity.worker.Worker;
+import entity.worker.WorkerWork;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.*;
 import agents.agentgroupc.*;
-import OSPABA.Process;
 import simulation.custommessage.MyMessageProduct;
 
 //meta! id="94"
@@ -31,10 +33,17 @@ public class ProcessFittingGroupC extends OSPABA.Process {
 	public void processStart(MessageForm message) {
 		// zacne fittovat
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] P. fitting start\n", ((MySimulation)mySim()).workdayTime());
+			System.out.printf("[%s] P. fitting C start\n", ((MySimulation)mySim()).workdayTime());
 
 		MyMessageProduct productMessage = (MyMessageProduct) message;
-		productMessage.getProduct().setProductActivity(ProductActivity.FITTING);
+		Product product = productMessage.getProduct();
+		Worker worker = product.getWorker();
+
+		product.setProductActivity(ProductActivity.FITTING);
+		product.setStartFittingAssemblyTime(mySim().currentTime());
+
+		worker.setCurrentWork(WorkerWork.FITTING, mySim().currentTime());
+		worker.setCurrentProduct(product);
 
 		double offset = this.fittingAssemblyGenerator.sample();
 		productMessage.setCode(Mc.holdFitting);
@@ -46,10 +55,15 @@ public class ProcessFittingGroupC extends OSPABA.Process {
 		switch (message.code()) {
 			case Mc.holdFitting:
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] P. fitting finished\n", ((MySimulation)mySim()).workdayTime());
+					System.out.printf("[%s] P. fitting C finished\n", ((MySimulation)mySim()).workdayTime());
 
 				MyMessageProduct productMessage = (MyMessageProduct) message;
-				productMessage.getProduct().setProductActivity(ProductActivity.FITTING);
+				Product product = productMessage.getProduct();
+
+				product.setProductAsDone(mySim().currentTime());
+
+				// finish fitting time
+				product.setFinishFittingAssemblyTime(mySim().currentTime());
 
 				this.assistantFinished(message);
 		}

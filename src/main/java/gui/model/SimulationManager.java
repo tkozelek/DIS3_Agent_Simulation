@@ -20,7 +20,7 @@ public class SimulationManager {
         if (isRunning.get()) return;
         isRunning.set(true);
 
-        this.simulation = new MySimulation(null, groups, workstationCount);
+        this.simulation = new MySimulation(5L, groups, workstationCount);
         this.simulation.addObserver(observer);
 
         worker = new SwingWorker<>() {

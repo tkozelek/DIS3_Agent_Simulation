@@ -33,8 +33,6 @@ public class ManagerOkolie extends OSPABA.Manager {
         // tzn. objednavka hotova cela
         if (Constants.DEBUG_MANAGER)
             System.out.printf("[%s] Manazer okolie: odchod objednavky", Helper.timeToDateString(mySim().currentTime(), 6));
-        MyMessageOrder orderMessage = (MyMessageOrder) message;
-        this.myAgent().removeOrder(orderMessage.getOrder());
     }
 
 	//meta! sender="SchedulerOrderArrival", id="18", type="Finish"

@@ -59,7 +59,7 @@ public class ManagerGroupC extends OSPABA.Manager {
 		worker.setCurrentWorkstation(product.getWorkstation());
 		worker.setCurrentProduct(product);
 
-		product.setCurrentWorker(worker);
+		product.setWorker(worker);
 
 		if (worker.getLocation() != product.getWorkstation()) {
 			this.moveWorkerRequest(messageProduct, worker, product.getWorkstation());
@@ -112,10 +112,6 @@ public class ManagerGroupC extends OSPABA.Manager {
 			message.setAddressee(myAgent().findAssistant(Id.processLakovanie));
 			this.startContinualAssistant(message);
 		} else {
-			Worker worker = product.getCurrentWorker();
-			worker.setCurrentWork(WorkerWork.IDLE, mySim().currentTime());
-			product.setCurrentWorker(null);
-
 			message.setCode(Mc.requestResponseWorkAgentC);
 			message.setAddressee(Id.agentWorker);
 			this.response(message);
@@ -126,10 +122,29 @@ public class ManagerGroupC extends OSPABA.Manager {
 
 	//meta! sender="AgentWorker", id="97", type="Request"
 	public void processRequestResponseFittingAssembly(MessageForm message) {
+		Worker worker = myAgent().group().getFreeWorker();
+		if (worker == null) {
+			// worker nie je free
+			message.setCode(Mc.requestResponseFittingAssembly);
+			message.setAddressee(Id.agentWorker);
+			this.response(message);
+			return;
+		}
+		MyMessageProduct msgProduct = (MyMessageProduct) message;
+		Product product = msgProduct.getProduct();
+
+		product.setWorker(worker);
+		worker.setCurrentProduct(product);
+
+		msgProduct.setAddressee(myAgent().findAssistant(Id.processFittingGroupC));
+		this.startContinualAssistant(msgProduct);
 	}
 
 	//meta! sender="ProcessFittingGroupC", id="95", type="Finish"
 	public void processFinishProcessFittingGroupC(MessageForm message) {
+		message.setCode(Mc.requestResponseWorkAgentC);
+		message.setAddressee(Id.agentWorker);
+		this.response(message);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

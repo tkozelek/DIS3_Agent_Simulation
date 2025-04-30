@@ -8,7 +8,7 @@ public class MyMessage extends OSPABA.MessageForm {
         super(mySim);
     }
 
-    public MyMessage(MyMessage original) {
+    public MyMessage(MessageForm original) {
         super(original);
         // copy() is called in superclass
     }
