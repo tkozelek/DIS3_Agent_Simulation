@@ -94,7 +94,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		Ids.resetAll();
 		this.setSpeed(speed);
 		this.notifyObservers();
-
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import entity.ILocation;
 import entity.Storage;
 import entity.order.Order;
 import entity.product.Product;
+import entity.product.ProductActivity;
 import entity.worker.Worker;
 import entity.workstation.Workstation;
 import simulation.Id;
@@ -148,10 +149,17 @@ public class ManagerGroupA extends OSPABA.Manager {
 		// skoncil presun, je bud pri workstatione alebo storage
 		MyMessageMove msgMove = (MyMessageMove) message;
 		Worker worker = msgMove.getWorker();
+		Product product = worker.getCurrentProduct();
+
+		if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
+			startProcess(message, product, Id.processFittingGroupA);
+			return;
+		}
+
 		if (worker.getLocation() == Storage.STORAGE) {
-			startProcess(msgMove, worker.getCurrentProduct(), Id.processPreparing);
-		} else if (worker.getLocation() == worker.getCurrentProduct().getWorkstation()) {
-			startProcess(msgMove, worker.getCurrentProduct(), Id.processCutting);
+			startProcess(msgMove, product, Id.processPreparing);
+		} else if (worker.getLocation() == product.getWorkstation()) {
+			startProcess(msgMove, product, Id.processCutting);
 		} else {
 			throw new IllegalStateException("Manager group A, invalid location");
 		}
@@ -215,8 +223,12 @@ public class ManagerGroupA extends OSPABA.Manager {
 		product.setWorker(worker);
 		worker.setCurrentProduct(product);
 
-		msgProduct.setAddressee(myAgent().findAssistant(Id.processFittingGroupA));
-		this.startContinualAssistant(msgProduct);
+		if (worker.getLocation() == product.getWorkstation()) {
+			this.startProcess(message, product, Id.processFittingGroupA);
+		} else {
+			// presun
+			this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
+		}
 	}
 
 	public void sendNoticeToWorker() {

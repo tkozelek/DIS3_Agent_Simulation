@@ -3,6 +3,7 @@ package agents.agentgroupc;
 import OSPABA.*;
 import entity.ILocation;
 import entity.product.Product;
+import entity.product.ProductActivity;
 import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import simulation.*;
@@ -37,7 +38,13 @@ public class ManagerGroupC extends OSPABA.Manager {
 	//meta! sender="AgentWorker", id="71", type="Response"
 	public void processRequestResponseMoveWorker(MessageForm message) {
 		MyMessageMove msg = (MyMessageMove) message;
-		this.startProcess(message, msg.getWorker().getCurrentProduct(), Id.processMorenie);
+		Product product = msg.getWorker().getCurrentProduct();
+
+		if (product.getProductActivity() == ProductActivity.CUT)
+			this.startProcess(message, product, Id.processMorenie);
+		else {
+			this.startProcess(message, product, Id.processFittingGroupC);
+		}
 	}
 
 	//meta! sender="AgentWorker", id="72", type="Request"
@@ -130,14 +137,21 @@ public class ManagerGroupC extends OSPABA.Manager {
 			this.response(message);
 			return;
 		}
+		// žiadost o fitting
+		// worker je free
+		// musime checknut ci je na workstatione, ak tak presun
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
 
 		product.setWorker(worker);
 		worker.setCurrentProduct(product);
 
-		msgProduct.setAddressee(myAgent().findAssistant(Id.processFittingGroupC));
-		this.startContinualAssistant(msgProduct);
+		if (worker.getLocation() == product.getWorkstation()) {
+			this.startProcess(message, product, Id.processFittingGroupC);
+		} else {
+			// presun
+			this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
+		}
 	}
 
 	//meta! sender="ProcessFittingGroupC", id="95", type="Finish"
