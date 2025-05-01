@@ -36,7 +36,7 @@ public class ProcessAgentMove extends OSPABA.Process {
 		msg.getWorker().setCurrentWork(WorkerWork.MOVING, mySim().currentTime());
 
 		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. move started\n", ((MySimulation)mySim()).workdayTime(), msg.getWorker());
+			System.out.printf("[%s] [%s] P. move started -> %s\n", ((MySimulation)mySim()).workdayTime(), msg.getWorker(), msg.getTargetLocation());
 
 		double offset = this.moveStationsGenerator.sample();
 		message.setCode(Mc.holdMove);
@@ -51,7 +51,7 @@ public class ProcessAgentMove extends OSPABA.Process {
 				msg.getWorker().setLocation(msg.getTargetLocation());
 
 				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s]  P. move finished\n", ((MySimulation)mySim()).workdayTime(), msg.getWorker());
+					System.out.printf("[%s] [%s] P. move finished -> %s\n", ((MySimulation)mySim()).workdayTime(), msg.getWorker(), msg.getTargetLocation());
 
 				this.assistantFinished(message);
         }

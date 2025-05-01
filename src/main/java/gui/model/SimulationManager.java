@@ -1,5 +1,6 @@
 package gui.model;
 
+import config.Constants;
 import gui.interfaces.Observer;
 import simulation.MySimulation;
 
@@ -26,7 +27,7 @@ public class SimulationManager {
         worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                simulation.simulate(replicationCount);
+                simulation.simulate(replicationCount, Constants.SIMULATION_TIME);
                 return null;
             }
 
