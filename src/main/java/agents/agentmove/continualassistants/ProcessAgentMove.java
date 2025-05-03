@@ -5,6 +5,7 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import agents.agentmove.AgentMove;
 import config.Constants;
+import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosTriangularGenerator;
@@ -48,7 +49,8 @@ public class ProcessAgentMove extends OSPABA.Process {
         switch (message.code()) {
 			case Mc.holdMove:
 				MyMessageMove msg = (MyMessageMove)message;
-				msg.getWorker().setLocation(msg.getTargetLocation());
+				Worker worker = msg.getWorker();
+				worker.setLocation(msg.getTargetLocation());
 
 				if (Constants.DEBUG_PROCESS)
 					System.out.printf("[%s] [%s] P. move finished -> %s\n", ((MySimulation)mySim()).workdayTime(), msg.getWorker(), msg.getTargetLocation());

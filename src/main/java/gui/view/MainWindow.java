@@ -57,6 +57,7 @@ public class MainWindow extends JFrame {
     private JList list1;
     private JCheckBox showStatsCheckBox;
     private JTextField fieldWorkstation;
+    private JLabel labelFitting;
     private JFreeChart chart1;
     private Chart chart;
 
@@ -223,9 +224,9 @@ public class MainWindow extends JFrame {
     }
 
     private void updateQueueSize(SimulationData simData) {
-//        JLabel[] labels = new JLabel[]{labelA, labelB, labelC};
-//
-//        for (int i = 0; i < labels.length; i++) {
+        JLabel[] labels = new JLabel[]{labelA, labelB, labelC, labelFitting};
+
+        for (int i = 0; i < labels.length; i++) {
 //            double[] isW = simData.workloadForGroupTotal() != null ? simData.workloadForGroupTotal()[i].getConfidenceInterval() : new double[]{0.0, 0.0};
 //            double[] isQ = simData.workloadForGroupTotal() != null ? simData.queueLengthTotal()[i].getConfidenceInterval() : new double[]{0.0, 0.0};
 //            labels[i].setText(String.format("<html>Group %c<br>(%.2f%% | %.2f%% [%.2f%% | %.2f%%])<br>%d | %.3f [%.3f | %.3f]</html>",
@@ -236,7 +237,11 @@ public class MainWindow extends JFrame {
 //                    simData.queues() != null && getSpeed() < Constants.MAX_SPEED ? simData.queues()[i] : 0,
 //                    simData.queueLengthTotal() != null ? simData.queueLengthTotal()[i].getMean() : 0.0,
 //                    isQ[0], isQ[1]));
-//        }
+
+            labels[i].setText(String.format("<html>Group %c<br>(%d)</html>",
+                    (i + 'A'),
+                    simData.queues() != null && getSpeed() < Constants.MAX_SPEED ? simData.queues()[i] : 0));
+        }
     }
 
     private double calculateWorkloadForGroupReplication(SimulationData simData, int i) {

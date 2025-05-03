@@ -79,20 +79,20 @@ public class ManagerOkolie extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.noticeOrderArrival:
-			processNoticeOrderArrival(message);
-		break;
-
-		case Mc.noticeInitAgentOkolie:
-			processNoticeInitAgentOkolie(message);
-		break;
-
 		case Mc.requestResponseOrderArrival:
 			processRequestResponseOrderArrival(message);
 		break;
 
 		case Mc.finish:
 			processFinish(message);
+		break;
+
+		case Mc.noticeOrderArrival:
+			processNoticeOrderArrival(message);
+		break;
+
+		case Mc.noticeInitAgentOkolie:
+			processNoticeInitAgentOkolie(message);
 		break;
 
 		default:

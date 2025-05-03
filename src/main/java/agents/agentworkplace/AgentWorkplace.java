@@ -21,11 +21,9 @@ public class AgentWorkplace extends OSPABA.Agent {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerWorkplace(Id.managerWorkplace, mySim(), this);
-		addOwnMessage(Mc.requestResponseOrderFreeWorkstation);
 		addOwnMessage(Mc.requestResponseOrderArrived);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 		addOwnMessage(Mc.requestResponseWorkOnOrderWorkplace);
-		addOwnMessage(Mc.requestResponseFreeWorkstation);
 	}
 	//meta! tag="end"
 }

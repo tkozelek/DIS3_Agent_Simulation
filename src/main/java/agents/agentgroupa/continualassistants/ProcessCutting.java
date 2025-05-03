@@ -53,6 +53,9 @@ public class ProcessCutting extends OSPABA.Process {
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. cutting start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
+		if (product.getProductActivity() != ProductActivity.PREPARED)
+			throw new IllegalStateException("Manager A product isnt prepared");
+
 		product.setProductActivity(ProductActivity.CUTTING);
 		product.setStartCuttingTime(mySim().currentTime());
 

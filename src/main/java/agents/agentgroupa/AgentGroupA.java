@@ -40,14 +40,14 @@ public class AgentGroupA extends OSPABA.Agent {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerGroupA(Id.managerGroupA, mySim(), this);
+		new ProcessCutting(Id.processCutting, mySim(), this);
 		new ProcessPreparing(Id.processPreparing, mySim(), this);
 		new ProcessFittingGroupA(Id.processFittingGroupA, mySim(), this);
-		new ProcessCutting(Id.processCutting, mySim(), this);
-		addOwnMessage(Mc.requestResponseWorkerFreeWorkstation);
 		addOwnMessage(Mc.noticeWorkstationFreed);
-		addOwnMessage(Mc.requestResponseFittingAssembly);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 		addOwnMessage(Mc.requestResponseWorkAgentA);
+		addOwnMessage(Mc.noticeTryFit);
+		addOwnMessage(Mc.requestResponseWorkerAFree);
 	}
 	//meta! tag="end"
 }

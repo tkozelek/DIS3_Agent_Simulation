@@ -39,6 +39,9 @@ public class ProcessFittingGroupA extends OSPABA.Process {
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. fitting A start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
+		if (product.getProductActivity() != ProductActivity.ASSEMBLED)
+			throw new IllegalStateException("Manager A product isnt assembled");
+
 		product.setProductActivity(ProductActivity.FITTING);
 		product.setStartFittingAssemblyTime(mySim().currentTime());
 

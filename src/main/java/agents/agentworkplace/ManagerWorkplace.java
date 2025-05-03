@@ -39,14 +39,6 @@ public class ManagerWorkplace extends OSPABA.Manager {
 		this.response(message);
 	}
 
-	//meta! sender="AgentWorker", id="45", type="Request"
-	public void processRequestResponseOrderFreeWorkstation(MessageForm message) {
-		// worker A vyziadal workstation pre objednavku
-		message.setCode(Mc.requestResponseFreeWorkstation);
-		message.setAddressee(Id.agentWorkstation);
-		this.request(message);
-    }
-
 	//meta! userInfo="Removed from model"
 	public void processNoticeInitWorkplace(MessageForm message) {
     }
@@ -55,14 +47,6 @@ public class ManagerWorkplace extends OSPABA.Manager {
 	public void processRequestResponseMoveWorkerAgentMove(MessageForm message) {
 		// agent bol presunuty posli response dalej agentovi workerovi
 		message.setCode(Mc.requestResponseMoveWorker);
-		message.setAddressee(Id.agentWorker);
-		this.response(message);
-    }
-
-	//meta! sender="AgentWorkstation", id="37", type="Response"
-	public void processRequestResponseFreeWorkstation(MessageForm message) {
-		// free workstation bol prideleny
-		message.setCode(Mc.requestResponseOrderFreeWorkstation);
 		message.setAddressee(Id.agentWorker);
 		this.response(message);
     }
@@ -90,26 +74,18 @@ public class ManagerWorkplace extends OSPABA.Manager {
 		switch (message.code()) {
 		case Mc.requestResponseMoveWorker:
 			switch (message.sender().id()) {
-			case Id.agentMove:
-				processRequestResponseMoveWorkerAgentMove(message);
-			break;
-
 			case Id.agentWorker:
 				processRequestResponseMoveWorkerAgentWorker(message);
+			break;
+
+			case Id.agentMove:
+				processRequestResponseMoveWorkerAgentMove(message);
 			break;
 			}
 		break;
 
 		case Mc.requestResponseWorkOnOrderWorkplace:
 			processRequestResponseWorkOnOrderWorkplace(message);
-		break;
-
-		case Mc.requestResponseOrderFreeWorkstation:
-			processRequestResponseOrderFreeWorkstation(message);
-		break;
-
-		case Mc.requestResponseFreeWorkstation:
-			processRequestResponseFreeWorkstation(message);
 		break;
 
 		case Mc.requestResponseOrderArrived:

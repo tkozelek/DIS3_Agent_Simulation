@@ -116,16 +116,16 @@ public class ManagerGroupB extends OSPABA.Manager
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.requestResponseWorkAgentB:
-			processRequestResponseWorkAgentB(message);
-		break;
-
 		case Mc.requestResponseMoveWorker:
 			processRequestResponseMoveWorker(message);
 		break;
 
 		case Mc.finish:
 			processFinish(message);
+		break;
+
+		case Mc.requestResponseWorkAgentB:
+			processRequestResponseWorkAgentB(message);
 		break;
 
 		default:

@@ -41,12 +41,13 @@ public class AgentGroupC extends OSPABA.Agent {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerGroupC(Id.managerGroupC, mySim(), this);
-		new ProcessLakovanie(Id.processLakovanie, mySim(), this);
 		new ProcessFittingGroupC(Id.processFittingGroupC, mySim(), this);
 		new ProcessMorenie(Id.processMorenie, mySim(), this);
-		addOwnMessage(Mc.requestResponseFittingAssembly);
+		new ProcessLakovanie(Id.processLakovanie, mySim(), this);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 		addOwnMessage(Mc.requestResponseWorkAgentC);
+		addOwnMessage(Mc.noticeTryFit);
+		addOwnMessage(Mc.requestResponseWorkerCFree);
 	}
 	//meta! tag="end"
 }

@@ -6,6 +6,7 @@ import entity.product.Product;
 import entity.product.ProductActivity;
 import entity.worker.Worker;
 import entity.worker.WorkerWork;
+import entity.workstation.Workstation;
 import simulation.*;
 import simulation.custommessage.MyMessageMove;
 import simulation.custommessage.MyMessageProduct;
@@ -58,7 +59,7 @@ public class ManagerGroupC extends OSPABA.Manager {
 	private void tryStartWorkOnOrder() {
 		Worker worker = myAgent().group().getFreeWorker();
 
-		if (worker == null) return;
+		if (worker == null || myAgent().group().queueSize() == 0) return;
 
 		MyMessageProduct messageProduct = myAgent().group().pollQueue();
 		Product product = messageProduct.getProduct();
@@ -127,24 +128,65 @@ public class ManagerGroupC extends OSPABA.Manager {
 			this.tryStartWorkOnOrder();
 	}
 
-	//meta! sender="AgentWorker", id="97", type="Request"
-	public void processRequestResponseFittingAssembly(MessageForm message) {
-		Worker worker = myAgent().group().getFreeWorker();
-		if (worker == null) {
-			// worker nie je free
-			message.setCode(Mc.requestResponseFittingAssembly);
-			message.setAddressee(Id.agentWorker);
-			this.response(message);
-			return;
-		}
-		// žiadost o fitting
-		// worker je free
-		// musime checknut ci je na workstatione, ak tak presun
+	//meta! sender="ProcessFittingGroupC", id="95", type="Finish"
+	public void processFinishProcessFittingGroupC(MessageForm message) {
+		this.sendRequestToWorker(message);
+	}
+
+	public void sendRequestToWorker(MessageForm message) {
+		message.setCode(Mc.requestResponseWorkerCFree);
+		message.setAddressee(Id.agentWorker);
+		this.request(message);
+	}
+
+	//meta! sender="AgentWorker", id="106", type="Response"
+	public void processRequestResponseWorkerCFree(MessageForm message) {
+		// ak nepošle s5 produkt, žiadny nečaká na fitting, začni next work
+		// ak pošle fitting needed
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
+		if (product == null || product.getProductActivity() != ProductActivity.ASSEMBLED) {
+			this.tryStartWorkOnOrder();
+		} else if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
+			Worker worker = myAgent().group().getFreeWorker();
+			if (worker == null)
+				throw new IllegalStateException("Worker c isnt free when should be");
+
+			Workstation workstation = product.getWorkstation();
+
+			worker.setCurrentWorkstation(workstation);
+			worker.setCurrentProduct(product);
+
+			product.setWorker(worker);
+
+			if (worker.getLocation() == product.getWorkstation()) {
+				this.startProcess(message, product, Id.processFittingGroupC);
+			} else {
+				// presun
+				this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
+			}
+		} else {
+			throw new IllegalStateException("Manager group C, invalid product");
+		}
+	}
+
+	//meta! sender="AgentWorker", id="112", type="Notice"
+	public void processNoticeTryFit(MessageForm message) {
+		Worker worker = myAgent().group().getFreeWorker();
+		if (worker == null) {
+			message.setCode(Mc.noticeProductFitted);
+			message.setAddressee(Id.agentWorker);
+			this.notice(message);
+			return;
+		}
+		MyMessageProduct msgProduct = (MyMessageProduct) message;
+		Product product = msgProduct.getProduct();
+		Workstation workstation = product.getWorkstation();
+
+		worker.setCurrentWorkstation(workstation);
+		worker.setCurrentProduct(product);
 
 		product.setWorker(worker);
-		worker.setCurrentProduct(product);
 
 		if (worker.getLocation() == product.getWorkstation()) {
 			this.startProcess(message, product, Id.processFittingGroupC);
@@ -152,13 +194,6 @@ public class ManagerGroupC extends OSPABA.Manager {
 			// presun
 			this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
 		}
-	}
-
-	//meta! sender="ProcessFittingGroupC", id="95", type="Finish"
-	public void processFinishProcessFittingGroupC(MessageForm message) {
-		message.setCode(Mc.requestResponseFittingAssembly);
-		message.setAddressee(Id.agentWorker);
-		this.response(message);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -184,16 +219,20 @@ public class ManagerGroupC extends OSPABA.Manager {
 			}
 		break;
 
-		case Mc.requestResponseWorkAgentC:
-			processRequestResponseWorkAgentC(message);
-		break;
-
 		case Mc.requestResponseMoveWorker:
 			processRequestResponseMoveWorker(message);
 		break;
 
-		case Mc.requestResponseFittingAssembly:
-			processRequestResponseFittingAssembly(message);
+		case Mc.requestResponseWorkAgentC:
+			processRequestResponseWorkAgentC(message);
+		break;
+
+		case Mc.noticeTryFit:
+			processNoticeTryFit(message);
+		break;
+
+		case Mc.requestResponseWorkerCFree:
+			processRequestResponseWorkerCFree(message);
 		break;
 
 		default:

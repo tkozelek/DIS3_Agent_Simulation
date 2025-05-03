@@ -1,16 +1,16 @@
 package gui.model;
 
-import entity.workstation.Workstation;
 import entity.order.Order;
 import entity.worker.Worker;
+import entity.workstation.Workstation;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public record SimulationData(
         double time,
         Worker[][] workers,
-        List<Workstation> workstations,
-        List<Order> orders,
+        ArrayList<Order> orders,
+        ArrayList<Workstation> workstations,
         int currentReplication,
         int[] queues,
         boolean updateChart) {

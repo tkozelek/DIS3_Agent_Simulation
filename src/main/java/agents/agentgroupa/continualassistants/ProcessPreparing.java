@@ -33,11 +33,14 @@ public class ProcessPreparing extends OSPABA.Process {
 	public void processStart(MessageForm message) {
 		MyMessageProduct productMessage = (MyMessageProduct) message;
 		Product product = productMessage.getProduct();
-		product.setProductActivity(ProductActivity.PREPARING);
 
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. preparing start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
+		if (product.getProductActivity() != ProductActivity.EMTPY)
+			throw new IllegalStateException("Manager A product isnt empty");
+
+		product.setProductActivity(ProductActivity.PREPARING);
 		Worker worker = productMessage.getProduct().getWorker();
 		worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL, mySim().currentTime());
 

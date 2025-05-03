@@ -24,21 +24,21 @@ public class AgentWorker extends OSPABA.Agent {
     public void prepareReplication() {
         super.prepareReplication();
         // Setup component for the next replication
+
+		this.group.reset();
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerWorker(Id.managerWorker, mySim(), this);
-		addOwnMessage(Mc.requestResponseOrderFreeWorkstation);
-		addOwnMessage(Mc.requestResponseWorkerFreeWorkstation);
-		addOwnMessage(Mc.requestResponseFittingAssembly);
+		addOwnMessage(Mc.noticeProductFitted);
 		addOwnMessage(Mc.requestResponseMoveWorker);
-		addOwnMessage(Mc.noticeAgentGroupAFreed);
 		addOwnMessage(Mc.requestResponseWorkOnOrderWorkplace);
 		addOwnMessage(Mc.requestResponseWorkAgentA);
 		addOwnMessage(Mc.requestResponseWorkAgentB);
 		addOwnMessage(Mc.requestResponseWorkAgentC);
-		addOwnMessage(Mc.noticeAgentGroupCFreed);
+		addOwnMessage(Mc.requestResponseWorkerAFree);
+		addOwnMessage(Mc.requestResponseWorkerCFree);
 	}
 	//meta! tag="end"
 }

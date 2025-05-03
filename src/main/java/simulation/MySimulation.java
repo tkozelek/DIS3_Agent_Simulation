@@ -1,22 +1,20 @@
 package simulation;
 
-import OSPABA.ISimDelegate;
-import OSPABA.SimState;
-import OSPABA.Simulation;
-import agents.agentboss.AgentBoss;
-import agents.agentgroupa.AgentGroupA;
-import agents.agentgroupb.AgentGroupB;
-import agents.agentgroupc.AgentGroupC;
-import agents.agentmove.AgentMove;
-import agents.agentokolie.AgentOkolie;
-import agents.agentworker.AgentWorker;
-import agents.agentworkplace.AgentWorkplace;
-import agents.agentworkstation.AgentWorkstation;
+import OSPABA.*;
+import agents.agentworkplace.*;
+import agents.agentworker.*;
+import agents.agentgroupa.*;
+import agents.agentboss.*;
+import agents.agentgroupb.*;
+import agents.agentgroupc.*;
+import agents.agentmove.*;
+import agents.agentokolie.*;
 import config.Constants;
 import config.Helper;
 import entity.Ids;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
+import entity.workstation.Workstation;
 import generator.SeedGenerator;
 import gui.interfaces.Observable;
 import gui.interfaces.Observer;
@@ -32,6 +30,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	private final int workstationCount;
 	private final ArrayList<Observer> observers;
 
+	private ArrayList<Workstation> workstations;
+
 	private boolean isPaused;
 	private int speed;
 
@@ -42,8 +42,31 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		this.workstationCount = wCount;
 		this.observers = new ArrayList<>();
 		this.registerDelegate(this);
+		this.workstations = new ArrayList<>();
 
 		init();
+	}
+
+	public void createWorkstations() {
+		workstations.clear();
+		for (int i = 0; i < workstationCount; i++) {
+			workstations.add(new Workstation());
+		}
+	}
+
+	public ArrayList<Workstation> getWorkstations() {
+		return this.workstations;
+	}
+
+	public ArrayList<Workstation> getFreeWorkstations(int amount) {
+		ArrayList<Workstation> freeWorkstations = new ArrayList<>();
+		for (Workstation w : workstations) {
+			if (w.getCurrentOrder() == null)
+				freeWorkstations.add(w);
+			if (freeWorkstations.size() >= amount)
+				break;
+		}
+		return freeWorkstations;
 	}
 
 	public int getWorkstationCount() {
@@ -83,6 +106,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	public void prepareSimulation() {
 		super.prepareSimulation();
 		// Create global statistcis
+
+		this.createWorkstations();
 	}
 
 	@Override
@@ -114,7 +139,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	private void init() {
 		setAgentBoss(new AgentBoss(Id.agentBoss, this, null));
 		setAgentWorkplace(new AgentWorkplace(Id.agentWorkplace, this, agentBoss()));
-		setAgentWorkstation(new AgentWorkstation(Id.agentWorkstation, this, agentWorkplace()));
 		setAgentMove(new AgentMove(Id.agentMove, this, agentWorkplace()));
 		setAgentWorker(new AgentWorker(Id.agentWorker, this, agentWorkplace()));
 		setAgentGroupA(new AgentGroupA(Id.agentGroupA, this, agentWorker()));
@@ -138,14 +162,6 @@ public AgentWorkplace agentWorkplace()
 
 	public void setAgentWorkplace(AgentWorkplace agentWorkplace)
 	{_agentWorkplace = agentWorkplace; }
-
-	private AgentWorkstation _agentWorkstation;
-
-public AgentWorkstation agentWorkstation()
-	{ return _agentWorkstation; }
-
-	public void setAgentWorkstation(AgentWorkstation agentWorkstation)
-	{_agentWorkstation = agentWorkstation; }
 
 	private AgentMove _agentMove;
 
@@ -230,10 +246,15 @@ public AgentGroupC agentGroupC()
 						_agentGroupB.group().getWorkers(),
 						_agentGroupC.group().getWorkers(),
 				},
-				_agentWorkstation.getWorkstations(),
 				_agentOkolie.getOrdersInSystem(),
+				this.workstations,
 				currentReplication(),
-				new int[]{_agentGroupA.group().queueSize()},
+				new int[]{
+						_agentGroupA.group().queueSize(),
+						_agentGroupB.group().queueSize(),
+						_agentGroupC.group().queueSize(),
+						_agentWorker.group().queueSize(),
+				},
 				false);
 
 	}

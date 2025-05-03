@@ -16,10 +16,8 @@ import simulation.MySimulation;
 import simulation.custommessage.MyMessageMove;
 import simulation.custommessage.MyMessageOrder;
 import simulation.custommessage.MyMessageProduct;
-import simulation.custommessage.MyMessageWorkstation;
 
 import java.util.ArrayList;
-import java.util.List;
 
 //meta! id="7"
 public class ManagerGroupA extends OSPABA.Manager {
@@ -38,18 +36,12 @@ public class ManagerGroupA extends OSPABA.Manager {
         }
     }
 
-	//meta! sender="AgentWorker", id="46", type="Response"
-	public void processRequestResponseWorkerFreeWorkstation(MessageForm message) {
-		// prišla free workstation, tzn. že je aj worker free
-		this.firstWorkOnOrder(message);
-    }
+	private void firstWorkOnOrder(ArrayList<Worker> workers) {
+		MySimulation sim = (MySimulation) mySim();
+		ArrayList<Workstation> workstations = sim.getFreeWorkstations(workers.size());
 
-	private void firstWorkOnOrder(MessageForm message) {
-		MyMessageWorkstation myMessage = (MyMessageWorkstation) message;
-		ArrayList<Workstation> workstations = myMessage.getWorkstations();
-
-		ArrayList<Worker> workers = myAgent().group().getFreeWorkers();
 		ArrayList<MyMessageProduct> msgProducts = new ArrayList<>();
+
 		int b = Math.min(workstations.size(), workers.size());
 		int amount = Math.min(b, myAgent().group().queueSize());
 
@@ -124,24 +116,16 @@ public class ManagerGroupA extends OSPABA.Manager {
 
 		// je to nova objednávka ked prišla agentovi A
 		// ak je free worker, skús vyžiadať workstation
-		this.startWork(message);
+		this.startWork();
     }
 
-	private void startWork(MessageForm message) {
-		List<Worker> freeWorkers = this.myAgent().group().getFreeWorkers();
+	private void startWork() {
+		if (myAgent().group().queueSize() == 0) return;
+
+		ArrayList<Worker> freeWorkers = this.myAgent().group().getFreeWorkers();
 		if (freeWorkers.isEmpty()) return;
 
-		int amount = Math.min(freeWorkers.size(), myAgent().group().queueSize());
-
-		this.requestWorkstation(message, amount);
-	}
-
-	private void requestWorkstation(MessageForm message, int amount) {
-		MyMessageWorkstation msg = new MyMessageWorkstation(message);
-		msg.setAmount(amount);
-		msg.setCode(Mc.requestResponseWorkerFreeWorkstation);
-		msg.setAddressee(Id.agentWorker);
-		this.request(msg);
+		this.firstWorkOnOrder(freeWorkers);
 	}
 
 	//meta! sender="AgentWorker", id="53", type="Response"
@@ -174,12 +158,14 @@ public class ManagerGroupA extends OSPABA.Manager {
 		msgProduct.setAddressee(Id.agentWorker);
 		this.response(msgProduct);
 
-		this.sendNoticeToWorker();
-
-		if (myAgent().group().queueSize() > 0) {
-			this.startWork(message);
-		}
+		this.sendRequestToWorker(new MyMessage(mySim()));
     }
+
+	public void sendRequestToWorker(MessageForm message) {
+		message.setCode(Mc.requestResponseWorkerAFree);
+		message.setAddressee(Id.agentWorker);
+		this.request(message);
+	}
 
 	//meta! sender="ProcessPreparing", id="50", type="Finish"
 	public void processFinishProcessPreparing(MessageForm message) {
@@ -192,13 +178,8 @@ public class ManagerGroupA extends OSPABA.Manager {
 
 	//meta! sender="ProcessFittingGroupA", id="52", type="Finish"
 	public void processFinishProcessFittingGroupA(MessageForm message) {
-		message.setCode(Mc.requestResponseFittingAssembly);
-		message.setAddressee(Id.agentWorker);
-		this.response(message);
-
-		if (myAgent().group().queueSize() > 0) {
-			this.startWork(new MyMessageProduct(message));
-		}
+		this.sendRequestToWorker(message);
+		// TODO
     }
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -207,41 +188,68 @@ public class ManagerGroupA extends OSPABA.Manager {
         }
     }
 
-	//meta! sender="AgentWorker", id="96", type="Request"
-	public void processRequestResponseFittingAssembly(MessageForm message) {
+	//meta! sender="AgentWorker", id="99", type="Notice"
+	public void processNoticeWorkstationFreed(MessageForm message) {
+		if (myAgent().group().queueSize() > 0) {
+			this.startWork();
+		}
+	}
+
+	//meta! sender="AgentWorker", id="105", type="Response"
+	public void processRequestResponseWorkerAFree(MessageForm message) {
+		// ak nepošle s5 produkt, žiadny nečaká na fitting, začni next work
+		// ak pošle fitting needed
+		if (message instanceof MyMessageProduct msgProduct) {
+			Product product = msgProduct.getProduct();
+			if (product == null || product.getProductActivity() != ProductActivity.ASSEMBLED) {
+				this.startWork();
+			} else if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
+				Worker worker = myAgent().group().getFreeWorker();
+				if (worker == null)
+					throw new IllegalStateException("Worker a isnt free when should be");
+
+				Workstation workstation = product.getWorkstation();
+
+				worker.setCurrentWorkstation(workstation);
+				worker.setCurrentProduct(product);
+
+				product.setWorker(worker);
+
+				if (worker.getLocation() == product.getWorkstation()) {
+					this.startProcess(message, product, Id.processFittingGroupA);
+				} else {
+					// presun
+					this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
+				}
+			} else {
+				throw new IllegalStateException("Manager group A, invalid product");
+			}
+		}
+	}
+
+	//meta! sender="AgentWorker", id="111", type="Notice"
+	public void processNoticeTryFit(MessageForm message) {
 		Worker worker = myAgent().group().getFreeWorker();
 		if (worker == null) {
-			// worker nie je free
-			message.setCode(Mc.requestResponseFittingAssembly);
+			message.setCode(Mc.noticeProductFitted);
 			message.setAddressee(Id.agentWorker);
-			this.response(message);
+			this.notice(message);
 			return;
 		}
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
+		Workstation workstation = product.getWorkstation();
+
+		worker.setCurrentWorkstation(workstation);
+		worker.setCurrentProduct(product);
 
 		product.setWorker(worker);
-		worker.setCurrentProduct(product);
 
 		if (worker.getLocation() == product.getWorkstation()) {
 			this.startProcess(message, product, Id.processFittingGroupA);
 		} else {
 			// presun
 			this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
-		}
-	}
-
-	public void sendNoticeToWorker() {
-		MyMessage msg = new MyMessage(mySim());
-		msg.setCode(Mc.noticeAgentGroupAFreed);
-		msg.setAddressee(Id.agentWorker);
-		this.notice(msg);
-	}
-
-	//meta! sender="AgentWorker", id="99", type="Notice"
-	public void processNoticeWorkstationFreed(MessageForm message) {
-		if (myAgent().group().queueSize() > 0) {
-			this.startWork(message);
 		}
 	}
 
@@ -252,40 +260,40 @@ public class ManagerGroupA extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.requestResponseWorkerAFree:
+			processRequestResponseWorkerAFree(message);
+		break;
+
 		case Mc.requestResponseWorkAgentA:
 			processRequestResponseWorkAgentA(message);
 		break;
 
-		case Mc.requestResponseFittingAssembly:
-			processRequestResponseFittingAssembly(message);
-		break;
-
 		case Mc.finish:
 			switch (message.sender().id()) {
-			case Id.processCutting:
-				processFinishProcessCutting(message);
+			case Id.processFittingGroupA:
+				processFinishProcessFittingGroupA(message);
 			break;
 
 			case Id.processPreparing:
 				processFinishProcessPreparing(message);
 			break;
 
-			case Id.processFittingGroupA:
-				processFinishProcessFittingGroupA(message);
+			case Id.processCutting:
+				processFinishProcessCutting(message);
 			break;
 			}
+		break;
+
+		case Mc.noticeWorkstationFreed:
+			processNoticeWorkstationFreed(message);
 		break;
 
 		case Mc.requestResponseMoveWorker:
 			processRequestResponseMoveWorker(message);
 		break;
 
-		case Mc.requestResponseWorkerFreeWorkstation:
-			processRequestResponseWorkerFreeWorkstation(message);
-		break;
-
-		case Mc.noticeWorkstationFreed:
-			processNoticeWorkstationFreed(message);
+		case Mc.noticeTryFit:
+			processNoticeTryFit(message);
 		break;
 
 		default:
