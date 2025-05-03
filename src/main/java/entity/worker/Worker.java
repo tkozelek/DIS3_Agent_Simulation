@@ -13,14 +13,12 @@ public class Worker {
     private WorkerWork currentWork;
     private ILocation location;
     private Product currentProduct;
-    private Workstation currentWorkstation;
     private int finishedTasks = 0;
 
     public Worker(WorkerGroup group) {
         this.id = Ids.getWorkerId();
         this.group = group;
         this.currentWork = WorkerWork.IDLE;
-        this.currentWorkstation = null;
         this.location = Storage.STORAGE;
     }
 
@@ -31,14 +29,6 @@ public class Worker {
     public void setCurrentProduct(Product currentProduct) {
         this.currentProduct = currentProduct;
         if (currentProduct != null) finishedTasks++;
-    }
-
-    public Workstation getCurrentWorkstation() {
-        return currentWorkstation;
-    }
-
-    public void setCurrentWorkstation(Workstation currentWorkstation) {
-        this.currentWorkstation = currentWorkstation;
     }
 
     public ILocation getLocation() {

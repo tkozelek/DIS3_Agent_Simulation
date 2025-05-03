@@ -86,6 +86,8 @@ public class ProcessCutting extends OSPABA.Process {
 				if (Constants.DEBUG_PROCESS)
 					System.out.printf("[%s] [%s] P. cutting finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 
+				product.validateTimes();
+
 				product.setProductActivity(ProductActivity.CUT);
 
 				product.clearWorker(mySim().currentTime());

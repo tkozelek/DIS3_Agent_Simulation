@@ -46,14 +46,16 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
             // vytvor order
             int productAmount = this.myAgent().getProductAmountGenerator().sample();
             Order order = new Order();
+            MyMessageOrder customMsg
+                    = new MyMessageOrder(this.mySim());
             for (int i = 0; i < productAmount; i++) {
                 Product product = new Product((ProductType) this.myAgent().getProductTypeGenerator().sample());
                 product.setShouldBePainted(myAgent().shouldBePainted());
                 order.addProduct(product);
+                product.setOrder(customMsg);
             }
             //
-            MyMessageOrder customMsg
-                    = new MyMessageOrder(this.mySim(), order);
+            customMsg.setOrder(order);
             customMsg.setCode(Mc.holdOrderArrival);
 
             this.hold(offsetArrival, customMsg);

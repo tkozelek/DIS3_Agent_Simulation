@@ -58,6 +58,7 @@ public class MainWindow extends JFrame {
     private JCheckBox showStatsCheckBox;
     private JTextField fieldWorkstation;
     private JLabel labelFitting;
+    private JLabel labelAverageProductTotal;
     private JFreeChart chart1;
     private Chart chart;
 
@@ -208,19 +209,33 @@ public class MainWindow extends JFrame {
     }
 
     private void updateAverageTimeInSystemTotal(SimulationData simData) {
-//        if (simData.orderTimeInSystem() != null && simData.orderTimeInSystem()[1] != null) {
-//            double[] is = simData.orderTimeInSystem()[1].getConfidenceInterval();
-//            this.labelAverageTimeInSystemTotal.setText("<html>" + String.format("%.2fh (%.2fs)<br>[%.2f | %.2f]" + "</html>",
-//                    (simData.orderTimeInSystem()[1].getMean() / 60 / 60),
-//                    (simData.orderTimeInSystem()[1].getMean()),
-//                    is[0],
-//                    is[1]));
-//            this.labelGraph.setText(String.format("%.2fh (%.2fs) [%.2f | %.2f]",
-//                    simData.orderTimeInSystem()[1].getMean() / 60 / 60,
-//                    simData.orderTimeInSystem()[1].getMean(),
-//                    is[0],
-//                    is[1]));
-//        }
+        if (simData.statOrder() != null && simData.statOrder()[1] != null) {
+            double[] is = simData.statOrder()[1].sampleSize() > 2 ? simData.statOrder()[1].confidenceInterval_95() : new double[]{0.0,0.0};
+            this.labelAverageTimeInSystemTotal.setText("<html>" + String.format("%.2fh (%.2fs)<br>[%.2f | %.2f]" + "</html>",
+                    (simData.statOrder()[1].mean() / 60 / 60),
+                    (simData.statOrder()[1].mean()),
+                    is[0],
+                    is[1]));
+            this.labelGraph.setText(String.format("%.2fh (%.2fs) [%.2f | %.2f]",
+                    simData.statOrder()[1].mean() / 60 / 60,
+                    simData.statOrder()[1].mean(),
+                    is[0],
+                    is[1]));
+        }
+
+        if (simData.statProduct() != null && simData.statProduct()[1] != null) {
+            double[] is = simData.statProduct()[1].sampleSize() > 2 ? simData.statProduct()[1].confidenceInterval_95() : new double[]{0.0,0.0};
+            this.labelAverageProductTotal.setText("<html>" + String.format("%.2fh (%.2fs)<br>[%.2f | %.2f]" + "</html>",
+                    (simData.statProduct()[1].mean() / 60 / 60),
+                    (simData.statProduct()[1].mean()),
+                    is[0],
+                    is[1]));
+            this.labelGraph.setText(String.format("%.2fh (%.2fs) [%.2f | %.2f]",
+                    simData.statProduct()[1].mean() / 60 / 60,
+                    simData.statProduct()[1].mean(),
+                    is[0],
+                    is[1]));
+        }
     }
 
     private void updateQueueSize(SimulationData simData) {

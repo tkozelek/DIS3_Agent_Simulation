@@ -90,6 +90,8 @@ public class ProcessAssembly extends OSPABA.Process {
 				}
 				product.setFinishAssemblyTime(mySim().currentTime());
 
+				product.validateTimes();
+
 				this.assistantFinished(message);
 				break;
 		}

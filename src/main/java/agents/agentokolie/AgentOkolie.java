@@ -17,6 +17,7 @@ import java.util.Random;
 //meta! id="1"
 public class AgentOkolie extends OSPABA.Agent {
     private ArrayList<Order> ordersInSystem;
+    private ArrayList<Order> finishedOrders;
 
     private final UniformDiscreteRNG productAmountGenerator;
     private EnumGenerator productTypeGenerator;
@@ -32,6 +33,7 @@ public class AgentOkolie extends OSPABA.Agent {
 
 
         this.ordersInSystem = new ArrayList<>();
+        this.finishedOrders = new ArrayList<>();
 
         this.randPaintingGenerator = new Random(sim.getSeedGenerator().sample());
 
@@ -53,9 +55,13 @@ public class AgentOkolie extends OSPABA.Agent {
     }
 
     public void removeOrder(Order order) {
-        order.setFinishTime(this.mySim().currentTime());
         ordersInSystem.remove(order);
     }
+
+    public void addToFinishedOrders(Order order) {
+        finishedOrders.add(order);
+    }
+
 
     public ArrayList<Order> getOrdersInSystem() {
         return ordersInSystem;

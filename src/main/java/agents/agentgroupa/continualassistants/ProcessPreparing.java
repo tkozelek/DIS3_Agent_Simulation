@@ -57,6 +57,8 @@ public class ProcessPreparing extends OSPABA.Process {
 				Product product = productMessage.getProduct();
 				product.setProductActivity(ProductActivity.PREPARED);
 
+				product.validateTimes();
+
 				if (Constants.DEBUG_PROCESS)
 					System.out.printf("[%s] [%s] P. preparing finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
 

@@ -31,14 +31,15 @@ public class AgentWorker extends OSPABA.Agent {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerWorker(Id.managerWorker, mySim(), this);
-		addOwnMessage(Mc.noticeProductFitted);
+		addOwnMessage(Mc.noticeAgentAFreed);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 		addOwnMessage(Mc.requestResponseWorkOnOrderWorkplace);
+		addOwnMessage(Mc.requestResponseTryFitGroupC);
 		addOwnMessage(Mc.requestResponseWorkAgentA);
 		addOwnMessage(Mc.requestResponseWorkAgentB);
+		addOwnMessage(Mc.requestResponseTryFitGroupA);
 		addOwnMessage(Mc.requestResponseWorkAgentC);
-		addOwnMessage(Mc.requestResponseWorkerAFree);
-		addOwnMessage(Mc.requestResponseWorkerCFree);
+		addOwnMessage(Mc.noticeAgentCFreed);
 	}
 	//meta! tag="end"
 }

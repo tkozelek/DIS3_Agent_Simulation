@@ -45,12 +45,13 @@ public class Group {
         }
     }
 
-    public ArrayList<Worker> getFreeWorkers() {
+    public ArrayList<Worker> getFreeWorkers(int amount) {
         ArrayList<Worker> freeWorkers = new ArrayList<>();
         for (Worker w : workers) {
-            if (w.getCurrentWork() == WorkerWork.IDLE) {
+            if (w.getCurrentWork() == WorkerWork.IDLE)
                 freeWorkers.add(w);
-            }
+            if (freeWorkers.size() >= amount)
+                break;
         }
         return freeWorkers;
     }

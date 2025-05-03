@@ -25,8 +25,8 @@ public class AgentMove extends Agent {
 	//meta! userInfo="Generated code: do not modify", tag="begin"
 	private void init() {
 		new ManagerMove(Id.managerMove, mySim(), this);
-		new ProcessAgentMove(Id.processAgentMove, mySim(), this);
 		new ProcessAgentMoveStorage(Id.processAgentMoveStorage, mySim(), this);
+		new ProcessAgentMove(Id.processAgentMove, mySim(), this);
 		addOwnMessage(Mc.requestResponseMoveWorker);
 	}
 	//meta! tag="end"

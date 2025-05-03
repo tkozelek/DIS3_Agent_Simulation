@@ -1,6 +1,7 @@
 package simulation;
 
 import OSPABA.*;
+import OSPStat.Stat;
 import agents.agentworkplace.*;
 import agents.agentworker.*;
 import agents.agentgroupa.*;
@@ -34,6 +35,13 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
 	private boolean isPaused;
 	private int speed;
+
+	// stat
+	private Stat statProductTimeInSystemReplication;
+	private Stat statProductTimeInSystemTotal;
+
+	private Stat statOrderTimeInSystemReplication;
+	private Stat statOrderTimeInSystemTotal;
 
 	public MySimulation(Long seed, int[] groups, int wCount) {
 		seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
@@ -94,6 +102,22 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		}
 	}
 
+	public Stat getStatProductTimeInSystemReplication() {
+		return statProductTimeInSystemReplication;
+	}
+
+	public Stat getStatProductTimeInSystemTotal() {
+		return statProductTimeInSystemTotal;
+	}
+
+	public Stat getStatOrderTimeInSystemReplication() {
+		return statOrderTimeInSystemReplication;
+	}
+
+	public Stat getStatOrderTimeInSystemTotal() {
+		return statOrderTimeInSystemTotal;
+	}
+
 	public void togglePauseSimulation() {
 		isPaused = !isPaused;
 		if (isPaused)
@@ -107,7 +131,12 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		super.prepareSimulation();
 		// Create global statistcis
 
-		this.createWorkstations();
+		this.initTotalStats();
+	}
+
+	private void initTotalStats() {
+		this.statProductTimeInSystemTotal = new Stat();
+		this.statOrderTimeInSystemTotal = new Stat();
 	}
 
 	@Override
@@ -115,16 +144,29 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		super.prepareReplication();
 		// Reset entities, queues, local statistics, etc...
 
+		if (currentReplication() % 50 == 0)
+			System.out.println(currentReplication());
+
 		_agentBoss.initOkolie();
+		this.createWorkstations();
+		this.initReplicationStats();
 		Ids.resetAll();
 		this.setSpeed(speed);
 		this.notifyObservers();
+	}
+
+	private void initReplicationStats() {
+		this.statProductTimeInSystemReplication = new Stat();
+		this.statOrderTimeInSystemReplication = new Stat();
 	}
 
 	@Override
 	public void replicationFinished() {
 		// Collect local statistics into global, update UI, etc...
 		super.replicationFinished();
+
+		this.statProductTimeInSystemTotal.addSample(this.statProductTimeInSystemReplication.mean());
+		this.statOrderTimeInSystemTotal.addSample(this.statOrderTimeInSystemReplication.mean());
 
 		this.notifyObservers();
 	}
@@ -133,6 +175,20 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	public void simulationFinished() {
 		// Display simulation results
 		super.simulationFinished();
+
+		System.out.println("Replications: " + replicationCount());
+		System.out.format("Groups: %d %d %d\n", groups[0], groups[1], groups[2]);
+		System.out.println(statToString(statOrderTimeInSystemTotal, "Order time total"));
+		System.out.println(statToString(statProductTimeInSystemTotal, "Product time total"));
+	}
+
+	public String statToString(Stat stat, String name) {
+		double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0,0};
+		return String.format("%s: %.2fh %.2fs <%.2f | %.2f>", name,
+				(stat.mean() / 60 / 60),
+				(stat.mean()),
+				is[0],
+				is[1]);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -254,6 +310,12 @@ public AgentGroupC agentGroupC()
 						_agentGroupB.group().queueSize(),
 						_agentGroupC.group().queueSize(),
 						_agentWorker.group().queueSize(),
+				},
+				new Stat[]{
+						statProductTimeInSystemReplication, statProductTimeInSystemTotal
+				},
+				new Stat[]{
+						statOrderTimeInSystemReplication, statOrderTimeInSystemTotal
 				},
 				false);
 

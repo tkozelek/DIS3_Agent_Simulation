@@ -42,7 +42,6 @@ public class Order {
     }
 
     public void addProduct(Product product) {
-        product.addOrder(this);
         this.products.add(product);
     }
 

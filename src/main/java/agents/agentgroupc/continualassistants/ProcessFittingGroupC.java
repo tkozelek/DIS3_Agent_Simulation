@@ -67,6 +67,7 @@ public class ProcessFittingGroupC extends OSPABA.Process {
 
 				// finish fitting time
 				product.setFinishFittingAssemblyTime(mySim().currentTime());
+				product.validateTimes();
 
 				this.assistantFinished(message);
 		}

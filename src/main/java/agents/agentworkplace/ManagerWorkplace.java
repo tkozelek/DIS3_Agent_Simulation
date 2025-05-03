@@ -74,12 +74,12 @@ public class ManagerWorkplace extends OSPABA.Manager {
 		switch (message.code()) {
 		case Mc.requestResponseMoveWorker:
 			switch (message.sender().id()) {
-			case Id.agentWorker:
-				processRequestResponseMoveWorkerAgentWorker(message);
-			break;
-
 			case Id.agentMove:
 				processRequestResponseMoveWorkerAgentMove(message);
+			break;
+
+			case Id.agentWorker:
+				processRequestResponseMoveWorkerAgentWorker(message);
 			break;
 			}
 		break;

@@ -1,12 +1,13 @@
 package entity.product;
 
 
+import config.Constants;
 import entity.Ids;
-import entity.order.Order;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
+import simulation.custommessage.MyMessageOrder;
 
 public class Product implements Comparable<Product> {
     private final int id;
@@ -33,7 +34,7 @@ public class Product implements Comparable<Product> {
     private double startFittingAssemblyTime;
     private double finishFittingAssemblyTime;
 
-    private Order order;
+    private MyMessageOrder order;
 
     private boolean shouldBePainted;
 
@@ -221,15 +222,33 @@ public class Product implements Comparable<Product> {
 
     @Override
     public int compareTo(Product o) {
-        int en = this.productActivity.compareTo(o.productActivity);
-        return en == 0 ? Integer.compare(id, o.id) : en;
+        int result = o.productActivity.compareTo(this.productActivity);
+        return result == 0 ? Integer.compare(this.id, o.id) : result;
     }
 
-    public void addOrder(Order order) {
+    public void setOrder(MyMessageOrder order) {
         this.order = order;
     }
 
-    public Order getOrder() {
+    public MyMessageOrder getMessageOrder() {
         return order;
     }
+
+    private void checkTimeOrder(double start, double finish, String name) {
+        if (start > finish && finish != 0) {
+            throw new IllegalStateException(name + ": start time cannot be after finish time.");
+        }
+    }
+
+    public void validateTimes() {
+        if (!Constants.CHECK_TIMES)
+            return;
+        checkTimeOrder(arrivalTime, finishTime, "Arrival");
+        checkTimeOrder(startCuttingTime, finishCuttingTime, "Cutting");
+        checkTimeOrder(startStainingTime, finishStainingTime, "Staining");
+        checkTimeOrder(startPaintingTime, finishPaintingTime, "Painting");
+        checkTimeOrder(startAssemblyTime, finishAssemblyTime, "Assembly");
+        checkTimeOrder(startFittingAssemblyTime, finishFittingAssemblyTime, "Fitting Assembly");
+    }
+
 }

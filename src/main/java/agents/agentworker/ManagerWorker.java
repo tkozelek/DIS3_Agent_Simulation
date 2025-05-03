@@ -75,20 +75,20 @@ public class ManagerWorker extends OSPABA.Manager {
 	public void processRequestResponseWorkAgentB(MessageForm message)
 	{
 		// worker B dokoncil pracu
+		// assembled
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
 		if (product.getProductType() == ProductType.CUPBOARD) {
 			// fitting assembly
 			// skus A
 			if (this.myAgent().group().queueSize() > 0) {
-				// uz su v queue pridaj len
+				// už sú v queue nejaké
 				this.myAgent().group().addQueue(msgProduct);
 				return;
 			}
-			// ak nie je skus workera A
-			message.setCode(Mc.noticeTryFit);
-			message.setAddressee(Id.agentGroupA);
-			this.request(message);
+			msgProduct.setCode(Mc.requestResponseTryFitGroupA);
+			msgProduct.setAddressee(Id.agentGroupA);
+			this.request(msgProduct);
 		} else {
 			// finished
 			product.setProductAsDone(mySim().currentTime());
@@ -145,65 +145,80 @@ public class ManagerWorker extends OSPABA.Manager {
 		this.response(message);
 	}
 
-	//meta! sender="AgentGroupA", id="107", type="Notice"
-	public void processNoticeProductFittedAgentGroupA(MessageForm message) {
-		if (checkIfDoneOrAddQueue(message)) {
-			// skus aj C
-			message.setCode(Mc.noticeTryFit);
-			message.setAddressee(Id.agentGroupC);
-			this.notice(message);
+	//meta! sender="AgentGroupA", id="119", type="Notice"
+	public void processNoticeAgentAFreed(MessageForm message) {
+		if (myAgent().group().queueSize() > 0) {
+			MyMessageProduct msgProduct = myAgent().group().pollQueue();
+			msgProduct.setCode(Mc.requestResponseTryFitGroupA);
+			msgProduct.setAddressee(Id.agentGroupA);
+			this.request(msgProduct);
+			return;
 		}
+		MyMessageProduct msgProduct = new MyMessageProduct(mySim(), null);
+		msgProduct.setCode(Mc.requestResponseTryFitGroupA);
+		msgProduct.setAddressee(Id.agentGroupA);
+		this.request(msgProduct);
 	}
 
-	//meta! sender="AgentGroupC", id="108", type="Notice"
-	public void processNoticeProductFittedAgentGroupC(MessageForm message) {
-		if (checkIfDoneOrAddQueue(message)) {
-			this.myAgent().group().addQueue((MyMessageProduct) message);
-		}
-	}
-
-	private boolean checkIfDoneOrAddQueue(MessageForm message) {
+	//meta! sender="AgentGroupA", id="117", type="Response"
+	public void processRequestResponseTryFitGroupA(MessageForm message) {
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
+
+		if (product == null) return;
+
 		if (product.getProductActivity() == ProductActivity.DONE) {
-			// worker A bol volny, spraivl
-			message.setCode(Mc.requestResponseWorkOnOrderWorkplace);
-			message.setAddressee(Id.agentWorkplace);
-			this.response(message);
-		} else if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
-			// worker A nie je volny
-			return true;
-		} else {
-			this.myAgent().group().addQueue(msgProduct);
-		}
-		return false;
-	}
-
-	//meta! sender="AgentGroupA", id="105", type="Request"
-	public void processRequestResponseWorkerAFree(MessageForm message) {
-		if (this.myAgent().group().queueSize() > 0) {
-			MyMessageProduct msgProduct = this.myAgent().group().pollQueue();
-			msgProduct.setCode(Mc.requestResponseWorkerAFree);
-			msgProduct.setAddressee(Id.agentGroupA);
+			// je dokonceny
+			System.out.println("FITTED A");
+			msgProduct.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+			msgProduct.setAddressee(Id.agentWorkplace);
 			this.response(msgProduct);
+			return;
 		}
 
-		message.setCode(Mc.requestResponseWorkerAFree);
-		message.setAddressee(Id.agentGroupA);
-		this.response(message);
-	}
-
-	//meta! sender="AgentGroupC", id="106", type="Request"
-	public void processRequestResponseWorkerCFree(MessageForm message) {
-		if (this.myAgent().group().queueSize() > 0) {
-			MyMessageProduct msgProduct = this.myAgent().group().pollQueue();
-			msgProduct.setCode(Mc.requestResponseWorkerCFree);
+		if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
+			// skus C
+			msgProduct.setCode(Mc.requestResponseTryFitGroupC);
 			msgProduct.setAddressee(Id.agentGroupC);
-			this.response(msgProduct);
+			this.request(msgProduct);
 		}
-		message.setCode(Mc.requestResponseWorkerCFree);
-		message.setAddressee(Id.agentGroupC);
-		this.response(message);
+	}
+
+	//meta! sender="AgentGroupC", id="118", type="Response"
+	public void processRequestResponseTryFitGroupC(MessageForm message) {
+		MyMessageProduct msgProduct = (MyMessageProduct) message;
+		Product product = msgProduct.getProduct();
+
+		if (product == null) return;
+
+		if (product.getProductActivity() == ProductActivity.DONE) {
+			// je dokonceny
+			System.out.println("FITTED C");
+			msgProduct.setCode(Mc.requestResponseWorkOnOrderWorkplace);
+			msgProduct.setAddressee(Id.agentWorkplace);
+			this.response(msgProduct);
+			return;
+		}
+
+		if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
+			// nevyšlo ani C, vlož do queue
+			myAgent().group().addQueue(msgProduct);
+		}
+	}
+
+	//meta! sender="AgentGroupC", id="120", type="Notice"
+	public void processNoticeAgentCFreed(MessageForm message) {
+		if (myAgent().group().queueSize() > 0) {
+			MyMessageProduct msgProduct = myAgent().group().pollQueue();
+			msgProduct.setCode(Mc.requestResponseTryFitGroupC);
+			msgProduct.setAddressee(Id.agentGroupC);
+			this.request(msgProduct);
+			return;
+		}
+		MyMessageProduct msgProduct = new MyMessageProduct(mySim(), null);
+		msgProduct.setCode(Mc.requestResponseTryFitGroupC);
+		msgProduct.setAddressee(Id.agentGroupC);
+		this.request(msgProduct);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
@@ -213,20 +228,12 @@ public class ManagerWorker extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.requestResponseWorkerAFree:
-			processRequestResponseWorkerAFree(message);
+		case Mc.requestResponseTryFitGroupA:
+			processRequestResponseTryFitGroupA(message);
 		break;
 
-		case Mc.noticeProductFitted:
-			switch (message.sender().id()) {
-			case Id.agentGroupA:
-				processNoticeProductFittedAgentGroupA(message);
-			break;
-
-			case Id.agentGroupC:
-				processNoticeProductFittedAgentGroupC(message);
-			break;
-			}
+		case Mc.requestResponseWorkAgentB:
+			processRequestResponseWorkAgentB(message);
 		break;
 
 		case Mc.requestResponseMoveWorker:
@@ -235,12 +242,12 @@ public class ManagerWorker extends OSPABA.Manager {
 				processRequestResponseMoveWorkerAgentWorkplace(message);
 			break;
 
-			case Id.agentGroupC:
-				processRequestResponseMoveWorkerAgentGroupC(message);
-			break;
-
 			case Id.agentGroupA:
 				processRequestResponseMoveWorkerAgentGroupA(message);
+			break;
+
+			case Id.agentGroupC:
+				processRequestResponseMoveWorkerAgentGroupC(message);
 			break;
 
 			case Id.agentGroupB:
@@ -249,24 +256,28 @@ public class ManagerWorker extends OSPABA.Manager {
 			}
 		break;
 
-		case Mc.requestResponseWorkAgentA:
-			processRequestResponseWorkAgentA(message);
-		break;
-
-		case Mc.requestResponseWorkAgentC:
-			processRequestResponseWorkAgentC(message);
+		case Mc.requestResponseTryFitGroupC:
+			processRequestResponseTryFitGroupC(message);
 		break;
 
 		case Mc.requestResponseWorkOnOrderWorkplace:
 			processRequestResponseWorkOnOrderWorkplace(message);
 		break;
 
-		case Mc.requestResponseWorkerCFree:
-			processRequestResponseWorkerCFree(message);
+		case Mc.requestResponseWorkAgentA:
+			processRequestResponseWorkAgentA(message);
 		break;
 
-		case Mc.requestResponseWorkAgentB:
-			processRequestResponseWorkAgentB(message);
+		case Mc.noticeAgentCFreed:
+			processNoticeAgentCFreed(message);
+		break;
+
+		case Mc.requestResponseWorkAgentC:
+			processRequestResponseWorkAgentC(message);
+		break;
+
+		case Mc.noticeAgentAFreed:
+			processNoticeAgentAFreed(message);
 		break;
 
 		default:

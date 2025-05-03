@@ -7,9 +7,8 @@ import entity.order.Order;
 public class MyMessageOrder extends MessageForm {
     private Order order;
 
-    public MyMessageOrder(Simulation mySim, Order order) {
+    public MyMessageOrder(Simulation mySim) {
         super(mySim);
-        this.order = order;
     }
 
     protected MyMessageOrder(MessageForm original) {
@@ -26,6 +25,10 @@ public class MyMessageOrder extends MessageForm {
         return "MsgOrder{" +
                 "order=" + order +
                 '}';
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public Order getOrder() {

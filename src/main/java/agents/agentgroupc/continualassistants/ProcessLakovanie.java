@@ -83,6 +83,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 				product.setFinishPaintingTime(mySim().currentTime());
 
 				product.clearWorker(mySim().currentTime());
+				product.validateTimes();
 
 				this.assistantFinished(message);
 				break;

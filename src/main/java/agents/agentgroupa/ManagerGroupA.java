@@ -58,7 +58,6 @@ public class ManagerGroupA extends OSPABA.Manager {
 			MyMessageProduct msgProduct = msgProducts.get(i);
 			Product product = msgProduct.getProduct();
 
-			worker.setCurrentWorkstation(workstation);
 			worker.setCurrentProduct(product);
 
 			product.setWorkstation(workstation);
@@ -116,13 +115,13 @@ public class ManagerGroupA extends OSPABA.Manager {
 
 		// je to nova objednávka ked prišla agentovi A
 		// ak je free worker, skús vyžiadať workstation
-		this.startWork();
+		this.tryStartWork();
     }
 
-	private void startWork() {
+	private void tryStartWork() {
 		if (myAgent().group().queueSize() == 0) return;
 
-		ArrayList<Worker> freeWorkers = this.myAgent().group().getFreeWorkers();
+		ArrayList<Worker> freeWorkers = this.myAgent().group().getFreeWorkers(myAgent().group().queueSize());
 		if (freeWorkers.isEmpty()) return;
 
 		this.firstWorkOnOrder(freeWorkers);
@@ -135,7 +134,8 @@ public class ManagerGroupA extends OSPABA.Manager {
 		Worker worker = msgMove.getWorker();
 		Product product = worker.getCurrentProduct();
 
-		if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
+		// ak sme skončili presun
+		if (product.getProductActivity() == ProductActivity.ASSEMBLED && worker.getLocation() == product.getWorkstation()) {
 			startProcess(message, product, Id.processFittingGroupA);
 			return;
 		}
@@ -158,28 +158,32 @@ public class ManagerGroupA extends OSPABA.Manager {
 		msgProduct.setAddressee(Id.agentWorker);
 		this.response(msgProduct);
 
-		this.sendRequestToWorker(new MyMessage(mySim()));
+//		this.tryStartWork();
+		this.sendNoticeToWorker();
     }
 
-	public void sendRequestToWorker(MessageForm message) {
-		message.setCode(Mc.requestResponseWorkerAFree);
-		message.setAddressee(Id.agentWorker);
-		this.request(message);
+	/**
+	 * Send notice to worker that a worker is freed
+	 */
+	public void sendNoticeToWorker() {
+		MyMessage msg = new MyMessage(mySim());
+		msg.setCode(Mc.noticeAgentAFreed);
+		msg.setAddressee(Id.agentWorker);
+		this.notice(msg);
 	}
 
 	//meta! sender="ProcessPreparing", id="50", type="Finish"
 	public void processFinishProcessPreparing(MessageForm message) {
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Worker worker = msgProduct.getProduct().getWorker();
+		Product product = msgProduct.getProduct();
 
 		// skoncil pracu v sklade -> move to workstation
-		this.moveWorkerRequest(message, worker, worker.getCurrentWorkstation());
+		this.moveWorkerRequest(message, worker, product.getWorkstation());
     }
 
 	//meta! sender="ProcessFittingGroupA", id="52", type="Finish"
 	public void processFinishProcessFittingGroupA(MessageForm message) {
-		this.sendRequestToWorker(message);
-		// TODO
     }
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -191,65 +195,44 @@ public class ManagerGroupA extends OSPABA.Manager {
 	//meta! sender="AgentWorker", id="99", type="Notice"
 	public void processNoticeWorkstationFreed(MessageForm message) {
 		if (myAgent().group().queueSize() > 0) {
-			this.startWork();
+			this.tryStartWork();
 		}
 	}
 
-	//meta! sender="AgentWorker", id="105", type="Response"
-	public void processRequestResponseWorkerAFree(MessageForm message) {
-		// ak nepošle s5 produkt, žiadny nečaká na fitting, začni next work
-		// ak pošle fitting needed
-		if (message instanceof MyMessageProduct msgProduct) {
-			Product product = msgProduct.getProduct();
-			if (product == null || product.getProductActivity() != ProductActivity.ASSEMBLED) {
-				this.startWork();
-			} else if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
-				Worker worker = myAgent().group().getFreeWorker();
-				if (worker == null)
-					throw new IllegalStateException("Worker a isnt free when should be");
-
-				Workstation workstation = product.getWorkstation();
-
-				worker.setCurrentWorkstation(workstation);
-				worker.setCurrentProduct(product);
-
-				product.setWorker(worker);
-
-				if (worker.getLocation() == product.getWorkstation()) {
-					this.startProcess(message, product, Id.processFittingGroupA);
-				} else {
-					// presun
-					this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
-				}
-			} else {
-				throw new IllegalStateException("Manager group A, invalid product");
-			}
-		}
-	}
-
-	//meta! sender="AgentWorker", id="111", type="Notice"
-	public void processNoticeTryFit(MessageForm message) {
+	//meta! sender="AgentWorker", id="117", type="Request"
+	public void processRequestResponseTryFitGroupA(MessageForm message) {
+		// prišiel req od agent workera
+		// skusime fitnut ak je free worker
 		Worker worker = myAgent().group().getFreeWorker();
+		// pošleme s5 spravu
 		if (worker == null) {
-			message.setCode(Mc.noticeProductFitted);
+			message.setCode(Mc.requestResponseTryFitGroupA);
 			message.setAddressee(Id.agentWorker);
-			this.notice(message);
+			this.response(message);
 			return;
 		}
+
+		// worker je free
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
-		Workstation workstation = product.getWorkstation();
-
-		worker.setCurrentWorkstation(workstation);
+		// tzn. že produkt nečaká na fitting
+		if (product == null) {
+			message.setCode(Mc.requestResponseTryFitGroupA);
+			message.setAddressee(Id.agentWorker);
+			this.response(message);
+			this.tryStartWork();
+			return;
+		}
 		worker.setCurrentProduct(product);
-
 		product.setWorker(worker);
 
-		if (worker.getLocation() == product.getWorkstation()) {
-			this.startProcess(message, product, Id.processFittingGroupA);
-		} else {
-			// presun
+		// je worker aj product
+		// skontrolujeme ci je worker na mieste
+		if (worker.getLocation() != product.getWorkstation()) {
+			// nie je na mieste, presunieme
 			this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
+		} else {
+			this.startProcess(msgProduct, product, Id.processFittingGroupA);
 		}
 	}
 
@@ -260,40 +243,36 @@ public class ManagerGroupA extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
-		case Mc.requestResponseWorkerAFree:
-			processRequestResponseWorkerAFree(message);
+		case Mc.requestResponseTryFitGroupA:
+			processRequestResponseTryFitGroupA(message);
 		break;
 
 		case Mc.requestResponseWorkAgentA:
 			processRequestResponseWorkAgentA(message);
 		break;
 
+		case Mc.requestResponseMoveWorker:
+			processRequestResponseMoveWorker(message);
+		break;
+
 		case Mc.finish:
 			switch (message.sender().id()) {
-			case Id.processFittingGroupA:
-				processFinishProcessFittingGroupA(message);
+			case Id.processCutting:
+				processFinishProcessCutting(message);
 			break;
 
 			case Id.processPreparing:
 				processFinishProcessPreparing(message);
 			break;
 
-			case Id.processCutting:
-				processFinishProcessCutting(message);
+			case Id.processFittingGroupA:
+				processFinishProcessFittingGroupA(message);
 			break;
 			}
 		break;
 
 		case Mc.noticeWorkstationFreed:
 			processNoticeWorkstationFreed(message);
-		break;
-
-		case Mc.requestResponseMoveWorker:
-			processRequestResponseMoveWorker(message);
-		break;
-
-		case Mc.noticeTryFit:
-			processNoticeTryFit(message);
 		break;
 
 		default:

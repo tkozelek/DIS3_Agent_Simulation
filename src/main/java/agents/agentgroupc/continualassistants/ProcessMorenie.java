@@ -79,6 +79,7 @@ public class ProcessMorenie extends OSPABA.Process {
 				if (!product.getShouldBePainted()) {
 					product.clearWorker(mySim().currentTime());
 				}
+				product.validateTimes();
 
 				this.assistantFinished(message);
 				break;

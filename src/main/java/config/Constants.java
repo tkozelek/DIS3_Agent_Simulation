@@ -8,7 +8,9 @@ public class Constants {
 
     public static final boolean DEBUG_SCHEDULER = false;
     public static final boolean DEBUG_MANAGER = false;
-    public static final boolean DEBUG_PROCESS = true;
+    public static final boolean DEBUG_PROCESS = false;
+
+    public static final boolean CHECK_TIMES = false;
 
     public static final int MAX_SPEED = 100_000;
     public static final int DEFAULT_SPEED = 1000;

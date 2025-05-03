@@ -5,10 +5,14 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import config.Constants;
 import config.Helper;
+import entity.order.Order;
+import entity.product.Product;
 import simulation.Id;
 import simulation.Mc;
 import simulation.MyMessage;
+import simulation.MySimulation;
 import simulation.custommessage.MyMessageOrder;
+import simulation.custommessage.MyMessageProduct;
 
 //meta! id="1"
 public class ManagerOkolie extends OSPABA.Manager {
@@ -32,8 +36,29 @@ public class ManagerOkolie extends OSPABA.Manager {
         // response na prichod objednavky
         // tzn. objednavka hotova cela
         if (Constants.DEBUG_MANAGER)
-            System.out.printf("[%s] Manazer okolie: odchod objednavky", Helper.timeToDateString(mySim().currentTime(), 6));
+            System.out.printf("[%s] Manazer okolie: odchod objednavky\n", Helper.timeToDateString(mySim().currentTime(), 6));
+        MySimulation sim = (MySimulation) mySim();
+
+        MyMessageProduct msgProduct = (MyMessageProduct) message;
+        Product product = msgProduct.getProduct();
+
+        sim.getStatProductTimeInSystemReplication().addSample(product.getFinishTime() - product.getArrivalTime());
+
+        Order order = product.getMessageOrder().getOrder();
+        double maxFinishTime = 0;
+        for (Product p : order.getProducts()) {
+            if (p.getFinishTime() == 0) {
+                maxFinishTime = 0;
+                return;
+            }
+            if (p.getFinishTime() > maxFinishTime)
+                maxFinishTime = p.getFinishTime();
+        }
+        order.setFinishTime(maxFinishTime);
+        myAgent().addToFinishedOrders(order);
+        sim.getStatOrderTimeInSystemReplication().addSample(order.getFinishTime() - order.getArrivalTime());
     }
+
 
 	//meta! sender="SchedulerOrderArrival", id="18", type="Finish"
 	public void processFinish(MessageForm message) {

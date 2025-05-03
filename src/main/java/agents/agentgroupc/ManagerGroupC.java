@@ -5,25 +5,15 @@ import entity.ILocation;
 import entity.product.Product;
 import entity.product.ProductActivity;
 import entity.worker.Worker;
-import entity.worker.WorkerWork;
-import entity.workstation.Workstation;
 import simulation.*;
 import simulation.custommessage.MyMessageMove;
 import simulation.custommessage.MyMessageProduct;
 
-import java.util.Random;
-
 //meta! id="67"
 public class ManagerGroupC extends OSPABA.Manager {
-
-	private Random randomStaining;
-
 	public ManagerGroupC(int id, Simulation mySim, Agent myAgent) {
 		super(id, mySim, myAgent);
 		init();
-
-		MySimulation sim = (MySimulation) mySim;
-		this.randomStaining = new Random(sim.getSeedGenerator().sample());
 	}
 
 	@Override
@@ -53,10 +43,13 @@ public class ManagerGroupC extends OSPABA.Manager {
 		// žiadosť o obslhuu od agentaworkera -> A dokončené
 		myAgent().group().addQueue((MyMessageProduct) message);
 
-		this.tryStartWorkOnOrder();
+		this.tryStartWork();
 	}
 
-	private void tryStartWorkOnOrder() {
+	/**
+	 * If a worker is available and any product is in the queue
+	 */
+	private void tryStartWork() {
 		Worker worker = myAgent().group().getFreeWorker();
 
 		if (worker == null || myAgent().group().queueSize() == 0) return;
@@ -64,7 +57,6 @@ public class ManagerGroupC extends OSPABA.Manager {
 		MyMessageProduct messageProduct = myAgent().group().pollQueue();
 		Product product = messageProduct.getProduct();
 
-		worker.setCurrentWorkstation(product.getWorkstation());
 		worker.setCurrentProduct(product);
 
 		product.setWorker(worker);
@@ -107,6 +99,19 @@ public class ManagerGroupC extends OSPABA.Manager {
 		message.setCode(Mc.requestResponseWorkAgentC);
 		message.setAddressee(Id.agentWorker);
 		this.response(message);
+
+//		this.tryStartWorkOnOrder();
+		this.sendNoticeToWorker();
+	}
+
+	/**
+	 * Send notice to worker that a worker is freed
+	 */
+	public void sendNoticeToWorker() {
+		MyMessage msg = new MyMessage(mySim());
+		msg.setCode(Mc.noticeAgentCFreed);
+		msg.setAddressee(Id.agentWorker);
+		this.notice(msg);
 	}
 
 	//meta! sender="ProcessMorenie", id="82", type="Finish"
@@ -123,76 +128,51 @@ public class ManagerGroupC extends OSPABA.Manager {
 			message.setCode(Mc.requestResponseWorkAgentC);
 			message.setAddressee(Id.agentWorker);
 			this.response(message);
+
+//			this.tryStartWorkOnOrder();
+			this.sendNoticeToWorker();
 		}
-		if (myAgent().group().queueSize() > 0)
-			this.tryStartWorkOnOrder();
 	}
 
 	//meta! sender="ProcessFittingGroupC", id="95", type="Finish"
 	public void processFinishProcessFittingGroupC(MessageForm message) {
-		this.sendRequestToWorker(message);
+
 	}
 
-	public void sendRequestToWorker(MessageForm message) {
-		message.setCode(Mc.requestResponseWorkerCFree);
-		message.setAddressee(Id.agentWorker);
-		this.request(message);
-	}
-
-	//meta! sender="AgentWorker", id="106", type="Response"
-	public void processRequestResponseWorkerCFree(MessageForm message) {
-		// ak nepošle s5 produkt, žiadny nečaká na fitting, začni next work
-		// ak pošle fitting needed
-		MyMessageProduct msgProduct = (MyMessageProduct) message;
-		Product product = msgProduct.getProduct();
-		if (product == null || product.getProductActivity() != ProductActivity.ASSEMBLED) {
-			this.tryStartWorkOnOrder();
-		} else if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
-			Worker worker = myAgent().group().getFreeWorker();
-			if (worker == null)
-				throw new IllegalStateException("Worker c isnt free when should be");
-
-			Workstation workstation = product.getWorkstation();
-
-			worker.setCurrentWorkstation(workstation);
-			worker.setCurrentProduct(product);
-
-			product.setWorker(worker);
-
-			if (worker.getLocation() == product.getWorkstation()) {
-				this.startProcess(message, product, Id.processFittingGroupC);
-			} else {
-				// presun
-				this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
-			}
-		} else {
-			throw new IllegalStateException("Manager group C, invalid product");
-		}
-	}
-
-	//meta! sender="AgentWorker", id="112", type="Notice"
-	public void processNoticeTryFit(MessageForm message) {
+	//meta! sender="AgentWorker", id="118", type="Request"
+	public void processRequestResponseTryFitGroupC(MessageForm message) {
+		// prišiel req od agent workera
+		// skusime fitnut ak je free worker
 		Worker worker = myAgent().group().getFreeWorker();
+
+		// pošleme s5 spravu
 		if (worker == null) {
-			message.setCode(Mc.noticeProductFitted);
+			message.setCode(Mc.requestResponseTryFitGroupC);
 			message.setAddressee(Id.agentWorker);
-			this.notice(message);
+			this.response(message);
 			return;
 		}
+
+		// worker je free
 		MyMessageProduct msgProduct = (MyMessageProduct) message;
 		Product product = msgProduct.getProduct();
-		Workstation workstation = product.getWorkstation();
-
-		worker.setCurrentWorkstation(workstation);
+		if (product == null) {
+			message.setCode(Mc.requestResponseTryFitGroupC);
+			message.setAddressee(Id.agentWorker);
+			this.response(message);
+			this.tryStartWork();
+			return;
+		}
 		worker.setCurrentProduct(product);
-
 		product.setWorker(worker);
 
-		if (worker.getLocation() == product.getWorkstation()) {
-			this.startProcess(message, product, Id.processFittingGroupC);
-		} else {
-			// presun
+		// je worker aj product
+		// skontrolujeme ci je worker na mieste
+		if (worker.getLocation() != product.getWorkstation()) {
+			// nie je na mieste, presunieme
 			this.moveWorkerRequest(msgProduct, worker, product.getWorkstation());
+		} else {
+			this.startProcess(msgProduct, product, Id.processFittingGroupC);
 		}
 	}
 
@@ -203,12 +183,12 @@ public class ManagerGroupC extends OSPABA.Manager {
 	@Override
 	public void processMessage(MessageForm message) {
 		switch (message.code()) {
+		case Mc.requestResponseMoveWorker:
+			processRequestResponseMoveWorker(message);
+		break;
+
 		case Mc.finish:
 			switch (message.sender().id()) {
-			case Id.processFittingGroupC:
-				processFinishProcessFittingGroupC(message);
-			break;
-
 			case Id.processMorenie:
 				processFinishProcessMorenie(message);
 			break;
@@ -216,23 +196,19 @@ public class ManagerGroupC extends OSPABA.Manager {
 			case Id.processLakovanie:
 				processFinishProcessLakovanie(message);
 			break;
-			}
-		break;
 
-		case Mc.requestResponseMoveWorker:
-			processRequestResponseMoveWorker(message);
+			case Id.processFittingGroupC:
+				processFinishProcessFittingGroupC(message);
+			break;
+			}
 		break;
 
 		case Mc.requestResponseWorkAgentC:
 			processRequestResponseWorkAgentC(message);
 		break;
 
-		case Mc.noticeTryFit:
-			processNoticeTryFit(message);
-		break;
-
-		case Mc.requestResponseWorkerCFree:
-			processRequestResponseWorkerCFree(message);
+		case Mc.requestResponseTryFitGroupC:
+			processRequestResponseTryFitGroupC(message);
 		break;
 
 		default:
