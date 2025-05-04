@@ -44,6 +44,8 @@ public class ManagerOkolie extends OSPABA.Manager {
 
         sim.getStatProductTimeInSystemReplication().addSample(product.getFinishTime() - product.getArrivalTime());
 
+        sim.getStatProductsTimeInSystemReplication()[product.getProductType().ordinal()].addSample(product.getFinishTime() - product.getArrivalTime());
+
         Order order = product.getMessageOrder().getOrder();
         double maxFinishTime = 0;
         for (Product p : order.getProducts()) {
@@ -55,7 +57,6 @@ public class ManagerOkolie extends OSPABA.Manager {
                 maxFinishTime = p.getFinishTime();
         }
         order.setFinishTime(maxFinishTime);
-        myAgent().addToFinishedOrders(order);
 
         sim.getStatOrderTimeInSystemReplication().addSample(order.getFinishTime() - order.getArrivalTime());
     }

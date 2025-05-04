@@ -27,7 +27,10 @@ public class SimulationManager {
         worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
+                double start = System.currentTimeMillis();
                 simulation.simulate(replicationCount, Constants.SIMULATION_TIME);
+                double end = System.currentTimeMillis();
+                System.out.println("Simulation took " + (end - start) + "ms");
                 return null;
             }
 

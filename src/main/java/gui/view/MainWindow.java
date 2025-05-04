@@ -20,6 +20,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalDouble;
 
 public class MainWindow extends JFrame {
     private JPanel panel1;
@@ -196,13 +197,13 @@ public class MainWindow extends JFrame {
         // WORKERS
         if (simData.workers() != null) {
             Worker[][] workers = simData.workers();
-            for (int i = 0; i < workers.length; i++) {
-                for (int j = 0; j < workers[i].length; j++) {
-                    Stat stat = workers[i][j].getStatWorkload();
-                    Stat statTotal = workers[i][j].getStatWorkloadTotal();
-                    String text = String.format("%s: %s", workers[i][j] + " replication", stat.toString());
+            for (Worker[] worker : workers) {
+                for (Worker value : worker) {
+                    Stat stat = value.getStatWorkload();
+                    Stat statTotal = value.getStatWorkloadTotal();
+                    String text = String.format("%s: %s", value + " replication", stat.toString());
                     tempModel.addElement(text);
-                    text = String.format("%s: %s", workers[i][j] + " total", statTotal.toString());
+                    text = String.format("%s: %s", value + " total", statTotal.toString());
                     tempModel.addElement(text);
                 }
             }
@@ -324,9 +325,10 @@ public class MainWindow extends JFrame {
     }
 
     private double calculateWorkloadForGroupReplication(SimulationData simData, int i) {
-        return Arrays.stream(simData.workers()[i])
+        OptionalDouble average =  Arrays.stream(simData.workers()[i])
                 .mapToDouble(w -> w.getStatWorkload().mean())
-                .average().getAsDouble();
+                .average();
+        return average.isPresent() ? average.getAsDouble() : 0;
     }
 
     public void updateWorkersTotal(SimulationData simData) {

@@ -166,7 +166,8 @@ public class ManagerWorker extends OSPABA.Manager {
 
         if (product.getProductActivity() == ProductActivity.DONE) {
             // je dokonceny
-            System.out.println("FITTED A");
+            if (Constants.DEBUG_MANAGER)
+                System.out.println("FITTED A");
             msgProduct.setCode(Mc.requestResponseWorkOnOrderWorkplace);
             msgProduct.setAddressee(Id.agentWorkplace);
             this.response(msgProduct);
@@ -190,7 +191,8 @@ public class ManagerWorker extends OSPABA.Manager {
 
         if (product.getProductActivity() == ProductActivity.DONE) {
             // je dokonceny
-            System.out.println("FITTED C");
+            if (Constants.DEBUG_MANAGER)
+                System.out.println("FITTED C");
             msgProduct.setCode(Mc.requestResponseWorkOnOrderWorkplace);
             msgProduct.setAddressee(Id.agentWorkplace);
             this.response(msgProduct);

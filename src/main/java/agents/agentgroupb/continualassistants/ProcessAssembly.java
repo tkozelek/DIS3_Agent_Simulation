@@ -36,8 +36,8 @@ public class ProcessAssembly extends OSPABA.Process {
 
     public Double getSampleBasedOnProductType(ProductType type) {
         return switch (type) {
-            case ProductType.CHAIR -> this.assemblyTableGenerator.sample();
-            case ProductType.TABLE -> this.assemblyChairGenerator.sample();
+            case ProductType.TABLE -> this.assemblyTableGenerator.sample();
+            case ProductType.CHAIR -> this.assemblyChairGenerator.sample();
             case ProductType.CUPBOARD -> this.assemblyCupboardGenerator.sample();
             default -> throw new IllegalStateException("Unexpected value: " + type);
         };

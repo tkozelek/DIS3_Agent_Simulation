@@ -21,10 +21,8 @@ import java.util.Random;
 public class AgentOkolie extends OSPABA.Agent {
     private final UniformDiscreteRNG productAmountGenerator;
     private final ArrayList<Order> ordersInSystem;
-    private final ArrayList<Order> finishedOrders;
-    private EnumGenerator productTypeGenerator;
-
     private final Random randPaintingGenerator;
+    private EnumGenerator productTypeGenerator;
 
     public AgentOkolie(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -33,9 +31,7 @@ public class AgentOkolie extends OSPABA.Agent {
 
         MySimulation sim = (MySimulation) mySim;
 
-
         this.ordersInSystem = new ArrayList<>();
-        this.finishedOrders = new ArrayList<>();
 
         this.randPaintingGenerator = new Random(sim.getSeedGenerator().sample());
 
@@ -58,10 +54,6 @@ public class AgentOkolie extends OSPABA.Agent {
 
     public void removeOrder(Order order) {
         ordersInSystem.remove(order);
-    }
-
-    public void addToFinishedOrders(Order order) {
-        finishedOrders.add(order);
     }
 
 

@@ -15,11 +15,10 @@ public class Group {
     private final SimQueue<MyMessageProduct> queue;
     private final WorkerGroup workerGroup;
     private final int amount;
-    private Worker[] workers;
     private final Stat statWorkloadGroupTotal;
     private final Stat statQueueLengthTotal;
-
     private final WStat statQueueLength;
+    private Worker[] workers;
 
     public Group(int workerAmount, WorkerGroup workerGroup, Simulation sim) {
         this.queue = new SimQueue<>();
@@ -44,10 +43,6 @@ public class Group {
 
     public Stat getStatQueueLengthTotal() {
         return statQueueLengthTotal;
-    }
-
-    public void workloadGroupAddSample(double sample) {
-        statWorkloadGroupTotal.addSample(sample);
     }
 
     public void collectStats() {
@@ -109,5 +104,10 @@ public class Group {
             w.reset(sim);
         }
         this.statQueueLength.clear();
+    }
+
+    @Override
+    public String toString() {
+        return workerGroup != null ? workerGroup.toString() : "Fitting";
     }
 }

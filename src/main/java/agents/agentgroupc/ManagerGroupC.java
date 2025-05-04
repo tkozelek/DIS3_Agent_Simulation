@@ -140,7 +140,10 @@ public class ManagerGroupC extends OSPABA.Manager {
 
     //meta! sender="ProcessFittingGroupC", id="95", type="Finish"
     public void processFinishProcessFittingGroupC(MessageForm message) {
-
+        message.setCode(Mc.requestResponseTryFitGroupC);
+        message.setAddressee(Id.agentWorker);
+        this.response(message);
+        this.sendNoticeToWorker();
     }
 
     //meta! sender="AgentWorker", id="118", type="Request"

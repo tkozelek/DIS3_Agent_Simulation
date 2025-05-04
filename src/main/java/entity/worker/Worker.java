@@ -11,14 +11,12 @@ import entity.product.Product;
 public class Worker {
     private final int id;
     private final WorkerGroup group;
-
+    private final Stat statWorkloadTotal;
     private WorkerWork currentWork;
     private ILocation location;
     private Product currentProduct;
     private int finishedTasks = 0;
-
     private WStat statWorkload;
-    private final Stat statWorkloadTotal;
 
     public Worker(WorkerGroup group, Simulation sim) {
         this.id = Ids.getWorkerId();

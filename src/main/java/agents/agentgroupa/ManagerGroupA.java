@@ -186,6 +186,10 @@ public class ManagerGroupA extends OSPABA.Manager {
 
     //meta! sender="ProcessFittingGroupA", id="52", type="Finish"
     public void processFinishProcessFittingGroupA(MessageForm message) {
+        message.setCode(Mc.requestResponseTryFitGroupA);
+        message.setAddressee(Id.agentWorker);
+        this.response(message);
+        this.sendNoticeToWorker();
     }
 
     //meta! userInfo="Process messages defined in code", id="0"

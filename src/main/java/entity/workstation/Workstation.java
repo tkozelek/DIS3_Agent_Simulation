@@ -9,11 +9,9 @@ import entity.product.Product;
 
 public class Workstation implements ILocation {
     private final int id;
-    private Product currentProduct;
-
-    private WStat statWorkload;
-
     private final Stat statWorkloadTotal;
+    private Product currentProduct;
+    private WStat statWorkload;
 
     public Workstation(Simulation sim) {
         this.id = Ids.getWorkstationId();

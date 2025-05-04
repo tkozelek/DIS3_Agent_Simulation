@@ -16,6 +16,7 @@ import config.Constants;
 import config.Group;
 import config.Helper;
 import entity.Ids;
+import entity.product.ProductType;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.workstation.Workstation;
@@ -40,6 +41,9 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     // stat
     private Stat statProductTimeInSystemReplication;
     private Stat statProductTimeInSystemTotal;
+
+    private Stat[] statProductsTimeInSystemReplication;
+    private Stat[] statProductsTimeInSystemTotal;
 
     private Stat statOrderTimeInSystemReplication;
     private Stat statOrderTimeInSystemTotal;
@@ -78,23 +82,15 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         }
     }
 
-    public ArrayList<Workstation> getWorkstations() {
-        return this.workstations;
-    }
-
     public ArrayList<Workstation> getFreeWorkstations(int amount) {
         ArrayList<Workstation> freeWorkstations = new ArrayList<>();
         for (Workstation w : workstations) {
             if (w.getCurrentProduct() == null)
                 freeWorkstations.add(w);
             if (freeWorkstations.size() >= amount)
-                break;
+                return freeWorkstations;
         }
         return freeWorkstations;
-    }
-
-    public int getWorkstationCount() {
-        return this.workstationCount;
     }
 
     public int getWorkerCountForGroup(WorkerGroup group) {
@@ -118,14 +114,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         }
     }
 
-    public Stat getStatProductTimeInSystemReplication() {
-        return statProductTimeInSystemReplication;
-    }
-
-    public Stat getStatOrderTimeInSystemReplication() {
-        return statOrderTimeInSystemReplication;
-    }
-
     public void togglePauseSimulation() {
         isPaused = !isPaused;
         if (isPaused)
@@ -137,7 +125,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     @Override
     public void prepareSimulation() {
         super.prepareSimulation();
-        // Create global statistcis
+        // Create global statistics
 
         this.initTotalStats();
     }
@@ -147,6 +135,10 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         this.statOrderTimeInSystemTotal = new Stat();
         this.statWorkstationWorkloadTotal = new Stat();
         this.statOrderNotWorkerOnTotal = new Stat();
+        this.statProductsTimeInSystemTotal = new Stat[ProductType.values().length];
+        for (int i = 0; i < statProductsTimeInSystemTotal.length; i++) {
+            this.statProductsTimeInSystemTotal[i] = new Stat();
+        }
     }
 
     @Override
@@ -171,6 +163,26 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     private void initReplicationStats() {
         this.statProductTimeInSystemReplication = new Stat();
         this.statOrderTimeInSystemReplication = new Stat();
+        this.statProductsTimeInSystemReplication = new Stat[ProductType.values().length];
+        for (int i = 0; i < statProductsTimeInSystemReplication.length; i++) {
+            this.statProductsTimeInSystemReplication[i] = new Stat();
+        }
+    }
+
+    public Stat getStatProductTimeInSystemReplication() {
+        return statProductTimeInSystemReplication;
+    }
+
+    public Stat getStatOrderTimeInSystemReplication() {
+        return statOrderTimeInSystemReplication;
+    }
+
+    public Stat[] getStatProductsTimeInSystemReplication() {
+        return statProductsTimeInSystemReplication;
+    }
+
+    public Stat[] getStatProductsTimeInSystemTotal() {
+        return statProductsTimeInSystemTotal;
     }
 
     @Override
@@ -187,6 +199,10 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 
         this.statOrderNotWorkerOnTotal.addSample(_agentGroupA.group().queueSize());
 
+        for (int i = 0; i < statProductsTimeInSystemReplication.length; i++) {
+            statProductsTimeInSystemTotal[i].addSample(statProductsTimeInSystemReplication[i].mean());
+        }
+
         _agentGroupA.group().collectStats();
         _agentGroupB.group().collectStats();
         _agentGroupC.group().collectStats();
@@ -202,19 +218,56 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         super.simulationFinished();
 
         System.out.println("Replications: " + replicationCount());
+        System.out.println("Workstations: " + workstations.size());
         System.out.format("Groups: %d %d %d\n", groups[0], groups[1], groups[2]);
-        System.out.println(statToString(statOrderTimeInSystemTotal, "Order time total"));
-        System.out.println(statToString(statProductTimeInSystemTotal, "Product time total"));
-        System.out.println(statToString(statProductTimeInSystemTotal, "Workstation workload total"));
+        System.out.println(statToStringTime(statOrderTimeInSystemTotal, "Order time total"));
+        System.out.println(statToStringTime(statProductTimeInSystemTotal, "Product time total"));
+        System.out.println(statToStringPercentual(statWorkstationWorkloadTotal, "Workstation workload total"));
+        for (int i = 0; i < statProductsTimeInSystemReplication.length; i++) {
+            System.out.println(statToStringTime(statProductsTimeInSystemTotal[i], ProductType.values()[i] + " time total"));
+        }
+        Group[] groups = getSimulationData().groups();
+        for (Group group : groups) {
+            System.out.println(statToStringPercentual(group.getWorkloadGroupTotal(), group + " workload group total"));
+        }
+        for (Group group : groups) {
+            System.out.println(statToString(group.getStatQueueLengthTotal(), group + " queue length total"));
+        }
+        for (Group group : groups) {
+            for (Worker w : group.getWorkers()) {
+                System.out.println(statToStringPercentual(w.getStatWorkloadTotal(), w.toStringGroupId() + " workload total"));
+            }
+        }
+    }
+
+    public String statToStringTime(Stat stat, String name) {
+        double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0, 0};
+        return String.format("%s: %.2f <%.2f | %.2f> %.2f <%.2f | %.2f>",
+                name,
+                (stat.mean() / 60 / 60),
+                is[0] / 60 / 60,
+                is[1] / 60 / 60,
+                (stat.mean()),
+                is[0],
+                is[1]);
     }
 
     public String statToString(Stat stat, String name) {
         double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0, 0};
-        return String.format("%s: %.2fh %.2fs <%.2f | %.2f>", name,
-                (stat.mean() / 60 / 60),
-                (stat.mean()),
+        return String.format("%s: %.2f <%.2f | %.2f>",
+                name,
+                stat.mean(),
                 is[0],
                 is[1]);
+    }
+
+    public String statToStringPercentual(Stat stat, String name) {
+        double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0, 0};
+        return String.format("%s: %.2f%% <%.2f%% | %.2f%%>",
+                name,
+                stat.mean() * 100,
+                is[0] * 100,
+                is[1] * 100);
     }
 
     //meta! userInfo="Generated code: do not modify", tag="begin"
