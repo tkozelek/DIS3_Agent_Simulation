@@ -1,7 +1,9 @@
 package config;
 
+import OSPABA.Simulation;
 import OSPDataStruct.SimQueue;
-import entity.product.Product;
+import OSPStat.Stat;
+import OSPStat.WStat;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.worker.WorkerWork;
@@ -15,19 +17,56 @@ public class Group {
     private final WorkerGroup workerGroup;
     private final int amount;
 
-    public Group(int workerAmount, WorkerGroup workerGroup) {
+    private Stat statWorkloadGroupTotal;
+    private Stat statQueueLengthTotal;
+
+    private WStat statQueueLength;
+
+    public Group(int workerAmount, WorkerGroup workerGroup, Simulation sim) {
         this.queue = new SimQueue<>();
         this.workers = new Worker[workerAmount];
         this.workerGroup = workerGroup;
         this.amount = workerAmount;
+
+        this.statWorkloadGroupTotal = new Stat();
+        this.statQueueLengthTotal = new Stat();
+
+        this.statQueueLength = new WStat(sim);
+        this.createWorkers(sim);
+    }
+
+    public WStat getStatQueueLength() {
+        return statQueueLength;
+    }
+
+    public Stat getWorkloadGroupTotal() {
+        return statWorkloadGroupTotal;
+    }
+
+    public Stat getStatQueueLengthTotal() {
+        return statQueueLengthTotal;
+    }
+
+    public void workloadGroupAddSample(double sample) {
+        statWorkloadGroupTotal.addSample(sample);
+    }
+
+    public void collectStats() {
+        for (Worker worker : workers) {
+            statWorkloadGroupTotal.addSample(worker.getStatWorkload().mean());
+        }
+        this.statQueueLengthTotal.addSample(statQueueLength.mean());
     }
 
     public void addQueue(MyMessageProduct p) {
         queue.add(p);
+        this.statQueueLength.addSample(queue.size());
     }
 
     public MyMessageProduct pollQueue() {
-        return queue.poll();
+        MyMessageProduct p = queue.poll();
+        this.statQueueLength.addSample(queue.size());
+        return p;
     }
 
     public int queueSize() {
@@ -38,10 +77,10 @@ public class Group {
         return workers;
     }
 
-    private void createWorkers() {
+    private void createWorkers(Simulation sim) {
         workers = new Worker[amount];
         for (int i = 0; i < amount; i++) {
-            workers[i] = new Worker(workerGroup);
+            workers[i] = new Worker(workerGroup, sim);
         }
     }
 
@@ -65,8 +104,11 @@ public class Group {
         return null;
     }
 
-    public void reset() {
+    public void reset(Simulation sim) {
         this.queue.clear();
-        this.createWorkers();
+        for (Worker w : workers) {
+            w.reset(sim);
+        }
+        this.statQueueLength.clear();
     }
 }

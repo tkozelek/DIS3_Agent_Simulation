@@ -22,7 +22,7 @@ public class AgentGroupA extends OSPABA.Agent {
 
 		MySimulation sim = (MySimulation) mySim;
 
-		this.group = new Group(sim.getWorkerCountForGroup(WorkerGroup.GROUP_A), WorkerGroup.GROUP_A);
+		this.group = new Group(sim.getWorkerCountForGroup(WorkerGroup.GROUP_A), WorkerGroup.GROUP_A, mySim());
 	}
 
 	public Group group() {
@@ -34,7 +34,7 @@ public class AgentGroupA extends OSPABA.Agent {
 		super.prepareReplication();
 		// Setup component for the next replication
 
-		this.group.reset();
+		this.group.reset(mySim());
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

@@ -62,7 +62,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 		product.setStartPaintingTime(mySim().currentTime());
 
 		Worker worker = product.getWorker();
-		worker.setCurrentWork(WorkerWork.PAINTING, mySim().currentTime());
+		worker.setCurrentWork(WorkerWork.PAINTING);
 
 		double offset = this.getSampleBasedOnProductType(product.getProductType());
 		productMessage.setCode(Mc.holdLakovanie);
@@ -82,7 +82,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 				product.setProductActivity(ProductActivity.PAINTED);
 				product.setFinishPaintingTime(mySim().currentTime());
 
-				product.clearWorker(mySim().currentTime());
+				product.clearWorker();
 				product.validateTimes();
 
 				this.assistantFinished(message);

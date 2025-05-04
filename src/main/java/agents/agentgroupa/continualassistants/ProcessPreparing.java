@@ -42,7 +42,7 @@ public class ProcessPreparing extends OSPABA.Process {
 
 		product.setProductActivity(ProductActivity.PREPARING);
 		Worker worker = productMessage.getProduct().getWorker();
-		worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL, mySim().currentTime());
+		worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL);
 
 		double offset = this.materialPreparationGenerator.sample();
 		message.setCode(Mc.holdPrepareMaterial);

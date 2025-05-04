@@ -1,6 +1,7 @@
 package gui.model;
 
 import OSPStat.Stat;
+import config.Group;
 import entity.order.Order;
 import entity.worker.Worker;
 import entity.workstation.Workstation;
@@ -13,9 +14,10 @@ public record SimulationData(
         ArrayList<Order> orders,
         ArrayList<Workstation> workstations,
         int currentReplication,
-        int[] queues,
+        Group[] groups,
         Stat[] statProduct,
         Stat[] statOrder,
+        Stat statWorkstationWorkloadTotal,
+        Stat statOrderNotWorkerOnTotal,
         boolean updateChart) {
-
 }

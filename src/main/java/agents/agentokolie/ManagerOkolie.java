@@ -56,13 +56,15 @@ public class ManagerOkolie extends OSPABA.Manager {
         }
         order.setFinishTime(maxFinishTime);
         myAgent().addToFinishedOrders(order);
+
         sim.getStatOrderTimeInSystemReplication().addSample(order.getFinishTime() - order.getArrivalTime());
     }
 
 
 	//meta! sender="SchedulerOrderArrival", id="18", type="Finish"
 	public void processFinish(MessageForm message) {
-
+        if (Constants.DEBUG_MANAGER)
+            System.out.println("Scheduler finished");
     }
 
 	//meta! sender="SchedulerOrderArrival", id="20", type="Notice"

@@ -32,7 +32,7 @@ public class ProcessAgentMoveStorage extends OSPABA.Process {
 	//meta! sender="AgentMove", id="48", type="Start"
 	public void processStart(MessageForm message) {
 		MyMessageMove msg = (MyMessageMove)message;
-		msg.getWorker().setCurrentWork(WorkerWork.MOVING, mySim().currentTime());
+		msg.getWorker().setCurrentWork(WorkerWork.MOVING);
 
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. move storage started -> %s\n", ((MySimulation)mySim()).workdayTime(), msg.getWorker(), msg.getTargetLocation());

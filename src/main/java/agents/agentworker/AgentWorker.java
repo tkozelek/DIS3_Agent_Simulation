@@ -13,7 +13,7 @@ public class AgentWorker extends OSPABA.Agent {
         super(id, mySim, parent);
         init();
 
-		this.group = new Group(0, null);
+		this.group = new Group(0, null, mySim());
     }
 
 	public Group group() {
@@ -25,7 +25,7 @@ public class AgentWorker extends OSPABA.Agent {
         super.prepareReplication();
         // Setup component for the next replication
 
-		this.group.reset();
+		this.group.reset(mySim());
     }
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

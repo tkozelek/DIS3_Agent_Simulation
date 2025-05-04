@@ -1,5 +1,8 @@
 package entity.worker;
 
+import OSPABA.Simulation;
+import OSPStat.Stat;
+import OSPStat.WStat;
 import entity.ILocation;
 import entity.Ids;
 import entity.Storage;
@@ -15,11 +18,33 @@ public class Worker {
     private Product currentProduct;
     private int finishedTasks = 0;
 
-    public Worker(WorkerGroup group) {
+    private WStat statWorkload;
+    private Stat statWorkloadTotal;
+
+    public Worker(WorkerGroup group, Simulation sim) {
         this.id = Ids.getWorkerId();
         this.group = group;
         this.currentWork = WorkerWork.IDLE;
         this.location = Storage.STORAGE;
+        this.statWorkload = new WStat(sim);
+        this.statWorkloadTotal = new Stat();
+    }
+
+    public void reset(Simulation sim) {
+        this.currentWork = WorkerWork.IDLE;
+        this.finishedTasks = 0;
+        this.location = Storage.STORAGE;
+        if (statWorkload.sampleSize() > 0)
+            statWorkloadTotal.addSample(statWorkload.mean());
+        this.statWorkload = new WStat(sim);
+    }
+
+    public Stat getStatWorkloadTotal() {
+        return statWorkloadTotal;
+    }
+
+    public WStat getStatWorkload() {
+        return statWorkload;
     }
 
     public Product getCurrentProduct() {
@@ -51,8 +76,9 @@ public class Worker {
         return currentWork;
     }
 
-    public void setCurrentWork(WorkerWork currentWork, double time) {
+    public void setCurrentWork(WorkerWork currentWork) {
         this.currentWork = currentWork;
+        statWorkload.addSample(currentWork == WorkerWork.IDLE ? 0 : 1);
     }
 
     public int getId() {

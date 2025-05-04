@@ -1,20 +1,24 @@
 package gui.view;
 
+import OSPStat.Stat;
 import config.Constants;
+import config.Group;
 import config.Helper;
 import entity.order.Order;
 import entity.product.Product;
 import entity.worker.Worker;
+import entity.workstation.Workstation;
 import gui.model.SimulationData;
-import gui.view.talbemodel.ProductTable;
-import gui.view.talbemodel.WorkerTable;
-import gui.view.talbemodel.WorkstationTable;
+import gui.view.talbemodel.*;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainWindow extends JFrame {
@@ -59,12 +63,17 @@ public class MainWindow extends JFrame {
     private JTextField fieldWorkstation;
     private JLabel labelFitting;
     private JLabel labelAverageProductTotal;
+    private JTable tableWorkstationTotal;
+    private JLabel workstationLabel;
+    private JLabel labelAverageProductReplication;
     private JFreeChart chart1;
     private Chart chart;
 
     private WorkerTable workerTableARep, workerTableBRep, workerTableCRep;
+    private WorkerTotalTable workerTableATotal, workerTableBTotal, workerTableCTotal;
     private ProductTable productTable;
     private WorkstationTable workstationTable;
+    private WorkstationTotalTable workstationTotalTable;
 
     public MainWindow() {
         setTitle("Diskretna simulacia");
@@ -96,16 +105,25 @@ public class MainWindow extends JFrame {
         workerTableBRep = new WorkerTable();
         workerTableCRep = new WorkerTable();
 
+        workerTableATotal = new WorkerTotalTable();
+        workerTableBTotal = new WorkerTotalTable();
+        workerTableCTotal = new WorkerTotalTable();
 
         productTable = new ProductTable();
         workstationTable = new WorkstationTable();
+        workstationTotalTable = new WorkstationTotalTable();
 
         tableARep.setModel(workerTableARep);
         tableBRep.setModel(workerTableBRep);
         tableCRep.setModel(workerTableCRep);
 
+        tableATotal.setModel(workerTableATotal);
+        tableBTotal.setModel(workerTableBTotal);
+        tableCTotal.setModel(workerTableCTotal);
+
         tableOrder.setModel(productTable);
         tableWorkstation.setModel(workstationTable);
+        tableWorkstationTotal.setModel(workstationTotalTable);
     }
 
     public void updateData(SimulationData simData) {
@@ -118,6 +136,7 @@ public class MainWindow extends JFrame {
         }
         updateQueueSize(simData);
         updateWorkersTotal(simData);
+        updateWorkstationTotal(simData);
         updateAverageTimeInSystemTotal(simData);
         updateAverageCountOfNotWorkedOnOrder(simData);
         if (showStatsCheckBox.isSelected()) updateList(simData);
@@ -126,86 +145,132 @@ public class MainWindow extends JFrame {
         currentRepLabel.setText(String.format("Replication: %d", simData.currentReplication()));
     }
 
+    private void updateWorkstationTotal(SimulationData simData) {
+        workstationTotalTable.addRows(simData.workstations());
+        double[] is = simData.statWorkstationWorkloadTotal().sampleSize() > 2 ? simData.statWorkstationWorkloadTotal().confidenceInterval_95() : new double[]{0,0};
+        workstationLabel.setText(String.format("<html>Workstations <br>%.2f%%<br>%.2f%% [%.2f%% | %.2f%%]</html>",
+                getSpeed() < Constants.MAX_SPEED ? calculateWorkloadForWorkstation(simData) * 100 : 0.0,
+                simData.statWorkstationWorkloadTotal().mean() * 100,
+                is[0] * 100, is[1] * 100
+                ));
+    }
+
+    private Double calculateWorkloadForWorkstation(SimulationData simData) {
+        ArrayList<Workstation> workstations = simData.workstations();
+        double sum = 0.0;
+        for (Workstation workstation : workstations) {
+            sum += workstation.getStatWorkload().mean();
+        }
+        return sum / workstations.size();
+    }
+
     private void updateList(SimulationData simData) {
-//        DefaultListModel<String> tempModel = new DefaultListModel<>();
-//        for (Statistic stat : simData.orderTimeInSystem()) tempModel.addElement(stat.toString());
-//        if (simData.orderTimeInSystem()[1] != null) {
-//            double[] is = simData.orderTimeInSystem()[1].getConfidenceInterval();
-//            tempModel.addElement(String.format("%s: %.4f h <%.4f | %.4f>\n",
-//                    simData.orderTimeInSystem()[1].getName(),
-//                    simData.orderTimeInSystem()[1].getMean() / 60 / 60,
-//                    is[0] / 60 / 60, is[1] / 60 / 60));
-//        }
-//
-//        for (Statistic stat : simData.queueLengthReplication()) tempModel.addElement(stat.toString());
-//        for (Statistic stat : simData.queueLengthTotal()) tempModel.addElement(stat.toString());
-//        if (simData.workstationSizeTotal() != null) tempModel.addElement(simData.workstationSizeTotal().toString());
-//
-//        if (simData.workerWorkloadTotal() != null) {
-//            for (DiscreteStatistic[] stats : simData.workerWorkloadTotal())
-//                for (Statistic stat : stats) tempModel.addElement(stat.toString());
-//
-//            for (Statistic stat : simData.workloadForGroupTotal()) tempModel.addElement(stat.toString());
-//            tempModel.addElement(simData.orderNotWorkedOnTotal().toString() + "\n");
-//        }
-//
-//        this.list1.setModel(tempModel);
+        DefaultListModel<String> tempModel = new DefaultListModel<>();
+        // ORDERS
+        String[] orderNames = new String[]{"Order time replication", "Order time total"};
+        for (int i = 0; i < simData.statOrder().length; i++) {
+            Stat stat = simData.statOrder()[i];
+            String text = String.format("%s: %s", orderNames[i], stat.toString());
+            tempModel.addElement(text);
+        }
+
+        // PRODUCT
+        String[] productNames = new String[]{"Product time replication", "Product time total"};
+        for (int i = 0; i < simData.statProduct().length; i++) {
+            Stat stat = simData.statProduct()[i];
+            String text = String.format("%s: %s", productNames[i], stat.toString());
+            tempModel.addElement(text);
+        }
+
+        // QUEUE
+        String[] queueNames = new String[]{"Queue A", "Queue B", "Queue C", "Fitting"};
+        for (int i = 0; i < simData.groups().length; i++) {
+            Stat stat = simData.groups()[i].getStatQueueLength();
+            Stat statTotal = simData.groups()[i].getStatQueueLengthTotal();
+            String text = String.format("%s: %s", queueNames[i] + " replication", stat.toString());
+            tempModel.addElement(text);
+            text = String.format("%s: %s", queueNames[i] + " total", statTotal.toString());
+            tempModel.addElement(text);
+        }
+
+        // WORKERS
+        if (simData.workers() != null) {
+            Worker[][] workers = simData.workers();
+            for (int i = 0; i < workers.length; i++) {
+                for (int j = 0; j < workers[i].length; j++) {
+                    Stat stat = workers[i][j].getStatWorkload();
+                    Stat statTotal = workers[i][j].getStatWorkloadTotal();
+                    String text = String.format("%s: %s", workers[i][j] +  " replication", stat.toString());
+                    tempModel.addElement(text);
+                    text = String.format("%s: %s", workers[i][j] + " total", statTotal.toString());
+                    tempModel.addElement(text);
+                }
+            }
+        }
+
+        this.list1.setModel(tempModel);
     }
 
     private void updateAverageQueueLengthReplication(SimulationData simData) {
-//        if (simData.queueLengthReplication() != null) {
-//            this.labelQueueLengthReplication.setText("<html>" + String.format("A: %.2f, B: %.2f, C: %.2f" + "</html>",
-//                    simData.queueLengthReplication()[0].getMean(),
-//                    simData.queueLengthReplication()[1].getMean(),
-//                    simData.queueLengthReplication()[2].getMean()));
-//        }
+        if (simData.groups() != null) {
+            this.labelQueueLengthReplication.setText("<html>" + String.format("A: %.2f, B: %.2f, C: %.2f" + "</html>",
+                    simData.groups()[0].getStatQueueLength().mean(),
+                    simData.groups()[1].getStatQueueLength().mean(),
+                    simData.groups()[2].getStatQueueLength().mean()));
+        }
     }
 
     private void updateAverageTimeReplication(SimulationData simData) {
-//        if (simData.orderTimeInSystem() != null && simData.orderTimeInSystem()[0] != null) {
-//            this.labelAverageTimeReplication.setText("<html>" + String.format("%.2fh (%.2fs)" + "</html>",
-//                    (simData.orderTimeInSystem()[0].getMean() / 60 / 60),
-//                    (simData.orderTimeInSystem()[0].getMean())));
-//        }
+        if (simData.statOrder() != null && simData.statOrder()[0] != null) {
+            this.labelAverageTimeReplication.setText("<html>" + String.format("%.2fh (%.2fs)" + "</html>",
+                    (simData.statOrder()[0].mean() / 60 / 60),
+                    (simData.statOrder()[0].mean())));
+        }
+
+        if (simData.statProduct() != null && simData.statProduct()[0] != null) {
+            this.labelAverageProductReplication.setText("<html>" + String.format("%.2fh (%.2fs)" + "</html>",
+                    (simData.statProduct()[0].mean() / 60 / 60),
+                    (simData.statProduct()[0].mean())));
+        }
     }
 
     public void updateChart(SimulationData simData, int replicationCount) {
-//        SwingUtilities.invokeLater(() -> {
-//            if (simData.updateChart() && simData.currentReplication() >= (replicationCount * Constants.PERCENTAGE_CUT_DATA) &&
-//                    simData.currentReplication() % Math.ceil((replicationCount * Constants.PERCENTAGE_UPDATE_DATA)) == 0) {
-//                XYSeriesCollection dataset = (XYSeriesCollection) chart1.getXYPlot().getDataset();
-//
-//                XYSeries seriesMain = dataset.getSeries(0);
-//
-//
-//                int rep = simData.currentReplication();
-//                DiscreteStatistic ds = simData.orderTimeInSystem()[1];
-//                double[] is = ds.getConfidenceInterval();
-//
-//                seriesMain.add(rep, ds.getMean());
-//
-//                if (simData.currentReplication() > 30) {
-//                    XYSeries seriesBottom = dataset.getSeries(1);
-//                    XYSeries seriesTop = dataset.getSeries(2);
-//                    seriesBottom.add(rep, is[0]);
-//                    seriesTop.add(rep, is[1]);
-//                }
-//
-//                chart.updateRange(Constants.OFFSET_FACTOR);
-//                chart1.fireChartChanged();
-//                progressBar1.setMaximum(replicationCount);
-//                progressBar1.setValue(simData.currentReplication());
-//            }
-//        });
+        SwingUtilities.invokeLater(() -> {
+            if (simData.updateChart() && simData.currentReplication() >= (replicationCount * Constants.PERCENTAGE_CUT_DATA) &&
+                    simData.currentReplication() % Math.ceil((replicationCount * Constants.PERCENTAGE_UPDATE_DATA)) == 0) {
+                XYSeriesCollection dataset = (XYSeriesCollection) chart1.getXYPlot().getDataset();
+
+                XYSeries seriesMain = dataset.getSeries(0);
+
+
+                int rep = simData.currentReplication();
+                Stat ds = simData.statOrder()[1];
+                double[] is = ds.confidenceInterval_95();
+
+                seriesMain.add(rep, ds.mean());
+
+                if (simData.currentReplication() > 30) {
+                    XYSeries seriesBottom = dataset.getSeries(1);
+                    XYSeries seriesTop = dataset.getSeries(2);
+                    seriesBottom.add(rep, is[0]);
+                    seriesTop.add(rep, is[1]);
+                }
+
+                chart.updateRange(Constants.OFFSET_FACTOR);
+                chart1.fireChartChanged();
+                progressBar1.setMaximum(replicationCount);
+                progressBar1.setValue(simData.currentReplication());
+            }
+        });
     }
 
     private void updateAverageCountOfNotWorkedOnOrder(SimulationData simData) {
-//        if (simData.orderNotWorkedOnTotal() != null) {
-//            double[] is = simData.orderNotWorkedOnTotal().getConfidenceInterval();
-//            labelOrderNotWorkedOn.setText(String.format("<html>%.4f<br>[%.4f | %.4f]</html>",
-//                    simData.orderNotWorkedOnTotal().getMean(),
-//                    is[0], is[1]));
-//        }
+        if (simData.statOrderNotWorkerOnTotal() != null) {
+            double[] is = simData.statOrderNotWorkerOnTotal().sampleSize() > 2 ? simData.statOrderNotWorkerOnTotal().confidenceInterval_95() : new double[] {0,0};
+            labelOrderNotWorkedOn.setText(String.format("<html>%.4f<br>[%.4f | %.4f]</html>",
+                    simData.statOrderNotWorkerOnTotal().mean(),
+                    is[0], is[1]));
+        }
     }
 
     private void updateAverageTimeInSystemTotal(SimulationData simData) {
@@ -239,44 +304,42 @@ public class MainWindow extends JFrame {
     }
 
     private void updateQueueSize(SimulationData simData) {
-        JLabel[] labels = new JLabel[]{labelA, labelB, labelC, labelFitting};
+        JLabel[] labels = new JLabel[]{labelA, labelB, labelC};
 
+        Group[] groups = simData.groups();
         for (int i = 0; i < labels.length; i++) {
-//            double[] isW = simData.workloadForGroupTotal() != null ? simData.workloadForGroupTotal()[i].getConfidenceInterval() : new double[]{0.0, 0.0};
-//            double[] isQ = simData.workloadForGroupTotal() != null ? simData.queueLengthTotal()[i].getConfidenceInterval() : new double[]{0.0, 0.0};
-//            labels[i].setText(String.format("<html>Group %c<br>(%.2f%% | %.2f%% [%.2f%% | %.2f%%])<br>%d | %.3f [%.3f | %.3f]</html>",
-//                    (i + 'A'),
-//                    getSpeed() < Constants.MAX_SPEED ? calculateWorkloadForGroupReplication(simData, i) * 100 : 0.0,
-//                    simData.workloadForGroupTotal() != null ? simData.workloadForGroupTotal()[i].getMean() * 100 : 0.0,
-//                    isW[0] * 100, isW[1] * 100,
-//                    simData.queues() != null && getSpeed() < Constants.MAX_SPEED ? simData.queues()[i] : 0,
-//                    simData.queueLengthTotal() != null ? simData.queueLengthTotal()[i].getMean() : 0.0,
-//                    isQ[0], isQ[1]));
-
-            labels[i].setText(String.format("<html>Group %c<br>(%d)</html>",
+            double[] isW = groups[i].getWorkloadGroupTotal().sampleSize() > 2 ? groups[i].getWorkloadGroupTotal().confidenceInterval_95() : new double[]{0.0, 0.0};
+            double[] isQ = groups[i].getStatQueueLengthTotal().sampleSize() > 2 ? groups[i].getStatQueueLengthTotal().confidenceInterval_95() : new double[]{0.0, 0.0};
+            labels[i].setText(String.format("<html>Group %c<br>%.2f%% | %.2f%% [%.2f%% | %.2f%%]<br>%d | %.3f [%.3f | %.3f]</html>",
                     (i + 'A'),
-                    simData.queues() != null && getSpeed() < Constants.MAX_SPEED ? simData.queues()[i] : 0));
+                    getSpeed() < Constants.MAX_SPEED ? calculateWorkloadForGroupReplication(simData, i) * 100 : 0.0,
+                    groups[i].getWorkloadGroupTotal() != null ? groups[i].getWorkloadGroupTotal().mean() * 100 : 0.0,
+                    isW[0] * 100, isW[1] * 100,
+                    groups[i] != null && getSpeed() < Constants.MAX_SPEED ? groups[i].queueSize() : 0,
+                    groups[i] != null ? groups[i].getStatQueueLengthTotal().mean() : 0.0,
+                    isQ[0], isQ[1]));
         }
+
+        labelFitting.setText(String.format("Fitting: %d", groups[3].queueSize()));
     }
 
     private double calculateWorkloadForGroupReplication(SimulationData simData, int i) {
-//        return Arrays.stream(simData.workers()[i])
-//                .mapToDouble(w -> w.getStatisticWorkload().getMean())
-//                .average().getAsDouble();
-        return 0.0;
+        return Arrays.stream(simData.workers()[i])
+                .mapToDouble(w -> w.getStatWorkload().mean())
+                .average().getAsDouble();
     }
 
     public void updateWorkersTotal(SimulationData simData) {
-//        if (simData.workerWorkloadTotal() != null) {
-//            DiscreteStatistic[][] stats = simData.workerWorkloadTotal();
-//            for (int i = 0; i < stats.length; i++) {
-//                switch (i) {
-//                    case 0 -> workerTableATotal.addRows(List.of(stats[i]));
-//                    case 1 -> workerTableBTotal.addRows(List.of(stats[i]));
-//                    case 2 -> workerTableCTotal.addRows(List.of(stats[i]));
-//                }
-//            }
-//        }
+        if (simData.workers() != null) {
+            Worker[][] workers = simData.workers();
+            for (int i = 0; i < workers.length; i++) {
+                switch (i) {
+                    case 0 -> workerTableATotal.addRows(List.of(workers[i]));
+                    case 1 -> workerTableBTotal.addRows(List.of(workers[i]));
+                    case 2 -> workerTableCTotal.addRows(List.of(workers[i]));
+                }
+            }
+        }
     }
 
     public void updateWorkersReplication(SimulationData simData) {

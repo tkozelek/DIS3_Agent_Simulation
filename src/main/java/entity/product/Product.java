@@ -195,22 +195,22 @@ public class Product implements Comparable<Product> {
 
         // vyčisti workstation
         if (workstation != null) {
-            this.clearWorkstation(time);
+            this.clearWorkstation();
         }
 
         // vyčisti workera
         if (worker != null) {
-            this.clearWorker(time);
+            this.clearWorker();
         }
     }
 
-    public void clearWorker(double time) {
-        this.worker.setCurrentWork(WorkerWork.IDLE, time);
+    public void clearWorker() {
+        this.worker.setCurrentWork(WorkerWork.IDLE);
         this.worker.setCurrentProduct(null);
         this.worker = null;
     }
 
-    public void clearWorkstation(double time) {
+    public void clearWorkstation() {
         this.workstation.setCurrentProduct(null);
         this.workstation = null;
     }

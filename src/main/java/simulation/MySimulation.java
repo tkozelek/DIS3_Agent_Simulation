@@ -11,6 +11,7 @@ import agents.agentgroupc.*;
 import agents.agentmove.*;
 import agents.agentokolie.*;
 import config.Constants;
+import config.Group;
 import config.Helper;
 import entity.Ids;
 import entity.worker.Worker;
@@ -43,6 +44,12 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	private Stat statOrderTimeInSystemReplication;
 	private Stat statOrderTimeInSystemTotal;
 
+	private Stat statWorkstationWorkloadTotal;
+
+	private Stat statOrderNotWorkerOnTotal;
+
+	private boolean updateChart;
+
 	public MySimulation(Long seed, int[] groups, int wCount) {
 		seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
 
@@ -50,15 +57,16 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		this.workstationCount = wCount;
 		this.observers = new ArrayList<>();
 		this.registerDelegate(this);
+
 		this.workstations = new ArrayList<>();
+		this.createWorkstations();
 
 		init();
 	}
 
 	public void createWorkstations() {
-		workstations.clear();
 		for (int i = 0; i < workstationCount; i++) {
-			workstations.add(new Workstation());
+			workstations.add(new Workstation(this));
 		}
 	}
 
@@ -69,7 +77,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	public ArrayList<Workstation> getFreeWorkstations(int amount) {
 		ArrayList<Workstation> freeWorkstations = new ArrayList<>();
 		for (Workstation w : workstations) {
-			if (w.getCurrentOrder() == null)
+			if (w.getCurrentProduct() == null)
 				freeWorkstations.add(w);
 			if (freeWorkstations.size() >= amount)
 				break;
@@ -106,16 +114,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		return statProductTimeInSystemReplication;
 	}
 
-	public Stat getStatProductTimeInSystemTotal() {
-		return statProductTimeInSystemTotal;
-	}
-
 	public Stat getStatOrderTimeInSystemReplication() {
 		return statOrderTimeInSystemReplication;
-	}
-
-	public Stat getStatOrderTimeInSystemTotal() {
-		return statOrderTimeInSystemTotal;
 	}
 
 	public void togglePauseSimulation() {
@@ -137,6 +137,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 	private void initTotalStats() {
 		this.statProductTimeInSystemTotal = new Stat();
 		this.statOrderTimeInSystemTotal = new Stat();
+		this.statWorkstationWorkloadTotal = new Stat();
+		this.statOrderNotWorkerOnTotal = new Stat();
 	}
 
 	@Override
@@ -147,8 +149,11 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		if (currentReplication() % 50 == 0)
 			System.out.println(currentReplication());
 
+		for (Workstation w : workstations) {
+			w.reset(this);
+		}
+
 		_agentBoss.initOkolie();
-		this.createWorkstations();
 		this.initReplicationStats();
 		Ids.resetAll();
 		this.setSpeed(speed);
@@ -168,7 +173,19 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		this.statProductTimeInSystemTotal.addSample(this.statProductTimeInSystemReplication.mean());
 		this.statOrderTimeInSystemTotal.addSample(this.statOrderTimeInSystemReplication.mean());
 
+		for (Workstation w : workstations) {
+			this.statWorkstationWorkloadTotal.addSample(w.getStatWorkload().mean());
+		}
+
+		this.statOrderNotWorkerOnTotal.addSample(_agentGroupA.group().queueSize());
+
+		_agentGroupA.group().collectStats();
+		_agentGroupB.group().collectStats();
+		_agentGroupC.group().collectStats();
+
+		this.updateChart = true;
 		this.notifyObservers();
+		this.updateChart = false;
 	}
 
 	@Override
@@ -180,6 +197,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
 		System.out.format("Groups: %d %d %d\n", groups[0], groups[1], groups[2]);
 		System.out.println(statToString(statOrderTimeInSystemTotal, "Order time total"));
 		System.out.println(statToString(statProductTimeInSystemTotal, "Product time total"));
+		System.out.println(statToString(statProductTimeInSystemTotal, "Workstation workload total"));
 	}
 
 	public String statToString(Stat stat, String name) {
@@ -305,11 +323,11 @@ public AgentGroupC agentGroupC()
 				_agentOkolie.getOrdersInSystem(),
 				this.workstations,
 				currentReplication(),
-				new int[]{
-						_agentGroupA.group().queueSize(),
-						_agentGroupB.group().queueSize(),
-						_agentGroupC.group().queueSize(),
-						_agentWorker.group().queueSize(),
+				new Group[]{
+						_agentGroupA.group(),
+						_agentGroupB.group(),
+						_agentGroupC.group(),
+						_agentWorker.group(),
 				},
 				new Stat[]{
 						statProductTimeInSystemReplication, statProductTimeInSystemTotal
@@ -317,7 +335,9 @@ public AgentGroupC agentGroupC()
 				new Stat[]{
 						statOrderTimeInSystemReplication, statOrderTimeInSystemTotal
 				},
-				false);
+				statWorkstationWorkloadTotal,
+				statOrderNotWorkerOnTotal,
+				updateChart);
 
 	}
 }

@@ -4,6 +4,7 @@ import OSPABA.*;
 import config.Constants;
 import entity.product.Product;
 import entity.product.ProductActivity;
+import entity.product.ProductType;
 import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import generator.SeedGenerator;
@@ -42,10 +43,13 @@ public class ProcessFittingGroupA extends OSPABA.Process {
 		if (product.getProductActivity() != ProductActivity.ASSEMBLED)
 			throw new IllegalStateException("Manager A product isnt assembled");
 
+		if (product.getProductType() != ProductType.CUPBOARD)
+			throw new IllegalStateException("Manager A product isnt cupboard");
+
 		product.setProductActivity(ProductActivity.FITTING);
 		product.setStartFittingAssemblyTime(mySim().currentTime());
 
-		worker.setCurrentWork(WorkerWork.FITTING, mySim().currentTime());
+		worker.setCurrentWork(WorkerWork.FITTING);
 		worker.setCurrentProduct(product);
 
 		double offset = this.fittingAssemblyGenerator.sample();

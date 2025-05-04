@@ -7,12 +7,13 @@ import java.util.List;
 public class WorkstationTable extends Table<Workstation> {
 
     public WorkstationTable() {
-        super(new String[]{"ID", "Order", "Work", "Worker"},
+        super(new String[]{"ID", "Order", "Work", "Worker", "WL%"},
                 List.of(
                         Workstation::getId,
-                        Workstation::getCurrentOrder,
-                        w -> (w.getCurrentOrder() != null) ? w.getCurrentOrder().getProductActivity() : "",
-                        w -> (w.getCurrentOrder() != null) ? w.getCurrentOrder().getWorker() : ""
+                        Workstation::getCurrentProduct,
+                        w -> (w.getCurrentProduct() != null) ? w.getCurrentProduct().getProductActivity() : "",
+                        w -> (w.getCurrentProduct() != null) ? w.getCurrentProduct().getWorker() : "",
+                        w -> w.getStatWorkload() != null ? String.format("%.2f", w.getStatWorkload().mean() * 100) : ""
                 ));
     }
 }

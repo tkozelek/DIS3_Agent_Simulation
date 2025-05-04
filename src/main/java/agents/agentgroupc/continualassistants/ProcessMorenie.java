@@ -56,7 +56,7 @@ public class ProcessMorenie extends OSPABA.Process {
 		product.setStartStainingTime(mySim().currentTime());
 
 		Worker worker = product.getWorker();
-		worker.setCurrentWork(WorkerWork.STAINING, mySim().currentTime());
+		worker.setCurrentWork(WorkerWork.STAINING);
 
 		double offset = this.getSampleBasedOnProductType(product.getProductType());
 		productMessage.setCode(Mc.holdMorenie);
@@ -77,7 +77,7 @@ public class ProcessMorenie extends OSPABA.Process {
 				product.setFinishStainingTime(mySim().currentTime());
 
 				if (!product.getShouldBePainted()) {
-					product.clearWorker(mySim().currentTime());
+					product.clearWorker();
 				}
 				product.validateTimes();
 

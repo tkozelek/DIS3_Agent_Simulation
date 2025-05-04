@@ -61,7 +61,7 @@ public class ProcessAssembly extends OSPABA.Process {
 		product.setStartAssemblyTime(mySim().currentTime());
 
 		Worker worker = product.getWorker();
-		worker.setCurrentWork(WorkerWork.ASSEMBLING, mySim().currentTime());
+		worker.setCurrentWork(WorkerWork.ASSEMBLING);
 
 		double offset = this.getSampleBasedOnProductType(product.getProductType());
 		productMessage.setCode(Mc.holdAssembly);
@@ -86,7 +86,7 @@ public class ProcessAssembly extends OSPABA.Process {
 					// je to cupboard, este nie je hotovy
 					// nechame workstation
 					product.setProductActivity(ProductActivity.ASSEMBLED);
-					product.clearWorker(mySim().currentTime());
+					product.clearWorker();
 				}
 				product.setFinishAssemblyTime(mySim().currentTime());
 

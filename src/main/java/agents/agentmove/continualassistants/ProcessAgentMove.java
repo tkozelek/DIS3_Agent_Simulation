@@ -34,7 +34,7 @@ public class ProcessAgentMove extends OSPABA.Process {
 	//meta! sender="AgentMove", id="43", type="Start"
 	public void processStart(MessageForm message) {
 		MyMessageMove msg = (MyMessageMove)message;
-		msg.getWorker().setCurrentWork(WorkerWork.MOVING, mySim().currentTime());
+		msg.getWorker().setCurrentWork(WorkerWork.MOVING);
 
 		if (Constants.DEBUG_PROCESS)
 			System.out.printf("[%s] [%s] P. move started -> %s\n", ((MySimulation)mySim()).workdayTime(), msg.getWorker(), msg.getTargetLocation());

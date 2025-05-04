@@ -45,7 +45,7 @@ public class ProcessFittingGroupC extends OSPABA.Process {
 		product.setProductActivity(ProductActivity.FITTING);
 		product.setStartFittingAssemblyTime(mySim().currentTime());
 
-		worker.setCurrentWork(WorkerWork.FITTING, mySim().currentTime());
+		worker.setCurrentWork(WorkerWork.FITTING);
 		worker.setCurrentProduct(product);
 
 		double offset = this.fittingAssemblyGenerator.sample();
