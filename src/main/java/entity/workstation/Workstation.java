@@ -13,7 +13,7 @@ public class Workstation implements ILocation {
 
     private WStat statWorkload;
 
-    private Stat statWorkloadTotal;
+    private final Stat statWorkloadTotal;
 
     public Workstation(Simulation sim) {
         this.id = Ids.getWorkstationId();

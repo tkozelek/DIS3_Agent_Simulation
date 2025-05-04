@@ -1,6 +1,5 @@
 package gui.controller;
 
-import config.Constants;
 import gui.interfaces.Observer;
 import gui.model.SimulationData;
 import gui.model.SimulationManager;

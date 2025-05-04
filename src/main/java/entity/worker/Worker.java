@@ -7,7 +7,6 @@ import entity.ILocation;
 import entity.Ids;
 import entity.Storage;
 import entity.product.Product;
-import entity.workstation.Workstation;
 
 public class Worker {
     private final int id;
@@ -19,7 +18,7 @@ public class Worker {
     private int finishedTasks = 0;
 
     private WStat statWorkload;
-    private Stat statWorkloadTotal;
+    private final Stat statWorkloadTotal;
 
     public Worker(WorkerGroup group, Simulation sim) {
         this.id = Ids.getWorkerId();

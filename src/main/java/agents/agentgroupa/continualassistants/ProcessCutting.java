@@ -21,21 +21,21 @@ import simulation.custommessage.MyMessageProduct;
 //meta! id="26"
 public class ProcessCutting extends OSPABA.Process {
 
-	private ContinuosEmpiricGenerator cuttingTableGenerator;
-	private ContinuosUniformGenerator cuttingChairGenerator;
-	private ContinuosUniformGenerator cuttingcupboardGenerator;
+    private final ContinuosEmpiricGenerator cuttingTableGenerator;
+    private final ContinuosUniformGenerator cuttingChairGenerator;
+    private final ContinuosUniformGenerator cuttingcupboardGenerator;
 
     public ProcessCutting(int id, Simulation mySim, CommonAgent myAgent) {
         super(id, mySim, myAgent);
 
-		SeedGenerator seedGen = ((MySimulation)mySim()).getSeedGenerator();
-		int times = 60;
-		this.cuttingTableGenerator = new ContinuosEmpiricGenerator(new Distribution[]{
-				new Distribution(10 * times, 25 * times, 0.6),
-				new Distribution(25 * times, 50 * times, 0.4)
-		}, seedGen);
-		this.cuttingChairGenerator = new ContinuosUniformGenerator(12 * times, 16 * times, seedGen);
-		this.cuttingcupboardGenerator = new ContinuosUniformGenerator(15 * times, 80 * times, seedGen);
+        SeedGenerator seedGen = ((MySimulation) mySim()).getSeedGenerator();
+        int times = 60;
+        this.cuttingTableGenerator = new ContinuosEmpiricGenerator(new Distribution[]{
+                new Distribution(10 * times, 25 * times, 0.6),
+                new Distribution(25 * times, 50 * times, 0.4)
+        }, seedGen);
+        this.cuttingChairGenerator = new ContinuosUniformGenerator(12 * times, 16 * times, seedGen);
+        this.cuttingcupboardGenerator = new ContinuosUniformGenerator(15 * times, 80 * times, seedGen);
     }
 
     @Override
@@ -44,75 +44,75 @@ public class ProcessCutting extends OSPABA.Process {
         // Setup component for the next replication
     }
 
-	//meta! sender="AgentGroupA", id="27", type="Start"
-	public void processStart(MessageForm message) {
-		// zacne rezat
-		MyMessageProduct productMessage = (MyMessageProduct) message;
-		Product product = productMessage.getProduct();
+    //meta! sender="AgentGroupA", id="27", type="Start"
+    public void processStart(MessageForm message) {
+        // zacne rezat
+        MyMessageProduct productMessage = (MyMessageProduct) message;
+        Product product = productMessage.getProduct();
 
-		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. cutting start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
+        if (Constants.DEBUG_PROCESS)
+            System.out.printf("[%s] [%s] P. cutting start %s\n", ((MySimulation) mySim()).workdayTime(), product.getWorker(), product);
 
-		if (product.getProductActivity() != ProductActivity.PREPARED)
-			throw new IllegalStateException("Manager A product isnt prepared");
+        if (product.getProductActivity() != ProductActivity.PREPARED)
+            throw new IllegalStateException("Manager A product isnt prepared");
 
-		product.setProductActivity(ProductActivity.CUTTING);
-		product.setStartCuttingTime(mySim().currentTime());
+        product.setProductActivity(ProductActivity.CUTTING);
+        product.setStartCuttingTime(mySim().currentTime());
 
-		Worker worker = product.getWorker();
-		worker.setCurrentWork(WorkerWork.CUTTING);
+        Worker worker = product.getWorker();
+        worker.setCurrentWork(WorkerWork.CUTTING);
 
-		double offset = this.getSampleFromGeneratorBasedOnProductType(product.getProductType());
-		productMessage.setCode(Mc.holdCutting);
-		this.hold(offset, productMessage);
+        double offset = this.getSampleFromGeneratorBasedOnProductType(product.getProductType());
+        productMessage.setCode(Mc.holdCutting);
+        this.hold(offset, productMessage);
     }
 
-	public Double getSampleFromGeneratorBasedOnProductType(ProductType type) {
-		return switch (type) {
-			case ProductType.CHAIR -> this.cuttingChairGenerator.sample();
-			case ProductType.TABLE -> this.cuttingTableGenerator.sample();
-			case ProductType.CUPBOARD -> this.cuttingcupboardGenerator.sample();
-			default -> throw new IllegalStateException("Unexpected value: " + type);
-		};
-	}
+    public Double getSampleFromGeneratorBasedOnProductType(ProductType type) {
+        return switch (type) {
+            case ProductType.CHAIR -> this.cuttingChairGenerator.sample();
+            case ProductType.TABLE -> this.cuttingTableGenerator.sample();
+            case ProductType.CUPBOARD -> this.cuttingcupboardGenerator.sample();
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
+    }
 
-	//meta! userInfo="Process messages defined in code", id="0"
-	public void processDefault(MessageForm message) {
+    //meta! userInfo="Process messages defined in code", id="0"
+    public void processDefault(MessageForm message) {
         switch (message.code()) {
-			case Mc.holdCutting:
-				MyMessageProduct productMessage = (MyMessageProduct) message;
-				Product product = productMessage.getProduct();
+            case Mc.holdCutting:
+                MyMessageProduct productMessage = (MyMessageProduct) message;
+                Product product = productMessage.getProduct();
 
-				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. cutting finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
+                if (Constants.DEBUG_PROCESS)
+                    System.out.printf("[%s] [%s] P. cutting finished %s\n", ((MySimulation) mySim()).workdayTime(), product.getWorker(), product);
 
-				product.validateTimes();
+                product.validateTimes();
 
-				product.setProductActivity(ProductActivity.CUT);
+                product.setProductActivity(ProductActivity.CUT);
 
-				product.clearWorker();
+                product.clearWorker();
 
-				product.setFinishCuttingTime(mySim().currentTime());
+                product.setFinishCuttingTime(mySim().currentTime());
 
-				this.assistantFinished(message);
-				break;
+                this.assistantFinished(message);
+                break;
         }
     }
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	@Override
-	public void processMessage(MessageForm message) {
-		switch (message.code()) {
-		case Mc.start:
-			processStart(message);
-		break;
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    @Override
+    public void processMessage(MessageForm message) {
+        switch (message.code()) {
+            case Mc.start:
+                processStart(message);
+                break;
 
-		default:
-			processDefault(message);
-		break;
-		}
-	}
-	//meta! tag="end"
+            default:
+                processDefault(message);
+                break;
+        }
+    }
+    //meta! tag="end"
 
     @Override
     public AgentGroupA myAgent() {

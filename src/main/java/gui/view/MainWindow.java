@@ -147,12 +147,12 @@ public class MainWindow extends JFrame {
 
     private void updateWorkstationTotal(SimulationData simData) {
         workstationTotalTable.addRows(simData.workstations());
-        double[] is = simData.statWorkstationWorkloadTotal().sampleSize() > 2 ? simData.statWorkstationWorkloadTotal().confidenceInterval_95() : new double[]{0,0};
+        double[] is = simData.statWorkstationWorkloadTotal().sampleSize() > 2 ? simData.statWorkstationWorkloadTotal().confidenceInterval_95() : new double[]{0, 0};
         workstationLabel.setText(String.format("<html>Workstations <br>%.2f%%<br>%.2f%% [%.2f%% | %.2f%%]</html>",
                 getSpeed() < Constants.MAX_SPEED ? calculateWorkloadForWorkstation(simData) * 100 : 0.0,
                 simData.statWorkstationWorkloadTotal().mean() * 100,
                 is[0] * 100, is[1] * 100
-                ));
+        ));
     }
 
     private Double calculateWorkloadForWorkstation(SimulationData simData) {
@@ -200,7 +200,7 @@ public class MainWindow extends JFrame {
                 for (int j = 0; j < workers[i].length; j++) {
                     Stat stat = workers[i][j].getStatWorkload();
                     Stat statTotal = workers[i][j].getStatWorkloadTotal();
-                    String text = String.format("%s: %s", workers[i][j] +  " replication", stat.toString());
+                    String text = String.format("%s: %s", workers[i][j] + " replication", stat.toString());
                     tempModel.addElement(text);
                     text = String.format("%s: %s", workers[i][j] + " total", statTotal.toString());
                     tempModel.addElement(text);
@@ -266,7 +266,7 @@ public class MainWindow extends JFrame {
 
     private void updateAverageCountOfNotWorkedOnOrder(SimulationData simData) {
         if (simData.statOrderNotWorkerOnTotal() != null) {
-            double[] is = simData.statOrderNotWorkerOnTotal().sampleSize() > 2 ? simData.statOrderNotWorkerOnTotal().confidenceInterval_95() : new double[] {0,0};
+            double[] is = simData.statOrderNotWorkerOnTotal().sampleSize() > 2 ? simData.statOrderNotWorkerOnTotal().confidenceInterval_95() : new double[]{0, 0};
             labelOrderNotWorkedOn.setText(String.format("<html>%.4f<br>[%.4f | %.4f]</html>",
                     simData.statOrderNotWorkerOnTotal().mean(),
                     is[0], is[1]));
@@ -275,7 +275,7 @@ public class MainWindow extends JFrame {
 
     private void updateAverageTimeInSystemTotal(SimulationData simData) {
         if (simData.statOrder() != null && simData.statOrder()[1] != null) {
-            double[] is = simData.statOrder()[1].sampleSize() > 2 ? simData.statOrder()[1].confidenceInterval_95() : new double[]{0.0,0.0};
+            double[] is = simData.statOrder()[1].sampleSize() > 2 ? simData.statOrder()[1].confidenceInterval_95() : new double[]{0.0, 0.0};
             this.labelAverageTimeInSystemTotal.setText("<html>" + String.format("%.2fh (%.2fs)<br>[%.2f | %.2f]" + "</html>",
                     (simData.statOrder()[1].mean() / 60 / 60),
                     (simData.statOrder()[1].mean()),
@@ -289,7 +289,7 @@ public class MainWindow extends JFrame {
         }
 
         if (simData.statProduct() != null && simData.statProduct()[1] != null) {
-            double[] is = simData.statProduct()[1].sampleSize() > 2 ? simData.statProduct()[1].confidenceInterval_95() : new double[]{0.0,0.0};
+            double[] is = simData.statProduct()[1].sampleSize() > 2 ? simData.statProduct()[1].confidenceInterval_95() : new double[]{0.0, 0.0};
             this.labelAverageProductTotal.setText("<html>" + String.format("%.2fh (%.2fs)<br>[%.2f | %.2f]" + "</html>",
                     (simData.statProduct()[1].mean() / 60 / 60),
                     (simData.statProduct()[1].mean()),

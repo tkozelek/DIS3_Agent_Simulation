@@ -24,6 +24,6 @@ public class Helper {
         if (time == 0.0) {
             return "-";
         }
-        return String.format("%d, %02d:%02d:%02d", getDays(time),getHours(time, offset), getMinutes(time), getSeconds(time));
+        return String.format("%d, %02d:%02d:%02d", getDays(time), getHours(time, offset), getMinutes(time), getSeconds(time));
     }
 }

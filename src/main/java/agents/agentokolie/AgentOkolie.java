@@ -1,13 +1,16 @@
 package agents.agentokolie;
 
-import OSPABA.*;
+import OSPABA.Agent;
+import OSPABA.Simulation;
 import OSPRNG.UniformDiscreteRNG;
+import agents.agentokolie.continualassistants.SchedulerOrderArrival;
 import config.Constants;
 import entity.order.Order;
 import entity.product.ProductType;
 import generator.EnumGenerator;
-import simulation.*;
-import agents.agentokolie.continualassistants.*;
+import simulation.Id;
+import simulation.Mc;
+import simulation.MySimulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,13 +19,12 @@ import java.util.Random;
 
 //meta! id="1"
 public class AgentOkolie extends OSPABA.Agent {
-    private ArrayList<Order> ordersInSystem;
-    private ArrayList<Order> finishedOrders;
-
     private final UniformDiscreteRNG productAmountGenerator;
+    private final ArrayList<Order> ordersInSystem;
+    private final ArrayList<Order> finishedOrders;
     private EnumGenerator productTypeGenerator;
 
-    private Random randPaintingGenerator;
+    private final Random randPaintingGenerator;
 
     public AgentOkolie(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -88,13 +90,13 @@ public class AgentOkolie extends OSPABA.Agent {
         this.ordersInSystem.clear();
     }
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	private void init() {
-		new ManagerOkolie(Id.managerOkolie, mySim(), this);
-		new SchedulerOrderArrival(Id.schedulerOrderArrival, mySim(), this);
-		addOwnMessage(Mc.requestResponseOrderArrival);
-		addOwnMessage(Mc.noticeInitAgentOkolie);
-		addOwnMessage(Mc.noticeOrderArrival);
-	}
-	//meta! tag="end"
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    private void init() {
+        new ManagerOkolie(Id.managerOkolie, mySim(), this);
+        new SchedulerOrderArrival(Id.schedulerOrderArrival, mySim(), this);
+        addOwnMessage(Mc.requestResponseOrderArrival);
+        addOwnMessage(Mc.noticeInitAgentOkolie);
+        addOwnMessage(Mc.noticeOrderArrival);
+    }
+    //meta! tag="end"
 }

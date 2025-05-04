@@ -12,7 +12,7 @@ public class WorkerTotalTable extends Table<Worker> {
                 w -> String.format("%.2f", w.getStatWorkloadTotal().mean() * 100),
                 w -> String.format("<%.2f%% | %.2f%%>",
                         w.getStatWorkloadTotal().sampleSize() > 2 ? w.getStatWorkloadTotal().confidenceInterval_95()[0] * 100 : 0,
-                        w.getStatWorkloadTotal().sampleSize() > 2 ? w.getStatWorkloadTotal().confidenceInterval_95()[1] * 100: 0)
+                        w.getStatWorkloadTotal().sampleSize() > 2 ? w.getStatWorkloadTotal().confidenceInterval_95()[1] * 100 : 0)
         ));
     }
 }

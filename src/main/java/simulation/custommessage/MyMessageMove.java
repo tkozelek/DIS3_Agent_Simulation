@@ -4,7 +4,6 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import entity.ILocation;
 import entity.worker.Worker;
-import entity.workstation.Workstation;
 
 public class MyMessageMove extends MessageForm {
     private ILocation targetLocation;
@@ -36,12 +35,12 @@ public class MyMessageMove extends MessageForm {
         return targetLocation;
     }
 
-    public Worker getWorker() {
-        return worker;
-    }
-
     public void setTargetLocation(ILocation targetLocation) {
         this.targetLocation = targetLocation;
+    }
+
+    public Worker getWorker() {
+        return worker;
     }
 
     public void setWorker(Worker worker) {

@@ -1,11 +1,5 @@
-import config.Constants;
-import entity.product.ProductActivity;
 import gui.controller.MainController;
 import gui.view.MainWindow;
-import simulation.MySimulation;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) {

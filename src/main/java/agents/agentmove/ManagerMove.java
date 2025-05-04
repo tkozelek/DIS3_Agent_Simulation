@@ -26,70 +26,70 @@ public class ManagerMove extends OSPABA.Manager {
         }
     }
 
-	//meta! sender="AgentWorkplace", id="38", type="Request"
-	public void processRequestResponseMoveWorker(MessageForm message) {
-		MyMessageMove msg = (MyMessageMove) message;
-		ILocation target = msg.getTargetLocation();
+    //meta! sender="AgentWorkplace", id="38", type="Request"
+    public void processRequestResponseMoveWorker(MessageForm message) {
+        MyMessageMove msg = (MyMessageMove) message;
+        ILocation target = msg.getTargetLocation();
 
-		if (target == Storage.STORAGE || msg.getWorker().getLocation() == Storage.STORAGE) {
-			msg.setAddressee(myAgent().findAssistant(Id.processAgentMoveStorage));
-		} else {
-			msg.setAddressee(myAgent().findAssistant(Id.processAgentMove));
-		}
-		this.startContinualAssistant(msg);
+        if (target == Storage.STORAGE || msg.getWorker().getLocation() == Storage.STORAGE) {
+            msg.setAddressee(myAgent().findAssistant(Id.processAgentMoveStorage));
+        } else {
+            msg.setAddressee(myAgent().findAssistant(Id.processAgentMove));
+        }
+        this.startContinualAssistant(msg);
     }
 
-	//meta! sender="ProcessAgentMove", id="43", type="Finish"
-	public void processFinishProcessAgentMove(MessageForm message) {
-		sendResponse(message);
+    //meta! sender="ProcessAgentMove", id="43", type="Finish"
+    public void processFinishProcessAgentMove(MessageForm message) {
+        sendResponse(message);
     }
 
-	//meta! sender="ProcessAgentMoveStorage", id="48", type="Finish"
-	public void processFinishProcessAgentMoveStorage(MessageForm message) {
-		sendResponse(message);
+    //meta! sender="ProcessAgentMoveStorage", id="48", type="Finish"
+    public void processFinishProcessAgentMoveStorage(MessageForm message) {
+        sendResponse(message);
     }
 
-	public void sendResponse(MessageForm message) {
-		message.setCode(Mc.requestResponseMoveWorker);
-		message.setAddressee(Id.agentWorkplace);
-		response(message);
-	}
+    public void sendResponse(MessageForm message) {
+        message.setCode(Mc.requestResponseMoveWorker);
+        message.setAddressee(Id.agentWorkplace);
+        response(message);
+    }
 
-	//meta! userInfo="Process messages defined in code", id="0"
-	public void processDefault(MessageForm message) {
+    //meta! userInfo="Process messages defined in code", id="0"
+    public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
     }
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	public void init() {
-	}
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    public void init() {
+    }
 
-	@Override
-	public void processMessage(MessageForm message) {
-		switch (message.code()) {
-		case Mc.requestResponseMoveWorker:
-			processRequestResponseMoveWorker(message);
-		break;
+    @Override
+    public void processMessage(MessageForm message) {
+        switch (message.code()) {
+            case Mc.requestResponseMoveWorker:
+                processRequestResponseMoveWorker(message);
+                break;
 
-		case Mc.finish:
-			switch (message.sender().id()) {
-			case Id.processAgentMoveStorage:
-				processFinishProcessAgentMoveStorage(message);
-			break;
+            case Mc.finish:
+                switch (message.sender().id()) {
+                    case Id.processAgentMoveStorage:
+                        processFinishProcessAgentMoveStorage(message);
+                        break;
 
-			case Id.processAgentMove:
-				processFinishProcessAgentMove(message);
-			break;
-			}
-		break;
+                    case Id.processAgentMove:
+                        processFinishProcessAgentMove(message);
+                        break;
+                }
+                break;
 
-		default:
-			processDefault(message);
-		break;
-		}
-	}
-	//meta! tag="end"
+            default:
+                processDefault(message);
+                break;
+        }
+    }
+    //meta! tag="end"
 
     @Override
     public AgentMove myAgent() {

@@ -13,14 +13,13 @@ import java.util.ArrayList;
 
 public class Group {
     private final SimQueue<MyMessageProduct> queue;
-    private Worker[] workers;
     private final WorkerGroup workerGroup;
     private final int amount;
+    private Worker[] workers;
+    private final Stat statWorkloadGroupTotal;
+    private final Stat statQueueLengthTotal;
 
-    private Stat statWorkloadGroupTotal;
-    private Stat statQueueLengthTotal;
-
-    private WStat statQueueLength;
+    private final WStat statQueueLength;
 
     public Group(int workerAmount, WorkerGroup workerGroup, Simulation sim) {
         this.queue = new SimQueue<>();

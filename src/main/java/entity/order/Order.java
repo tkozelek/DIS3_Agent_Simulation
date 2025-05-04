@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Order {
     private final int id;
-    private ArrayList<Product> products;
+    private final ArrayList<Product> products;
 
     private double arrivalTime;
     private double finishTime;

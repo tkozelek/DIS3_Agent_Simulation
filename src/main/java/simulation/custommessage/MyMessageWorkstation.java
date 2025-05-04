@@ -1,12 +1,9 @@
 package simulation.custommessage;
 
 import OSPABA.MessageForm;
-import OSPABA.Simulation;
 import entity.workstation.Workstation;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyMessageWorkstation extends MessageForm {
     private ArrayList<Workstation> workstations;

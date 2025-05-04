@@ -1,6 +1,9 @@
 package agents.agentgroupc.continualassistants;
 
-import OSPABA.*;
+import OSPABA.CommonAgent;
+import OSPABA.MessageForm;
+import OSPABA.Simulation;
+import agents.agentgroupc.AgentGroupC;
 import config.Constants;
 import entity.product.Product;
 import entity.product.ProductActivity;
@@ -8,102 +11,102 @@ import entity.product.ProductType;
 import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import generator.continuos.ContinuosUniformGenerator;
-import simulation.*;
-import agents.agentgroupc.*;
+import simulation.Mc;
+import simulation.MySimulation;
 import simulation.custommessage.MyMessageProduct;
 
 //meta! id="81"
 public class ProcessMorenie extends OSPABA.Process {
 
-	private ContinuosUniformGenerator morenieTableGenerator;
-	private ContinuosUniformGenerator morenieChairGenerator;
-	private ContinuosUniformGenerator morenieCupboardGenerator;
+    private final ContinuosUniformGenerator morenieTableGenerator;
+    private final ContinuosUniformGenerator morenieChairGenerator;
+    private final ContinuosUniformGenerator morenieCupboardGenerator;
 
 
-	public ProcessMorenie(int id, Simulation mySim, CommonAgent myAgent) {
-		super(id, mySim, myAgent);
+    public ProcessMorenie(int id, Simulation mySim, CommonAgent myAgent) {
+        super(id, mySim, myAgent);
 
-		int times = 60;
-		MySimulation sim = (MySimulation) mySim;
-		this.morenieTableGenerator = new ContinuosUniformGenerator(100 * times, 480 * times, sim.getSeedGenerator());
-		this.morenieChairGenerator = new ContinuosUniformGenerator(90 * times, 400 * times, sim.getSeedGenerator());
-		this.morenieCupboardGenerator = new ContinuosUniformGenerator(300 * times, 600 * times, sim.getSeedGenerator());
-	}
+        int times = 60;
+        MySimulation sim = (MySimulation) mySim;
+        this.morenieTableGenerator = new ContinuosUniformGenerator(100 * times, 480 * times, sim.getSeedGenerator());
+        this.morenieChairGenerator = new ContinuosUniformGenerator(90 * times, 400 * times, sim.getSeedGenerator());
+        this.morenieCupboardGenerator = new ContinuosUniformGenerator(300 * times, 600 * times, sim.getSeedGenerator());
+    }
 
-	private Double getSampleBasedOnProductType(ProductType productType) {
-		return switch (productType) {
-			case ProductType.TABLE -> this.morenieTableGenerator.sample();
-			case ProductType.CHAIR -> this.morenieChairGenerator.sample();
-			case ProductType.CUPBOARD -> this.morenieCupboardGenerator.sample();
-		};
-	}
+    private Double getSampleBasedOnProductType(ProductType productType) {
+        return switch (productType) {
+            case ProductType.TABLE -> this.morenieTableGenerator.sample();
+            case ProductType.CHAIR -> this.morenieChairGenerator.sample();
+            case ProductType.CUPBOARD -> this.morenieCupboardGenerator.sample();
+        };
+    }
 
-	@Override
-	public void prepareReplication() {
-		super.prepareReplication();
-		// Setup component for the next replication
-	}
+    @Override
+    public void prepareReplication() {
+        super.prepareReplication();
+        // Setup component for the next replication
+    }
 
-	//meta! sender="AgentGroupC", id="82", type="Start"
-	public void processStart(MessageForm message) {
-		MyMessageProduct productMessage = (MyMessageProduct) message;
-		Product product = productMessage.getProduct();
+    //meta! sender="AgentGroupC", id="82", type="Start"
+    public void processStart(MessageForm message) {
+        MyMessageProduct productMessage = (MyMessageProduct) message;
+        Product product = productMessage.getProduct();
 
-		if (Constants.DEBUG_PROCESS)
-			System.out.printf("[%s] [%s] P. staining start %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
+        if (Constants.DEBUG_PROCESS)
+            System.out.printf("[%s] [%s] P. staining start %s\n", ((MySimulation) mySim()).workdayTime(), product.getWorker(), product);
 
-		product.setProductActivity(ProductActivity.STAINING);
-		product.setStartStainingTime(mySim().currentTime());
+        product.setProductActivity(ProductActivity.STAINING);
+        product.setStartStainingTime(mySim().currentTime());
 
-		Worker worker = product.getWorker();
-		worker.setCurrentWork(WorkerWork.STAINING);
+        Worker worker = product.getWorker();
+        worker.setCurrentWork(WorkerWork.STAINING);
 
-		double offset = this.getSampleBasedOnProductType(product.getProductType());
-		productMessage.setCode(Mc.holdMorenie);
-		this.hold(offset, productMessage);
-	}
+        double offset = this.getSampleBasedOnProductType(product.getProductType());
+        productMessage.setCode(Mc.holdMorenie);
+        this.hold(offset, productMessage);
+    }
 
-	//meta! userInfo="Process messages defined in code", id="0"
-	public void processDefault(MessageForm message) {
-		switch (message.code()) {
-			case Mc.holdMorenie:
-				MyMessageProduct productMessage = (MyMessageProduct) message;
-				Product product = productMessage.getProduct();
+    //meta! userInfo="Process messages defined in code", id="0"
+    public void processDefault(MessageForm message) {
+        switch (message.code()) {
+            case Mc.holdMorenie:
+                MyMessageProduct productMessage = (MyMessageProduct) message;
+                Product product = productMessage.getProduct();
 
-				if (Constants.DEBUG_PROCESS)
-					System.out.printf("[%s] [%s] P. staining finished %s\n", ((MySimulation)mySim()).workdayTime(), product.getWorker(), product);
+                if (Constants.DEBUG_PROCESS)
+                    System.out.printf("[%s] [%s] P. staining finished %s\n", ((MySimulation) mySim()).workdayTime(), product.getWorker(), product);
 
-				product.setProductActivity(ProductActivity.STAINED);
-				product.setFinishStainingTime(mySim().currentTime());
+                product.setProductActivity(ProductActivity.STAINED);
+                product.setFinishStainingTime(mySim().currentTime());
 
-				if (!product.getShouldBePainted()) {
-					product.clearWorker();
-				}
-				product.validateTimes();
+                if (!product.getShouldBePainted()) {
+                    product.clearWorker();
+                }
+                product.validateTimes();
 
-				this.assistantFinished(message);
-				break;
-		}
-	}
+                this.assistantFinished(message);
+                break;
+        }
+    }
 
-	//meta! userInfo="Generated code: do not modify", tag="begin"
-	@Override
-	public void processMessage(MessageForm message) {
-		switch (message.code()) {
-		case Mc.start:
-			processStart(message);
-		break;
+    //meta! userInfo="Generated code: do not modify", tag="begin"
+    @Override
+    public void processMessage(MessageForm message) {
+        switch (message.code()) {
+            case Mc.start:
+                processStart(message);
+                break;
 
-		default:
-			processDefault(message);
-		break;
-		}
-	}
-	//meta! tag="end"
+            default:
+                processDefault(message);
+                break;
+        }
+    }
+    //meta! tag="end"
 
-	@Override
-	public AgentGroupC myAgent() {
-		return (AgentGroupC)super.myAgent();
-	}
+    @Override
+    public AgentGroupC myAgent() {
+        return (AgentGroupC) super.myAgent();
+    }
 
 }
