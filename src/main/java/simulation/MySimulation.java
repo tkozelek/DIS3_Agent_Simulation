@@ -27,6 +27,7 @@ import gui.model.SimulationData;
 
 import java.util.ArrayList;
 
+import static config.StatFormatter.*;
 
 public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Observable {
     private final int[] groups;
@@ -62,6 +63,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     private AgentOkolie _agentOkolie;
     private AgentGroupC _agentGroupC;
 
+    private boolean exportToFiles = false;
+
     public MySimulation(Long seed, int[] groups, int wCount) {
         seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
 
@@ -74,6 +77,10 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         this.createWorkstations();
 
         init();
+    }
+
+    public void exportToFiles() {
+        this.exportToFiles = true;
     }
 
     public void createWorkstations() {
@@ -240,36 +247,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         }
     }
 
-    public String statToStringTime(Stat stat, String name) {
-        double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0, 0};
-        return String.format("%s: %.2f <%.2f | %.2f> %.2f <%.2f | %.2f>",
-                name,
-                (stat.mean() / 60 / 60),
-                is[0] / 60 / 60,
-                is[1] / 60 / 60,
-                (stat.mean()),
-                is[0],
-                is[1]);
-    }
-
-    public String statToString(Stat stat, String name) {
-        double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0, 0};
-        return String.format("%s: %.2f <%.2f | %.2f>",
-                name,
-                stat.mean(),
-                is[0],
-                is[1]);
-    }
-
-    public String statToStringPercentual(Stat stat, String name) {
-        double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0, 0};
-        return String.format("%s: %.2f%% <%.2f%% | %.2f%%>",
-                name,
-                stat.mean() * 100,
-                is[0] * 100,
-                is[1] * 100);
-    }
-
     //meta! userInfo="Generated code: do not modify", tag="begin"
     private void init() {
         setAgentBoss(new AgentBoss(Id.agentBoss, this, null));
@@ -398,7 +375,9 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
                 },
                 statWorkstationWorkloadTotal,
                 statOrderNotWorkerOnTotal,
-                updateChart);
+                updateChart,
+                String.format("%s %s %s", groups[0], groups[1], groups[2])
+        );
 
     }
 }

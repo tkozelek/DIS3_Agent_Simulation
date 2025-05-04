@@ -1,16 +1,27 @@
 import config.Constants;
+import config.FileExporter;
+import gui.controller.MainController;
+import gui.model.SimulationData;
+import gui.view.MainWindow;
 import simulation.MySimulation;
+
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
 //        MainWindow win = new MainWindow();
 //        MainController controller = new MainController(win);
 
-        MySimulation sim = new MySimulation(null, new int[]{2, 2, 10}, 10);
-        sim.setSpeed(Constants.MAX_SPEED);
-        double start = System.currentTimeMillis();
-        sim.simulate(100, Constants.SIMULATION_TIME);
-        double end = System.currentTimeMillis();
-        System.out.println("Simulation took " + (end - start) + "ms");
+//
+//
+//
+//        double start = System.currentTimeMillis();
+//        sim.simulate(5, Constants.SIMULATION_TIME);
+//        simulationData.add(sim.getSimulationData());
+//        double end = System.currentTimeMillis();
+//        System.out.println("Simulation took " + (end - start) + "ms");
+//
+//        FileExporter.exportToTXT(simulationData);
+//        FileExporter.exportToCSV("stats/blabla.csv", simulationData);
     }
 }

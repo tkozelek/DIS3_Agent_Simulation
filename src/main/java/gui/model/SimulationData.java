@@ -19,5 +19,6 @@ public record SimulationData(
         Stat[] statOrder,
         Stat statWorkstationWorkloadTotal,
         Stat statOrderNotWorkerOnTotal,
-        boolean updateChart) {
+        boolean updateChart,
+        String workerGroups) {
 }
