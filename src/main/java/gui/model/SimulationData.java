@@ -17,6 +17,7 @@ public record SimulationData(
         Group[] groups,
         Stat[] statProduct,
         Stat[] statOrder,
+        Stat[] statQueueTime,
         Stat statWorkstationWorkloadTotal,
         Stat statOrderNotWorkerOnTotal,
         boolean updateChart,

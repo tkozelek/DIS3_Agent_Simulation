@@ -45,6 +45,7 @@ public class ManagerOkolie extends OSPABA.Manager {
         sim.getStatProductTimeInSystemReplication().addSample(product.getFinishTime() - product.getArrivalTime());
 
         sim.getStatProductsTimeInSystemReplication()[product.getProductType().ordinal()].addSample(product.getFinishTime() - product.getArrivalTime());
+        sim.getStatAverageTimeInQueueReplication().addSample(product.getTotalQueueTime());
 
         Order order = product.getMessageOrder().getOrder();
         double maxFinishTime = 0;

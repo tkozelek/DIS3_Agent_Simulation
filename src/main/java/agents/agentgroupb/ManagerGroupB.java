@@ -34,7 +34,7 @@ public class ManagerGroupB extends OSPABA.Manager {
         if (Constants.DEBUG_MANAGER)
             System.out.format("[%s] M. B received order", mySim().currentTime());
 
-        myAgent().group().addQueue((MyMessageProduct) message);
+        myAgent().group().addQueue((MyMessageProduct) message, mySim().currentTime());
 
         this.tryStartWorkOnOrder();
     }
@@ -44,7 +44,7 @@ public class ManagerGroupB extends OSPABA.Manager {
 
         if (worker == null) return;
 
-        MyMessageProduct messageProduct = myAgent().group().pollQueue();
+        MyMessageProduct messageProduct = myAgent().group().pollQueue(mySim().currentTime());
         Product product = messageProduct.getProduct();
 
         worker.setCurrentProduct(product);

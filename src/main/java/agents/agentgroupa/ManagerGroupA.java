@@ -48,7 +48,7 @@ public class ManagerGroupA extends OSPABA.Manager {
         int amount = Math.min(b, myAgent().group().queueSize());
 
         for (int i = 0; i < amount; i++) {
-            msgProducts.add(myAgent().group().pollQueue());
+            msgProducts.add(myAgent().group().pollQueue(mySim().currentTime()));
         }
 
         if (workers.isEmpty() || workstations.isEmpty() || msgProducts.isEmpty()) return;
@@ -112,7 +112,7 @@ public class ManagerGroupA extends OSPABA.Manager {
         for (Product product : products) {
             MyMessageProduct msgProduct = new MyMessageProduct(message);
             msgProduct.setProduct(product);
-            myAgent().group().addQueue(msgProduct);
+            myAgent().group().addQueue(msgProduct, mySim().currentTime());
         }
 
         // je to nova objednávka ked prišla agentovi A

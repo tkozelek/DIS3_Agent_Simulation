@@ -52,13 +52,17 @@ public class Group {
         this.statQueueLengthTotal.addSample(statQueueLength.mean());
     }
 
-    public void addQueue(MyMessageProduct p) {
+    public void addQueue(MyMessageProduct p, double time) {
         queue.add(p);
         this.statQueueLength.addSample(queue.size());
+        p.getProduct().enterQueue(time);
     }
 
-    public MyMessageProduct pollQueue() {
+    public MyMessageProduct pollQueue(double time) {
         MyMessageProduct p = queue.poll();
+        if (p != null) {
+            p.getProduct().exitQueue(time);
+        }
         this.statQueueLength.addSample(queue.size());
         return p;
     }

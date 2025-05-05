@@ -4,6 +4,7 @@ import OSPStat.Stat;
 import config.Constants;
 import config.Group;
 import config.Helper;
+import config.StatFormatter;
 import entity.order.Order;
 import entity.product.Product;
 import entity.worker.Worker;
@@ -171,7 +172,7 @@ public class MainWindow extends JFrame {
         String[] orderNames = new String[]{"Order time replication", "Order time total"};
         for (int i = 0; i < simData.statOrder().length; i++) {
             Stat stat = simData.statOrder()[i];
-            String text = String.format("%s: %s", orderNames[i], stat.toString());
+            String text = StatFormatter.statToStringTime(stat, orderNames[i]);
             tempModel.addElement(text);
         }
 
@@ -179,7 +180,15 @@ public class MainWindow extends JFrame {
         String[] productNames = new String[]{"Product time replication", "Product time total"};
         for (int i = 0; i < simData.statProduct().length; i++) {
             Stat stat = simData.statProduct()[i];
-            String text = String.format("%s: %s", productNames[i], stat.toString());
+            String text = StatFormatter.statToStringTime(stat, productNames[i]);
+            tempModel.addElement(text);
+        }
+
+        // QUEUE TIME
+        String[] queueTimeNames = new String[]{"Product queue time replication", "Product queue time total"};
+        for (int i = 0; i < simData.statQueueTime().length; i++) {
+            Stat stat = simData.statQueueTime()[i];
+            String text = StatFormatter.statToStringTime(stat, queueTimeNames[i]);
             tempModel.addElement(text);
         }
 
@@ -197,13 +206,13 @@ public class MainWindow extends JFrame {
         // WORKERS
         if (simData.workers() != null) {
             Worker[][] workers = simData.workers();
-            for (Worker[] worker : workers) {
-                for (Worker value : worker) {
-                    Stat stat = value.getStatWorkload();
-                    Stat statTotal = value.getStatWorkloadTotal();
-                    String text = String.format("%s: %s", value + " replication", stat.toString());
+            for (Worker[] workersGroup : workers) {
+                for (Worker worker : workersGroup) {
+                    Stat stat = worker.getStatWorkload();
+                    Stat statTotal = worker.getStatWorkloadTotal();
+                    String text = StatFormatter.statToStringPercentual(stat, worker + " workload replication");
                     tempModel.addElement(text);
-                    text = String.format("%s: %s", value + " total", statTotal.toString());
+                    text = StatFormatter.statToStringPercentual(statTotal, worker + " workload total");
                     tempModel.addElement(text);
                 }
             }
@@ -246,7 +255,7 @@ public class MainWindow extends JFrame {
 
                 int rep = simData.currentReplication();
                 Stat ds = simData.statOrder()[1];
-                double[] is = ds.confidenceInterval_95();
+                double[] is = rep > 2 ? ds.confidenceInterval_95() : new double[] {0,0};
 
                 seriesMain.add(rep, ds.mean());
 
@@ -294,11 +303,6 @@ public class MainWindow extends JFrame {
             this.labelAverageProductTotal.setText("<html>" + String.format("%.2fh (%.2fs)<br>[%.2f | %.2f]" + "</html>",
                     (simData.statProduct()[1].mean() / 60 / 60),
                     (simData.statProduct()[1].mean()),
-                    is[0],
-                    is[1]));
-            this.labelGraph.setText(String.format("%.2fh (%.2fs) [%.2f | %.2f]",
-                    simData.statProduct()[1].mean() / 60 / 60,
-                    simData.statProduct()[1].mean(),
                     is[0],
                     is[1]));
         }

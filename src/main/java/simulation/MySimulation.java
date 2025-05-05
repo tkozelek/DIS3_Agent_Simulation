@@ -49,6 +49,9 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     private Stat statOrderTimeInSystemReplication;
     private Stat statOrderTimeInSystemTotal;
 
+    private Stat statAverageTimeInQueueReplication;
+    private Stat statAverageTimeInQueueTotal;
+
     private Stat statWorkstationWorkloadTotal;
 
     private Stat statOrderNotWorkerOnTotal;
@@ -62,8 +65,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     private AgentGroupB _agentGroupB;
     private AgentOkolie _agentOkolie;
     private AgentGroupC _agentGroupC;
-
-    private boolean exportToFiles = false;
 
     public MySimulation(Long seed, int[] groups, int wCount) {
         seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
@@ -79,9 +80,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         init();
     }
 
-    public void exportToFiles() {
-        this.exportToFiles = true;
-    }
 
     public void createWorkstations() {
         for (int i = 0; i < workstationCount; i++) {
@@ -146,15 +144,13 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         for (int i = 0; i < statProductsTimeInSystemTotal.length; i++) {
             this.statProductsTimeInSystemTotal[i] = new Stat();
         }
+        this.statAverageTimeInQueueTotal = new Stat();
     }
 
     @Override
     public void prepareReplication() {
         super.prepareReplication();
         // Reset entities, queues, local statistics, etc...
-
-        if (currentReplication() % 50 == 0)
-            System.out.println(currentReplication());
 
         for (Workstation w : workstations) {
             w.reset(this);
@@ -174,6 +170,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         for (int i = 0; i < statProductsTimeInSystemReplication.length; i++) {
             this.statProductsTimeInSystemReplication[i] = new Stat();
         }
+        this.statAverageTimeInQueueReplication = new Stat();
     }
 
     public Stat getStatProductTimeInSystemReplication() {
@@ -188,8 +185,8 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         return statProductsTimeInSystemReplication;
     }
 
-    public Stat[] getStatProductsTimeInSystemTotal() {
-        return statProductsTimeInSystemTotal;
+    public Stat getStatAverageTimeInQueueReplication() {
+        return statAverageTimeInQueueReplication;
     }
 
     @Override
@@ -209,6 +206,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         for (int i = 0; i < statProductsTimeInSystemReplication.length; i++) {
             statProductsTimeInSystemTotal[i].addSample(statProductsTimeInSystemReplication[i].mean());
         }
+        this.statAverageTimeInQueueTotal.addSample(statAverageTimeInQueueReplication.mean());
 
         _agentGroupA.group().collectStats();
         _agentGroupB.group().collectStats();
@@ -227,22 +225,28 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         System.out.println("Replications: " + replicationCount());
         System.out.println("Workstations: " + workstations.size());
         System.out.format("Groups: %d %d %d\n", groups[0], groups[1], groups[2]);
-        System.out.println(statToStringTime(statOrderTimeInSystemTotal, "Order time total"));
-        System.out.println(statToStringTime(statProductTimeInSystemTotal, "Product time total"));
-        System.out.println(statToStringPercentual(statWorkstationWorkloadTotal, "Workstation workload total"));
+        System.out.println(statToStringTime(statOrderTimeInSystemTotal, "Order time"));
+        System.out.println(statToStringTime(statProductTimeInSystemTotal, "Product time"));
+
+        System.out.println(statToStringPercentual(statWorkstationWorkloadTotal, "Workstation workload"));
+
         for (int i = 0; i < statProductsTimeInSystemReplication.length; i++) {
-            System.out.println(statToStringTime(statProductsTimeInSystemTotal[i], ProductType.values()[i] + " time total"));
+            System.out.println(statToStringTime(statProductsTimeInSystemTotal[i], ProductType.values()[i] + " time"));
         }
+
         Group[] groups = getSimulationData().groups();
         for (Group group : groups) {
-            System.out.println(statToStringPercentual(group.getWorkloadGroupTotal(), group + " workload group total"));
+            System.out.println(statToStringPercentual(group.getWorkloadGroupTotal(), group + " workload group"));
         }
+
+        System.out.println(statToStringTime(statAverageTimeInQueueTotal, "Product average queue time"));
         for (Group group : groups) {
-            System.out.println(statToString(group.getStatQueueLengthTotal(), group + " queue length total"));
+            System.out.println(statToString(group.getStatQueueLengthTotal(), group + " queue length"));
         }
+
         for (Group group : groups) {
             for (Worker w : group.getWorkers()) {
-                System.out.println(statToStringPercentual(w.getStatWorkloadTotal(), w.toStringGroupId() + " workload total"));
+                System.out.println(statToStringPercentual(w.getStatWorkloadTotal(), w.toStringGroupId() + " workload"));
             }
         }
     }
@@ -360,7 +364,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
                 },
                 _agentOkolie.getOrdersInSystem(),
                 this.workstations,
-                currentReplication(),
+                currentReplication()+1,
                 new Group[]{
                         _agentGroupA.group(),
                         _agentGroupB.group(),
@@ -372,6 +376,9 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
                 },
                 new Stat[]{
                         statOrderTimeInSystemReplication, statOrderTimeInSystemTotal
+                },
+                new Stat[]{
+                        statAverageTimeInQueueReplication, statAverageTimeInQueueTotal
                 },
                 statWorkstationWorkloadTotal,
                 statOrderNotWorkerOnTotal,

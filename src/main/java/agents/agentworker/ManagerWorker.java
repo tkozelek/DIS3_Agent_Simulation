@@ -80,7 +80,7 @@ public class ManagerWorker extends OSPABA.Manager {
             // skus A
             if (this.myAgent().group().queueSize() > 0) {
                 // už sú v queue nejaké
-                this.myAgent().group().addQueue(msgProduct);
+                this.myAgent().group().addQueue(msgProduct, mySim().currentTime());
                 return;
             }
             msgProduct.setCode(Mc.requestResponseTryFitGroupA);
@@ -145,7 +145,7 @@ public class ManagerWorker extends OSPABA.Manager {
     //meta! sender="AgentGroupA", id="119", type="Notice"
     public void processNoticeAgentAFreed(MessageForm message) {
         if (myAgent().group().queueSize() > 0) {
-            MyMessageProduct msgProduct = myAgent().group().pollQueue();
+            MyMessageProduct msgProduct = myAgent().group().pollQueue(mySim().currentTime());
             msgProduct.setCode(Mc.requestResponseTryFitGroupA);
             msgProduct.setAddressee(Id.agentGroupA);
             this.request(msgProduct);
@@ -201,14 +201,14 @@ public class ManagerWorker extends OSPABA.Manager {
 
         if (product.getProductActivity() == ProductActivity.ASSEMBLED) {
             // nevyšlo ani C, vlož do queue
-            myAgent().group().addQueue(msgProduct);
+            myAgent().group().addQueue(msgProduct, mySim().currentTime());
         }
     }
 
     //meta! sender="AgentGroupC", id="120", type="Notice"
     public void processNoticeAgentCFreed(MessageForm message) {
         if (myAgent().group().queueSize() > 0) {
-            MyMessageProduct msgProduct = myAgent().group().pollQueue();
+            MyMessageProduct msgProduct = myAgent().group().pollQueue(mySim().currentTime());
             msgProduct.setCode(Mc.requestResponseTryFitGroupC);
             msgProduct.setAddressee(Id.agentGroupC);
             this.request(msgProduct);

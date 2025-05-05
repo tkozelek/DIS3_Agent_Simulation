@@ -46,6 +46,7 @@ public class FileExporter {
                 for (Group group : groups) {
                     writer.println(statToStringPercentual(group.getWorkloadGroupTotal(), group + " workload group total"));
                 }
+                writer.println(statToStringTime(result.statQueueTime()[1], "Product average queue time"));
                 for (Group group : groups) {
                     writer.println(statToString(group.getStatQueueLengthTotal(), group + " queue length total"));
                 }

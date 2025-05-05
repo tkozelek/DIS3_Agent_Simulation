@@ -40,7 +40,7 @@ public class MainController implements Observer {
 
     private void stopSimulation() {
         this.simulationManager.stopSimulation();
-        this.view.getStopButton().setBackground(Color.RED);
+        this.view.getStopButton().setBackground(Color.ORANGE);
         view.getStartButton().setEnabled(true);
     }
 
@@ -48,7 +48,7 @@ public class MainController implements Observer {
         this.simulationManager.pauseSimulation();
         this.paused = !this.paused;
         if (paused)
-            this.view.getPauseButton().setBackground(Color.RED);
+            this.view.getPauseButton().setBackground(Color.ORANGE);
         else
             this.view.getPauseButton().setBackground(null);
     }

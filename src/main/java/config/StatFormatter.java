@@ -6,7 +6,7 @@ public class StatFormatter {
 
     public static String statToStringTime(Stat stat, String name) {
         double[] is = stat.sampleSize() > 2 ? stat.confidenceInterval_95() : new double[]{0, 0};
-        return String.format("%s: %.2f <%.2f | %.2f> %.2f <%.2f | %.2f>",
+        return String.format("%s: %.2fh <%.2fh | %.2fh> %.2f <%.2f | %.2f>",
                 name,
                 stat.mean() / 60 / 60,
                 is[0] / 60 / 60,

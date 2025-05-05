@@ -34,6 +34,9 @@ public class Product implements Comparable<Product> {
     private double startFittingAssemblyTime;
     private double finishFittingAssemblyTime;
 
+    private double queueEntryTime;
+    private double totalQueueTime;
+
     private MyMessageOrder order;
 
     private boolean shouldBePainted;
@@ -42,15 +45,24 @@ public class Product implements Comparable<Product> {
         this.id = Ids.getProductId();
         this.productType = productType;
         this.productActivity = ProductActivity.EMTPY;
+        this.queueEntryTime = -1;
+        this.totalQueueTime = 0;
     }
 
-    public WorkerGroup getNextNeededGroup() {
-        return switch (productActivity) {
-            case EMTPY -> WorkerGroup.GROUP_A;
-            case CUT, ASSEMBLED -> WorkerGroup.GROUP_C;
-            case PAINTED -> WorkerGroup.GROUP_B;
-            default -> throw new IllegalStateException("Unexpected value: " + productActivity);
-        };
+    public void enterQueue(double time) {
+        this.queueEntryTime = time;
+    }
+
+    public void exitQueue(double time) {
+        if (queueEntryTime != -1) {
+            double timeInQueue = time - queueEntryTime;
+            totalQueueTime += timeInQueue;
+            queueEntryTime = -1;
+        }
+    }
+
+    public double getTotalQueueTime() {
+        return totalQueueTime;
     }
 
     public boolean getShouldBePainted() {

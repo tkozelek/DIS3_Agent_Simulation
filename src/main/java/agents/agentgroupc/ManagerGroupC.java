@@ -45,7 +45,7 @@ public class ManagerGroupC extends OSPABA.Manager {
     //meta! sender="AgentWorker", id="72", type="Request"
     public void processRequestResponseWorkAgentC(MessageForm message) {
         // žiadosť o obslhuu od agentaworkera -> A dokončené
-        myAgent().group().addQueue((MyMessageProduct) message);
+        myAgent().group().addQueue((MyMessageProduct) message, mySim().currentTime());
 
         this.tryStartWork();
     }
@@ -58,7 +58,7 @@ public class ManagerGroupC extends OSPABA.Manager {
 
         if (worker == null || myAgent().group().queueSize() == 0) return;
 
-        MyMessageProduct messageProduct = myAgent().group().pollQueue();
+        MyMessageProduct messageProduct = myAgent().group().pollQueue(mySim().currentTime());
         Product product = messageProduct.getProduct();
 
         worker.setCurrentProduct(product);
