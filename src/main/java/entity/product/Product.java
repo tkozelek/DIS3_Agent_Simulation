@@ -3,11 +3,10 @@ package entity.product;
 
 import config.Constants;
 import entity.Ids;
+import entity.order.Order;
 import entity.worker.Worker;
-import entity.worker.WorkerGroup;
 import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
-import simulation.custommessage.MyMessageOrder;
 
 public class Product implements Comparable<Product> {
     private final int id;
@@ -37,7 +36,7 @@ public class Product implements Comparable<Product> {
     private double queueEntryTime;
     private double totalQueueTime;
 
-    private MyMessageOrder order;
+    private Order order;
 
     private boolean shouldBePainted;
 
@@ -238,11 +237,11 @@ public class Product implements Comparable<Product> {
         return result == 0 ? Integer.compare(this.id, o.id) : result;
     }
 
-    public void setOrder(MyMessageOrder order) {
+    public void setOrder(Order order) {
         this.order = order;
     }
 
-    public MyMessageOrder getMessageOrder() {
+    public Order getOrder() {
         return order;
     }
 

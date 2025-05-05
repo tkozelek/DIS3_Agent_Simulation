@@ -12,8 +12,8 @@ import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="78"
 public class ProcessAssembly extends OSPABA.Process {
@@ -51,7 +51,7 @@ public class ProcessAssembly extends OSPABA.Process {
 
     //meta! sender="AgentGroupB", id="79", type="Start"
     public void processStart(MessageForm message) {
-        MyMessageProduct productMessage = (MyMessageProduct) message;
+        MyMessage productMessage = (MyMessage) message;
         Product product = productMessage.getProduct();
 
         if (Constants.DEBUG_PROCESS)
@@ -75,7 +75,7 @@ public class ProcessAssembly extends OSPABA.Process {
     public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdAssembly:
-                MyMessageProduct productMessage = (MyMessageProduct) message;
+                MyMessage productMessage = (MyMessage) message;
                 Product product = productMessage.getProduct();
 
                 if (Constants.DEBUG_PROCESS)

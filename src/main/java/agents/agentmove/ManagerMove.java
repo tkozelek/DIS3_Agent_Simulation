@@ -7,7 +7,7 @@ import entity.ILocation;
 import entity.Storage;
 import simulation.Id;
 import simulation.Mc;
-import simulation.custommessage.MyMessageMove;
+import simulation.MyMessage;
 
 //meta! id="5"
 public class ManagerMove extends OSPABA.Manager {
@@ -28,7 +28,7 @@ public class ManagerMove extends OSPABA.Manager {
 
     //meta! sender="AgentWorkplace", id="38", type="Request"
     public void processRequestResponseMoveWorker(MessageForm message) {
-        MyMessageMove msg = (MyMessageMove) message;
+        MyMessage msg = (MyMessage) message;
         ILocation target = msg.getTargetLocation();
 
         if (target == Storage.STORAGE || msg.getWorker().getLocation() == Storage.STORAGE) {

@@ -14,7 +14,7 @@ import static config.StatFormatter.*;
 public class FileExporter {
     public static void exportToCSV(String filename, ArrayList<SimulationData> results) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
-            writer.println("GROUPS;STATIONS;WORKLOAD A;WORKLOAD B;WORKLOAD C;TIME");
+            writer.println("GROUPS;STATIONS;WORKLOAD A;WORKLOAD B;WORKLOAD C;TIME;IS_BOTTOM;IS_TOP");
             for (SimulationData result : results) {
                 double[] is = result.statOrder()[1].confidenceInterval_95();
                 writer.printf("%s;%d;%.1f%%;%.1f%%;%.1f%%;%.2fh;%.2fh;%.2fh\n",

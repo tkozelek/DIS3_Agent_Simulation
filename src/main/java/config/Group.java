@@ -7,12 +7,12 @@ import OSPStat.WStat;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.worker.WorkerWork;
-import simulation.custommessage.MyMessageProduct;
+import simulation.MyMessage;
 
 import java.util.ArrayList;
 
 public class Group {
-    private final SimQueue<MyMessageProduct> queue;
+    private final SimQueue<MyMessage> queue;
     private final WorkerGroup workerGroup;
     private final int amount;
     private final Stat statWorkloadGroupTotal;
@@ -52,14 +52,14 @@ public class Group {
         this.statQueueLengthTotal.addSample(statQueueLength.mean());
     }
 
-    public void addQueue(MyMessageProduct p, double time) {
+    public void addQueue(MyMessage p, double time) {
         queue.add(p);
         this.statQueueLength.addSample(queue.size());
         p.getProduct().enterQueue(time);
     }
 
-    public MyMessageProduct pollQueue(double time) {
-        MyMessageProduct p = queue.poll();
+    public MyMessage pollQueue(double time) {
+        MyMessage p = queue.poll();
         if (p != null) {
             p.getProduct().exitQueue(time);
         }

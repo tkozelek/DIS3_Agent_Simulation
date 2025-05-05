@@ -11,8 +11,8 @@ import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import generator.continuos.ContinuosTriangularGenerator;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="49"
 public class ProcessPreparing extends OSPABA.Process {
@@ -32,7 +32,7 @@ public class ProcessPreparing extends OSPABA.Process {
 
     //meta! sender="AgentGroupA", id="50", type="Start"
     public void processStart(MessageForm message) {
-        MyMessageProduct productMessage = (MyMessageProduct) message;
+        MyMessage productMessage = (MyMessage) message;
         Product product = productMessage.getProduct();
 
         if (Constants.DEBUG_PROCESS)
@@ -54,7 +54,7 @@ public class ProcessPreparing extends OSPABA.Process {
     public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdPrepareMaterial:
-                MyMessageProduct productMessage = (MyMessageProduct) message;
+                MyMessage productMessage = (MyMessage) message;
                 Product product = productMessage.getProduct();
                 product.setProductActivity(ProductActivity.PREPARED);
 

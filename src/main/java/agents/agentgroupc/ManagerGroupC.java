@@ -10,8 +10,6 @@ import entity.worker.Worker;
 import simulation.Id;
 import simulation.Mc;
 import simulation.MyMessage;
-import simulation.custommessage.MyMessageMove;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="67"
 public class ManagerGroupC extends OSPABA.Manager {
@@ -32,7 +30,7 @@ public class ManagerGroupC extends OSPABA.Manager {
 
     //meta! sender="AgentWorker", id="71", type="Response"
     public void processRequestResponseMoveWorker(MessageForm message) {
-        MyMessageMove msg = (MyMessageMove) message;
+        MyMessage msg = (MyMessage) message;
         Product product = msg.getWorker().getCurrentProduct();
 
         if (product.getProductActivity() == ProductActivity.CUT)
@@ -45,7 +43,7 @@ public class ManagerGroupC extends OSPABA.Manager {
     //meta! sender="AgentWorker", id="72", type="Request"
     public void processRequestResponseWorkAgentC(MessageForm message) {
         // žiadosť o obslhuu od agentaworkera -> A dokončené
-        myAgent().group().addQueue((MyMessageProduct) message, mySim().currentTime());
+        myAgent().group().addQueue((MyMessage) message, mySim().currentTime());
 
         this.tryStartWork();
     }
@@ -58,7 +56,7 @@ public class ManagerGroupC extends OSPABA.Manager {
 
         if (worker == null || myAgent().group().queueSize() == 0) return;
 
-        MyMessageProduct messageProduct = myAgent().group().pollQueue(mySim().currentTime());
+        MyMessage messageProduct = myAgent().group().pollQueue(mySim().currentTime());
         Product product = messageProduct.getProduct();
 
         worker.setCurrentProduct(product);
@@ -73,17 +71,17 @@ public class ManagerGroupC extends OSPABA.Manager {
     }
 
     private void startProcess(MessageForm message, Product product, int processId) {
-        MyMessageProduct msgProduct = new MyMessageProduct(message);
+        MyMessage msgProduct = new MyMessage(message);
         msgProduct.setProduct(product);
         msgProduct.setAddressee(myAgent().findAssistant(processId));
         startContinualAssistant(msgProduct);
     }
 
-    private void moveWorkerRequest(MyMessageProduct message, Worker worker, ILocation location) {
+    private void moveWorkerRequest(MyMessage message, Worker worker, ILocation location) {
         if (worker.getLocation() == location)
             throw new IllegalStateException("Worker and location is the same");
 
-        MyMessageMove msgMove = new MyMessageMove(message);
+        MyMessage msgMove = new MyMessage(message);
         msgMove.setTargetLocation(location);
         msgMove.setWorker(worker);
 
@@ -121,7 +119,7 @@ public class ManagerGroupC extends OSPABA.Manager {
     //meta! sender="ProcessMorenie", id="82", type="Finish"
     public void processFinishProcessMorenie(MessageForm message) {
         // je nalakovany
-        MyMessageProduct msgProduct = (MyMessageProduct) message;
+        MyMessage msgProduct = (MyMessage) message;
         Product product = msgProduct.getProduct();
 
         if (product.getShouldBePainted()) {
@@ -161,7 +159,7 @@ public class ManagerGroupC extends OSPABA.Manager {
         }
 
         // worker je free
-        MyMessageProduct msgProduct = (MyMessageProduct) message;
+        MyMessage msgProduct = (MyMessage) message;
         Product product = msgProduct.getProduct();
         if (product == null) {
             message.setCode(Mc.requestResponseTryFitGroupC);

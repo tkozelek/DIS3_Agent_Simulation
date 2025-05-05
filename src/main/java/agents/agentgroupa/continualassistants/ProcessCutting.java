@@ -15,8 +15,8 @@ import generator.SeedGenerator;
 import generator.continuos.ContinuosEmpiricGenerator;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="26"
 public class ProcessCutting extends OSPABA.Process {
@@ -47,7 +47,7 @@ public class ProcessCutting extends OSPABA.Process {
     //meta! sender="AgentGroupA", id="27", type="Start"
     public void processStart(MessageForm message) {
         // zacne rezat
-        MyMessageProduct productMessage = (MyMessageProduct) message;
+        MyMessage productMessage = (MyMessage) message;
         Product product = productMessage.getProduct();
 
         if (Constants.DEBUG_PROCESS)
@@ -80,7 +80,7 @@ public class ProcessCutting extends OSPABA.Process {
     public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdCutting:
-                MyMessageProduct productMessage = (MyMessageProduct) message;
+                MyMessage productMessage = (MyMessage) message;
                 Product product = productMessage.getProduct();
 
                 if (Constants.DEBUG_PROCESS)

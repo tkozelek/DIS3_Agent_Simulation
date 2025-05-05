@@ -9,8 +9,7 @@ import entity.product.Product;
 import entity.worker.Worker;
 import simulation.Id;
 import simulation.Mc;
-import simulation.custommessage.MyMessageMove;
-import simulation.custommessage.MyMessageProduct;
+import simulation.MyMessage;
 
 //meta! id="61"
 public class ManagerGroupB extends OSPABA.Manager {
@@ -34,7 +33,7 @@ public class ManagerGroupB extends OSPABA.Manager {
         if (Constants.DEBUG_MANAGER)
             System.out.format("[%s] M. B received order", mySim().currentTime());
 
-        myAgent().group().addQueue((MyMessageProduct) message, mySim().currentTime());
+        myAgent().group().addQueue((MyMessage) message, mySim().currentTime());
 
         this.tryStartWorkOnOrder();
     }
@@ -44,7 +43,7 @@ public class ManagerGroupB extends OSPABA.Manager {
 
         if (worker == null) return;
 
-        MyMessageProduct messageProduct = myAgent().group().pollQueue(mySim().currentTime());
+        MyMessage messageProduct = myAgent().group().pollQueue(mySim().currentTime());
         Product product = messageProduct.getProduct();
 
         worker.setCurrentProduct(product);
@@ -62,7 +61,7 @@ public class ManagerGroupB extends OSPABA.Manager {
         if (worker.getLocation() == location)
             throw new IllegalStateException("Worker and location is the same");
 
-        MyMessageMove msgMove = new MyMessageMove(message);
+        MyMessage msgMove = new MyMessage(message);
         msgMove.setTargetLocation(location);
         msgMove.setWorker(worker);
 
@@ -72,7 +71,7 @@ public class ManagerGroupB extends OSPABA.Manager {
     }
 
     private void startProcess(MessageForm message, Product product, int processId) {
-        MyMessageProduct msgProduct = new MyMessageProduct(message);
+        MyMessage msgProduct = new MyMessage(message);
         msgProduct.setProduct(product);
         msgProduct.setAddressee(myAgent().findAssistant(processId));
         startContinualAssistant(msgProduct);
@@ -86,14 +85,13 @@ public class ManagerGroupB extends OSPABA.Manager {
 
     //meta! sender="AgentWorker", id="66", type="Response"
     public void processRequestResponseMoveWorker(MessageForm message) {
-        MyMessageMove msg = (MyMessageMove) message;
+        MyMessage msg = (MyMessage) message;
         this.startProcess(message, msg.getWorker().getCurrentProduct(), Id.processAssembly);
     }
 
     //meta! sender="ProcessAssembly", id="79", type="Finish"
     public void processFinish(MessageForm message) {
-        MyMessageProduct msg = (MyMessageProduct) message;
-        Product product = msg.getProduct();
+        MyMessage msg = (MyMessage) message;
 
         message.setCode(Mc.requestResponseWorkAgentB);
         message.setAddressee(Id.agentWorker);

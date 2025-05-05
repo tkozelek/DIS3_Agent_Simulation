@@ -10,8 +10,8 @@ import entity.worker.WorkerWork;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosTriangularGenerator;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageMove;
 
 //meta! id="42"
 public class ProcessAgentMove extends OSPABA.Process {
@@ -32,7 +32,7 @@ public class ProcessAgentMove extends OSPABA.Process {
 
     //meta! sender="AgentMove", id="43", type="Start"
     public void processStart(MessageForm message) {
-        MyMessageMove msg = (MyMessageMove) message;
+        MyMessage msg = (MyMessage) message;
         msg.getWorker().setCurrentWork(WorkerWork.MOVING);
 
         if (Constants.DEBUG_PROCESS)
@@ -47,7 +47,7 @@ public class ProcessAgentMove extends OSPABA.Process {
     public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdMove:
-                MyMessageMove msg = (MyMessageMove) message;
+                MyMessage msg = (MyMessage) message;
                 Worker worker = msg.getWorker();
                 worker.setLocation(msg.getTargetLocation());
 

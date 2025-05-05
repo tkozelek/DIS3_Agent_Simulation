@@ -10,7 +10,7 @@ public class ProductTable extends Table<Product> {
     public ProductTable() {
         super(new String[]{"OID", "ID", "Type", "Wid", "Stat", "Arr", "S Cut", "E Cut", "S Stain", "E Stain", "S Paint", "E Paint", "S Ass", "E Ass", "S Fit", "E Fit", "Fin"},
                 List.of(
-                        p -> p.getMessageOrder().getOrder().getId(),
+                        p -> p.getOrder().getId(),
                         Product::getId,
                         Product::getProductType,
                         p -> p.getWorker() != null ? p.getWorker().toStringGroupId() : null,

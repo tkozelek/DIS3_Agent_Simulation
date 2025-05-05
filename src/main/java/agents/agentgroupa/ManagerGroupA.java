@@ -15,9 +15,6 @@ import simulation.Id;
 import simulation.Mc;
 import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageMove;
-import simulation.custommessage.MyMessageOrder;
-import simulation.custommessage.MyMessageProduct;
 
 import java.util.ArrayList;
 
@@ -42,7 +39,7 @@ public class ManagerGroupA extends OSPABA.Manager {
         MySimulation sim = (MySimulation) mySim();
         ArrayList<Workstation> workstations = sim.getFreeWorkstations(workers.size());
 
-        ArrayList<MyMessageProduct> msgProducts = new ArrayList<>();
+        ArrayList<MyMessage> msgProducts = new ArrayList<>();
 
         int b = Math.min(workstations.size(), workers.size());
         int amount = Math.min(b, myAgent().group().queueSize());
@@ -57,7 +54,7 @@ public class ManagerGroupA extends OSPABA.Manager {
         for (int i = 0; i < amount; i++) {
             Workstation workstation = workstations.get(i);
             Worker worker = workers.get(i);
-            MyMessageProduct msgProduct = msgProducts.get(i);
+            MyMessage msgProduct = msgProducts.get(i);
             Product product = msgProduct.getProduct();
 
             worker.setCurrentProduct(product);
@@ -81,7 +78,7 @@ public class ManagerGroupA extends OSPABA.Manager {
     }
 
     private void startProcess(MessageForm message, Product product, int processId) {
-        MyMessageProduct msgProduct = new MyMessageProduct(message);
+        MyMessage msgProduct = new MyMessage(message);
         msgProduct.setProduct(product);
         msgProduct.setAddressee(myAgent().findAssistant(processId));
         startContinualAssistant(msgProduct);
@@ -91,7 +88,7 @@ public class ManagerGroupA extends OSPABA.Manager {
         if (worker.getLocation() == location)
             throw new IllegalStateException("Worker A location is the same");
 
-        MyMessageMove msgMove = new MyMessageMove(message);
+        MyMessage msgMove = new MyMessage(message);
         msgMove.setTargetLocation(location);
         msgMove.setWorker(worker);
 
@@ -103,14 +100,14 @@ public class ManagerGroupA extends OSPABA.Manager {
     //meta! sender="AgentWorker", id="39", type="Request"
     public void processRequestResponseWorkAgentA(MessageForm message) {
         // prisla objednavka
-        MyMessageOrder orderMessage = (MyMessageOrder) message;
+        MyMessage orderMessage = (MyMessage) message;
         Order order = orderMessage.getOrder();
         if (Constants.DEBUG_MANAGER)
             System.out.printf("[%s] M. group A objednávka prišla: %s\n", ((MySimulation) mySim()).workdayTime(), order);
         // vlozime do queue
         ArrayList<Product> products = order.getProducts();
         for (Product product : products) {
-            MyMessageProduct msgProduct = new MyMessageProduct(message);
+            MyMessage msgProduct = new MyMessage(message);
             msgProduct.setProduct(product);
             myAgent().group().addQueue(msgProduct, mySim().currentTime());
         }
@@ -132,7 +129,7 @@ public class ManagerGroupA extends OSPABA.Manager {
     //meta! sender="AgentWorker", id="53", type="Response"
     public void processRequestResponseMoveWorker(MessageForm message) {
         // skoncil presun, je bud pri workstatione alebo storage
-        MyMessageMove msgMove = (MyMessageMove) message;
+        MyMessage msgMove = (MyMessage) message;
         Worker worker = msgMove.getWorker();
         Product product = worker.getCurrentProduct();
 
@@ -154,7 +151,7 @@ public class ManagerGroupA extends OSPABA.Manager {
     //meta! sender="ProcessCutting", id="27", type="Finish"
     public void processFinishProcessCutting(MessageForm message) {
         // skončilo rezanie, agent A končí robotu na produkte
-        MyMessageProduct msgProduct = (MyMessageProduct) message;
+        MyMessage msgProduct = (MyMessage) message;
 
         msgProduct.setCode(Mc.requestResponseWorkAgentA);
         msgProduct.setAddressee(Id.agentWorker);
@@ -176,7 +173,7 @@ public class ManagerGroupA extends OSPABA.Manager {
 
     //meta! sender="ProcessPreparing", id="50", type="Finish"
     public void processFinishProcessPreparing(MessageForm message) {
-        MyMessageProduct msgProduct = (MyMessageProduct) message;
+        MyMessage msgProduct = (MyMessage) message;
         Worker worker = msgProduct.getProduct().getWorker();
         Product product = msgProduct.getProduct();
 
@@ -219,7 +216,7 @@ public class ManagerGroupA extends OSPABA.Manager {
         }
 
         // worker je free
-        MyMessageProduct msgProduct = (MyMessageProduct) message;
+        MyMessage msgProduct = (MyMessage) message;
         Product product = msgProduct.getProduct();
         // tzn. že produkt nečaká na fitting
         if (product == null) {

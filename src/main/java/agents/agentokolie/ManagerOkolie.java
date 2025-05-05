@@ -11,8 +11,6 @@ import simulation.Id;
 import simulation.Mc;
 import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageOrder;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="1"
 public class ManagerOkolie extends OSPABA.Manager {
@@ -39,15 +37,15 @@ public class ManagerOkolie extends OSPABA.Manager {
             System.out.printf("[%s] Manazer okolie: odchod objednavky\n", Helper.timeToDateString(mySim().currentTime(), 6));
         MySimulation sim = (MySimulation) mySim();
 
-        MyMessageProduct msgProduct = (MyMessageProduct) message;
-        Product product = msgProduct.getProduct();
+        MyMessage msg = (MyMessage) message;
+        Product product = msg.getProduct();
 
         sim.getStatProductTimeInSystemReplication().addSample(product.getFinishTime() - product.getArrivalTime());
 
         sim.getStatProductsTimeInSystemReplication()[product.getProductType().ordinal()].addSample(product.getFinishTime() - product.getArrivalTime());
         sim.getStatAverageTimeInQueueReplication().addSample(product.getTotalQueueTime());
 
-        Order order = product.getMessageOrder().getOrder();
+        Order order = msg.getOrder();
         double maxFinishTime = 0;
         for (Product p : order.getProducts()) {
             if (p.getFinishTime() == 0) {
@@ -74,7 +72,7 @@ public class ManagerOkolie extends OSPABA.Manager {
         if (Constants.DEBUG_MANAGER)
             System.out.printf("[%s] M. okolie objednávka prišla\n", Helper.timeToDateString(mySim().currentTime(), 6));
 
-        MyMessageOrder orderMessage = (MyMessageOrder) message;
+        MyMessage orderMessage = (MyMessage) message;
 
         if (this.mySim().currentTime() > Constants.SIMULATION_TIME) {
             throw new IllegalStateException("Manazer okolie prisiel zakaznik po case simulacie");

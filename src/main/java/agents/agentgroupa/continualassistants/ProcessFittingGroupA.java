@@ -13,8 +13,8 @@ import entity.worker.WorkerWork;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="51"
 public class ProcessFittingGroupA extends OSPABA.Process {
@@ -37,7 +37,7 @@ public class ProcessFittingGroupA extends OSPABA.Process {
     //meta! sender="AgentGroupA", id="52", type="Start"
     public void processStart(MessageForm message) {
         // zacne fittovat
-        MyMessageProduct productMessage = (MyMessageProduct) message;
+        MyMessage productMessage = (MyMessage) message;
         Product product = productMessage.getProduct();
         Worker worker = product.getWorker();
 
@@ -65,7 +65,7 @@ public class ProcessFittingGroupA extends OSPABA.Process {
     public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdFitting:
-                MyMessageProduct productMessage = (MyMessageProduct) message;
+                MyMessage productMessage = (MyMessage) message;
                 Product product = productMessage.getProduct();
 
                 if (Constants.DEBUG_PROCESS)

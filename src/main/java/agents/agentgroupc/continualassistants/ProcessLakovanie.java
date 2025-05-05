@@ -14,8 +14,8 @@ import generator.Distribution;
 import generator.continuos.ContinuosEmpiricGenerator;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="83"
 public class ProcessLakovanie extends OSPABA.Process {
@@ -55,7 +55,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 
     //meta! sender="AgentGroupC", id="84", type="Start"
     public void processStart(MessageForm message) {
-        MyMessageProduct productMessage = (MyMessageProduct) message;
+        MyMessage productMessage = (MyMessage) message;
         Product product = productMessage.getProduct();
 
         if (Constants.DEBUG_PROCESS)
@@ -76,7 +76,7 @@ public class ProcessLakovanie extends OSPABA.Process {
     public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdLakovanie:
-                MyMessageProduct productMessage = (MyMessageProduct) message;
+                MyMessage productMessage = (MyMessage) message;
                 Product product = productMessage.getProduct();
 
                 if (Constants.DEBUG_PROCESS)

@@ -12,8 +12,8 @@ import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import generator.continuos.ContinuosUniformGenerator;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageProduct;
 
 //meta! id="81"
 public class ProcessMorenie extends OSPABA.Process {
@@ -49,7 +49,7 @@ public class ProcessMorenie extends OSPABA.Process {
 
     //meta! sender="AgentGroupC", id="82", type="Start"
     public void processStart(MessageForm message) {
-        MyMessageProduct productMessage = (MyMessageProduct) message;
+        MyMessage productMessage = (MyMessage) message;
         Product product = productMessage.getProduct();
 
         if (Constants.DEBUG_PROCESS)
@@ -70,7 +70,7 @@ public class ProcessMorenie extends OSPABA.Process {
     public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdMorenie:
-                MyMessageProduct productMessage = (MyMessageProduct) message;
+                MyMessage productMessage = (MyMessage) message;
                 Product product = productMessage.getProduct();
 
                 if (Constants.DEBUG_PROCESS)

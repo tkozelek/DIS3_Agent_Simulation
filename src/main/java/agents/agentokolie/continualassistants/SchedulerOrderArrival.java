@@ -13,7 +13,6 @@ import simulation.Id;
 import simulation.Mc;
 import simulation.MyMessage;
 import simulation.MySimulation;
-import simulation.custommessage.MyMessageOrder;
 
 //meta! id="17"
 public class SchedulerOrderArrival extends OSPABA.Scheduler {
@@ -46,19 +45,19 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
             // vytvor order
             int productAmount = this.myAgent().getProductAmountGenerator().sample();
             Order order = new Order();
-            MyMessageOrder customMsg
-                    = new MyMessageOrder(this.mySim());
+            MyMessage message
+                    = new MyMessage(this.mySim());
             for (int i = 0; i < productAmount; i++) {
                 Product product = new Product((ProductType) this.myAgent().getProductTypeGenerator().sample());
                 product.setShouldBePainted(myAgent().shouldBePainted());
                 order.addProduct(product);
-                product.setOrder(customMsg);
+                product.setOrder(order);
             }
             //
-            customMsg.setOrder(order);
-            customMsg.setCode(Mc.holdOrderArrival);
+            message.setOrder(order);
+            message.setCode(Mc.holdOrderArrival);
 
-            this.hold(offsetArrival, customMsg);
+            this.hold(offsetArrival, message);
         } else {
             this.assistantFinished(new MyMessage(mySim()));
         }
@@ -78,7 +77,7 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
             System.out.printf("%.2f: Order arrived\n", mySim().currentTime());
 
         // objednávka prišla po holde
-        MyMessageOrder orderMessage = (MyMessageOrder) message;
+        MyMessage orderMessage = (MyMessage) message;
 
         // pošli spravu managerovi o prichode
         orderMessage.setCode(Mc.noticeOrderArrival);
