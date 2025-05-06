@@ -13,6 +13,7 @@ public class MyMessage extends OSPABA.MessageForm {
     private Worker worker;
     private Product product;
 
+
     public MyMessage(Simulation mySim) {
         super(mySim);
     }

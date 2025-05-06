@@ -5,11 +5,10 @@ import gui.interfaces.Observer;
 import simulation.MySimulation;
 
 import javax.swing.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SimulationManager {
     private final Observer observer;
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+    private boolean isRunning = false;
     private MySimulation simulation;
     private SwingWorker<Void, Void> worker;
 
@@ -18,8 +17,8 @@ public class SimulationManager {
     }
 
     public void startSimulation(int replicationCount, int[] groups, int workstationCount) {
-        if (isRunning.get()) return;
-        isRunning.set(true);
+        if (isRunning) return;
+        isRunning = true;
 
         this.simulation = new MySimulation(null, groups, workstationCount);
         this.simulation.addObserver(observer);
@@ -36,7 +35,7 @@ public class SimulationManager {
 
             @Override
             protected void done() {
-                isRunning.set(false);
+                isRunning = false;
                 try {
                     get();
                     System.out.println("Simulation finished!");
@@ -59,7 +58,7 @@ public class SimulationManager {
     public void stopSimulation() {
         if (simulation != null) {
             simulation.stopSimulation();
-            isRunning.set(false);
+            isRunning = false;
         }
         if (worker != null) {
             worker.cancel(true);
@@ -76,9 +75,5 @@ public class SimulationManager {
         if (simulation != null) {
             simulation.setSpeed(speed);
         }
-    }
-
-    public AtomicBoolean getIsRunning() {
-        return isRunning;
     }
 }
