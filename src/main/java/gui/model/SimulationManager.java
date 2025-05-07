@@ -1,5 +1,6 @@
 package gui.model;
 
+import OSPABA.Simulation;
 import config.Constants;
 import gui.interfaces.Observer;
 import simulation.MySimulation;
@@ -75,5 +76,9 @@ public class SimulationManager {
         if (simulation != null) {
             simulation.setSpeed(speed);
         }
+    }
+
+    public MySimulation getSimulation() {
+        return this.simulation;
     }
 }

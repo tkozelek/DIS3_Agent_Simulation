@@ -1,12 +1,15 @@
 package entity.product;
 
 
+import OSPAnimator.AnimImageItem;
+import OSPAnimator.AnimItem;
 import config.Constants;
 import entity.Ids;
 import entity.order.Order;
 import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
+import simulation.Data;
 
 public class Product implements Comparable<Product> {
     private final int id;
@@ -40,12 +43,30 @@ public class Product implements Comparable<Product> {
 
     private boolean shouldBePainted;
 
+    private AnimImageItem animItem;
+
     public Product(ProductType productType) {
         this.id = Ids.getProductId();
         this.productType = productType;
         this.productActivity = ProductActivity.EMTPY;
         this.queueEntryTime = -1;
         this.totalQueueTime = 0;
+
+        this.animItem = this.getAnimImage();
+        this.animItem.setToolTip(this.toString());
+        this.animItem.setPositionAlignment(AnimItem.PositionAlignment.CENTER);
+    }
+
+    private AnimImageItem getAnimImage() {
+        return switch (productType) {
+            case TABLE -> new AnimImageItem(Data.TABLE, 60, 40);
+            case CHAIR -> new AnimImageItem(Data.CHAIR, 50, 50);
+            case CUPBOARD -> new AnimImageItem(Data.CUPBOARD, 40, 60);
+        };
+    }
+
+    public AnimImageItem getAnimImageItem() {
+        return animItem;
     }
 
     public void enterQueue(double time) {
@@ -86,6 +107,8 @@ public class Product implements Comparable<Product> {
 
     public void setWorkstation(Workstation workstation) {
         this.workstation = workstation;
+
+
     }
 
     public ProductActivity getProductActivity() {
@@ -228,7 +251,7 @@ public class Product implements Comparable<Product> {
 
     @Override
     public String toString() {
-        return String.format("%d - %s", id, productType);
+        return String.format("%d: %s", id, productType);
     }
 
     @Override

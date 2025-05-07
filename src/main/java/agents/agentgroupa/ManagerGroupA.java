@@ -3,6 +3,7 @@ package agents.agentgroupa;
 import OSPABA.Agent;
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
+import OSPAnimator.AnimImageItem;
 import config.Constants;
 import entity.ILocation;
 import entity.Storage;
@@ -11,10 +12,7 @@ import entity.product.Product;
 import entity.product.ProductActivity;
 import entity.worker.Worker;
 import entity.workstation.Workstation;
-import simulation.Id;
-import simulation.Mc;
-import simulation.MyMessage;
-import simulation.MySimulation;
+import simulation.*;
 
 import java.util.ArrayList;
 
@@ -61,6 +59,12 @@ public class ManagerGroupA extends OSPABA.Manager {
 
             product.setWorkstation(workstation);
             product.setWorker(worker);
+            if (_mySim.animatorExists()) {
+                myAgent().getAnimQueue().removeFirst();
+                product.getAnimImageItem().moveTo(sim.currentTime(), 0,
+                        workstation.getAnimImageItem().getPosX() + (double) Data.WORKSTATION_WIDTH / 2,
+                        workstation.getAnimImageItem().getPosY() + (double) Data.WORKSTATION_HEIGHT / 3);
+            }
 
             workstation.setCurrentProduct(product);
 
@@ -110,6 +114,12 @@ public class ManagerGroupA extends OSPABA.Manager {
             MyMessage msgProduct = new MyMessage(message);
             msgProduct.setProduct(product);
             myAgent().group().addQueue(msgProduct, mySim().currentTime());
+
+            if (_mySim.animatorExists()) {
+                mySim().animator().register(product.getAnimImageItem());
+                AnimImageItem animItem = product.getAnimImageItem();
+                myAgent().getAnimQueue().insert(animItem);
+            }
         }
 
         // je to nova objednávka ked prišla agentovi A

@@ -2,6 +2,7 @@ package simulation;
 
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
+import OSPAnimator.AnimItem;
 import entity.ILocation;
 import entity.order.Order;
 import entity.product.Product;
@@ -12,7 +13,6 @@ public class MyMessage extends OSPABA.MessageForm {
     private ILocation targetLocation;
     private Worker worker;
     private Product product;
-
 
     public MyMessage(Simulation mySim) {
         super(mySim);

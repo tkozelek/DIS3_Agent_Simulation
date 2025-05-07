@@ -1,3 +1,4 @@
+import OSPAnimator.Flags;
 import config.Constants;
 import config.FileExporter;
 import gui.controller.MainController;

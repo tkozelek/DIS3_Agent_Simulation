@@ -7,7 +7,9 @@ import OSPStat.WStat;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.worker.WorkerWork;
+import simulation.Data;
 import simulation.MyMessage;
+import simulation.MySimulation;
 
 import java.util.ArrayList;
 
@@ -113,5 +115,14 @@ public class Group {
     @Override
     public String toString() {
         return workerGroup != null ? workerGroup.toString() : "Fitting";
+    }
+
+    public void initWorkers(MySimulation sim) {
+        if (sim.animatorExists()) {
+            for (Worker w : workers) {
+                w.getAnimImageItem().setPosition(Data.getRandomStoragePoiunt());
+                sim.animator().register(w.getAnimImageItem());
+            }
+        }
     }
 }

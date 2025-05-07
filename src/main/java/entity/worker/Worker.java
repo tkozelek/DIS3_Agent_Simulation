@@ -1,12 +1,14 @@
 package entity.worker;
 
 import OSPABA.Simulation;
+import OSPAnimator.AnimImageItem;
 import OSPStat.Stat;
 import OSPStat.WStat;
 import entity.ILocation;
 import entity.Ids;
 import entity.Storage;
 import entity.product.Product;
+import simulation.Data;
 
 public class Worker {
     private final int id;
@@ -18,6 +20,8 @@ public class Worker {
     private int finishedTasks = 0;
     private WStat statWorkload;
 
+    private AnimImageItem animImageItem;
+
     public Worker(WorkerGroup group, Simulation sim) {
         this.id = Ids.getWorkerId();
         this.group = group;
@@ -25,6 +29,21 @@ public class Worker {
         this.location = Storage.STORAGE;
         this.statWorkload = new WStat(sim);
         this.statWorkloadTotal = new Stat();
+        this.animImageItem = getImage();
+        this.animImageItem.setZIndex(10);
+        this.animImageItem.setToolTip(this.toString());
+    }
+
+    private AnimImageItem getImage() {
+        return switch (group) {
+            case GROUP_A -> new AnimImageItem(Data.WORKER_A, 40, 60);
+            case GROUP_B -> new AnimImageItem(Data.WORKER_B, 40, 60);
+            case GROUP_C -> new AnimImageItem(Data.WORKER_C, 40, 60);
+        };
+    }
+
+    public AnimImageItem getAnimImageItem() {
+        return animImageItem;
     }
 
     public void reset(Simulation sim) {

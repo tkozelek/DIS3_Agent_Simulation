@@ -1,11 +1,13 @@
 package entity.workstation;
 
 import OSPABA.Simulation;
+import OSPAnimator.AnimImageItem;
 import OSPStat.Stat;
 import OSPStat.WStat;
 import entity.ILocation;
 import entity.Ids;
 import entity.product.Product;
+import simulation.Data;
 
 public class Workstation implements ILocation {
     private final int id;
@@ -13,10 +15,19 @@ public class Workstation implements ILocation {
     private Product currentProduct;
     private WStat statWorkload;
 
+    private AnimImageItem animImageItem;
+
     public Workstation(Simulation sim) {
         this.id = Ids.getWorkstationId();
         this.statWorkload = new WStat(sim);
         this.statWorkloadTotal = new Stat();
+
+        this.animImageItem = new AnimImageItem(Data.WORKSTATION, Data.WORKSTATION_WIDTH, Data.WORKSTATION_HEIGHT);
+        this.animImageItem.setToolTip(toString());
+    }
+
+    public AnimImageItem getAnimImageItem() {
+        return animImageItem;
     }
 
     public Stat getStatWorkloadTotal() {

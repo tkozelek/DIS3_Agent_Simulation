@@ -5,9 +5,14 @@ import OSPABA.MessageForm;
 import OSPABA.Simulation;
 import agents.agentmove.AgentMove;
 import config.Constants;
+import entity.ILocation;
+import entity.Storage;
+import entity.worker.Worker;
 import entity.worker.WorkerWork;
+import entity.workstation.Workstation;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosTriangularGenerator;
+import simulation.Data;
 import simulation.Mc;
 import simulation.MyMessage;
 import simulation.MySimulation;
@@ -33,12 +38,25 @@ public class ProcessAgentMoveStorage extends OSPABA.Process {
     //meta! sender="AgentMove", id="48", type="Start"
     public void processStart(MessageForm message) {
         MyMessage msg = (MyMessage) message;
-        msg.getWorker().setCurrentWork(WorkerWork.MOVING);
+        Worker worker = msg.getWorker();
+        ILocation target = msg.getTargetLocation();
+        worker.setCurrentWork(WorkerWork.MOVING);
 
         if (Constants.DEBUG_PROCESS)
             System.out.printf("[%s] [%s] P. move storage started -> %s\n", ((MySimulation) mySim()).workdayTime(), msg.getWorker(), msg.getTargetLocation());
 
         double offset = moveToStorageGenerator.sample();
+
+        if (target instanceof Workstation workstation) {
+            worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
+                    workstation.getAnimImageItem().getPosX(),
+                    workstation.getAnimImageItem().getPosY());
+        } else if (target instanceof Storage) {
+            worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
+                    Data.getRandomStoragePoiunt());
+        }
+
+
         message.setCode(Mc.holdMoveStorage);
         this.hold(offset, message);
     }

@@ -3,16 +3,19 @@ package agents.agentokolie.continualassistants;
 import OSPABA.CommonAgent;
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
+import OSPAnimator.AnimImageItem;
+import OSPAnimator.AnimItem;
 import agents.agentokolie.AgentOkolie;
 import config.Constants;
 import entity.order.Order;
 import entity.product.Product;
 import entity.product.ProductType;
 import generator.continuos.ContinuosExponentialGenerator;
-import simulation.Id;
-import simulation.Mc;
-import simulation.MyMessage;
-import simulation.MySimulation;
+import simulation.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
 //meta! id="17"
 public class SchedulerOrderArrival extends OSPABA.Scheduler {
@@ -75,6 +78,9 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
     private void orderArrival(MessageForm message) {
         if (Constants.DEBUG_SCHEDULER)
             System.out.printf("%.2f: Order arrived\n", mySim().currentTime());
+
+        MySimulation sim = (MySimulation) mySim();
+        sim.updateAnimatorTime();
 
         // objednávka prišla po holde
         MyMessage orderMessage = (MyMessage) message;
