@@ -1,12 +1,5 @@
-import OSPAnimator.Flags;
-import config.Constants;
-import config.FileExporter;
 import gui.controller.MainController;
-import gui.model.SimulationData;
 import gui.view.MainWindow;
-import simulation.MySimulation;
-
-import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {

@@ -3,7 +3,6 @@ package agents.agentgroupa;
 import OSPABA.Agent;
 import OSPABA.Simulation;
 import OSPAnimator.AnimQueue;
-import OSPAnimator.Flags;
 import agents.agentgroupa.continualassistants.ProcessCutting;
 import agents.agentgroupa.continualassistants.ProcessFittingGroupA;
 import agents.agentgroupa.continualassistants.ProcessPreparing;

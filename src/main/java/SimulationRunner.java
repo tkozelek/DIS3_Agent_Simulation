@@ -3,8 +3,9 @@ import config.FileExporter;
 import gui.model.SimulationData;
 import simulation.MySimulation;
 
-import java.sql.Time;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class SimulationRunner {

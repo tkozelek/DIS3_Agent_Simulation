@@ -1,6 +1,5 @@
 package gui.model;
 
-import OSPABA.Simulation;
 import config.Constants;
 import gui.interfaces.Observer;
 import simulation.MySimulation;

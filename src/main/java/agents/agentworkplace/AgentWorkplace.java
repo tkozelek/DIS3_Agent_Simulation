@@ -2,7 +2,8 @@ package agents.agentworkplace;
 
 import OSPABA.Agent;
 import OSPABA.Simulation;
-import OSPAnimator.*;
+import OSPAnimator.AnimImageItem;
+import OSPAnimator.AnimTextItem;
 import config.Helper;
 import simulation.Data;
 import simulation.Id;
@@ -23,8 +24,7 @@ public class AgentWorkplace extends OSPABA.Agent {
         init();
     }
 
-    public void initAnimator()
-    {
+    public void initAnimator() {
         imgStorage = new AnimImageItem(Data.STORAGE, Data.STORAGE_WIDTH, Data.STORAGE_HEIGHT);
         imgStorage.setPosition(Data.STORAGE_POSITION);
         imgStorage.setZIndex(10);
@@ -38,8 +38,7 @@ public class AgentWorkplace extends OSPABA.Agent {
         textSimulationTime.setPosition(Data.TEXT_SIMULATIONTIME_POSITION);
         textSimulationTime.setZIndex(100);
 
-        if (mySim().animatorExists())
-        {
+        if (mySim().animatorExists()) {
             _mySim.animator().register(imgStorage);
             _mySim.animator().register(textQueueSize);
             _mySim.animator().register(textSimulationTime);

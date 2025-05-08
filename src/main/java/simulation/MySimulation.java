@@ -195,7 +195,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     }
 
 
-        private void initWorkers() {
+    private void initWorkers() {
         _agentGroupA.group().initWorkers(this);
         _agentGroupB.group().initWorkers(this);
         _agentGroupC.group().initWorkers(this);
@@ -416,7 +416,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
                 },
                 _agentOkolie.getOrdersInSystem(),
                 this.workstations,
-                currentReplication()+1,
+                currentReplication() + 1,
                 new Group[]{
                         _agentGroupA.group(),
                         _agentGroupB.group(),

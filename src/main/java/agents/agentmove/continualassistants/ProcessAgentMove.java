@@ -46,8 +46,8 @@ public class ProcessAgentMove extends OSPABA.Process {
 
         if (mySim().animatorExists())
             worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
-                workstation.getAnimImageItem().getPosX() + Data.WORKER_WORKSTATION_OFFSET_X,
-                workstation.getAnimImageItem().getPosY() + Data.WORKER_WORKSTATION_OFFSET_Y);
+                    workstation.getAnimImageItem().getPosX() + Data.WORKER_WORKSTATION_OFFSET_X,
+                    workstation.getAnimImageItem().getPosY() + Data.WORKER_WORKSTATION_OFFSET_Y);
 
         message.setCode(Mc.holdMove);
         this.hold(offset, message);

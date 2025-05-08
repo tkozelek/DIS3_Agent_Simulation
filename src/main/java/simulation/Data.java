@@ -27,11 +27,8 @@ public class Data {
     public static final int WORKSTATION_X_OFFSET = 20;
 
     public static final int WORKSTATION_X_START = (int) (STORAGE_POSITION.getX() + STORAGE_WIDTH + WORKSTATION_HORIZONTAL_MARGIN_FROM_STORAGE);
-
-    public static final int WORKSTATION_Y_START = (int) (STORAGE_POSITION.getY());
-
     public static final int WORKSTATION_X_ROW_END_BOUNDARY = WORKSTATION_X_START + ((WORKSTATION_WIDTH + WORKSTATION_X_OFFSET) * MAX_WORKSTATIONS_PER_ROW);
-
+    public static final int WORKSTATION_Y_START = (int) (STORAGE_POSITION.getY());
     public static final int WORKSTATION_Y_OFFSET_PER_ROW = WORKSTATION_HEIGHT + WORKSTATION_VERTICAL_GAP_BETWEEN_ROWS;
 
     public static final int WORKSTATION_PRODUCT_OFFSET_X = 30;
@@ -42,7 +39,17 @@ public class Data {
 
     public static final int WORKER_WIDTH = 50;
     public static final int WORKER_HEIGHT = 65;
-
+    // Workers
+    public static final String WORKER_A = "models/worker_cutting.png";
+    public static final String WORKER_B = "models/worker_assembly.png";
+    public static final String WORKER_C = "models/worker_painter.png";
+    // Products
+    public static final String CHAIR = "models/chair.png";
+    public static final String TABLE = "models/table.png";
+    public static final String CUPBOARD = "models/cupboard.png";
+    // Structures
+    public static final String WORKSTATION = "models/workstation.png";
+    public static final String STORAGE = "models/storage.jpg";
 
     public static Point2D getRandomStoragePoiunt() {
         Random r = new Random();
@@ -55,18 +62,4 @@ public class Data {
         double y = (yMin >= yMax) ? yMin : r.nextInt(yMin, yMax);
         return new Point2D.Double(x, y);
     }
-
-    // Workers
-    public static final String WORKER_A = "models/worker_cutting.png";
-    public static final String WORKER_B = "models/worker_assembly.png";
-    public static final String WORKER_C = "models/worker_painter.png";
-
-    // Products
-    public static final String CHAIR = "models/chair.png";
-    public static final String TABLE = "models/table.png";
-    public static final String CUPBOARD = "models/cupboard.png";
-
-    // Structures
-    public static final String WORKSTATION = "models/workstation.png";
-    public static final String STORAGE = "models/storage.jpg";
 }

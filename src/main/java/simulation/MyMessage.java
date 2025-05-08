@@ -2,7 +2,6 @@ package simulation;
 
 import OSPABA.MessageForm;
 import OSPABA.Simulation;
-import OSPAnimator.AnimItem;
 import entity.ILocation;
 import entity.order.Order;
 import entity.product.Product;

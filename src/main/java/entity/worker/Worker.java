@@ -21,7 +21,7 @@ public class Worker {
     private int finishedTasks = 0;
     private WStat statWorkload;
 
-    private AnimImageItem animImageItem;
+    private final AnimImageItem animImageItem;
 
     public Worker(WorkerGroup group, Simulation sim) {
         this.id = Ids.getWorkerId();
@@ -117,10 +117,10 @@ public class Worker {
         if (location instanceof Workstation workstation) {
             int x = (int) workstation.getAnimImageItem().getPosX();
             int y = (int) workstation.getAnimImageItem().getPosY();
-            this.animImageItem.setPosition(x + (double) Data.WORKSTATION_WIDTH / 2, y + (double) Data.WORKSTATION_HEIGHT / 2 );
+            this.animImageItem.setPosition(x + (double) Data.WORKSTATION_WIDTH / 2, y + (double) Data.WORKSTATION_HEIGHT / 2);
         }
         if (location instanceof Storage storage) {
-           this.animImageItem.setPosition(Data.getRandomStoragePoiunt());
+            this.animImageItem.setPosition(Data.getRandomStoragePoiunt());
         }
     }
 }

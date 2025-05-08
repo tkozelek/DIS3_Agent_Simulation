@@ -3,7 +3,6 @@ package entity.product;
 
 import OSPAnimator.AnimImageItem;
 import OSPAnimator.AnimItem;
-import OSPAnimator.AnimTextItem;
 import config.Constants;
 import entity.Ids;
 import entity.order.Order;
@@ -12,41 +11,29 @@ import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
 import simulation.Data;
 
-import java.awt.*;
-
 public class Product implements Comparable<Product> {
     private final int id;
     private final ProductType productType;
+    private final AnimImageItem animItem;
     private ProductActivity productActivity;
     private Workstation workstation;
     private Worker worker;
-
     private double arrivalTime;
     private double finishTime;
-
     private double startCuttingTime;
     private double finishCuttingTime;
-
     private double startStainingTime;
     private double finishStainingTime;
-
     private double startPaintingTime;
     private double finishPaintingTime;
-
     private double startAssemblyTime;
     private double finishAssemblyTime;
-
     private double startFittingAssemblyTime;
     private double finishFittingAssemblyTime;
-
     private double queueEntryTime;
     private double totalQueueTime;
-
     private Order order;
-
     private boolean shouldBePainted;
-
-    private final AnimImageItem animItem;
 
     public Product(ProductType productType) {
         this.id = Ids.getProductId();
@@ -261,12 +248,12 @@ public class Product implements Comparable<Product> {
         return result == 0 ? Integer.compare(this.id, o.id) : result;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
     public Order getOrder() {
         return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     private void checkTimeOrder(double start, double finish, String name) {

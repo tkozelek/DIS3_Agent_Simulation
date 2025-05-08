@@ -15,7 +15,7 @@ public class Workstation implements ILocation {
     private Product currentProduct;
     private WStat statWorkload;
 
-    private AnimImageItem animImageItem;
+    private final AnimImageItem animImageItem;
 
     public Workstation(Simulation sim) {
         this.id = Ids.getWorkstationId();

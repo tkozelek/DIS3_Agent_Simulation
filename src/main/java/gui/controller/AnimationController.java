@@ -44,7 +44,7 @@ public class AnimationController {
             return;
 
         sim.createAnimator();
-        
+
         sim.initAnimator();
 
         view.getPanelCanvas().setLayout(new BorderLayout());

@@ -5,7 +5,6 @@ import config.Constants;
 import config.Group;
 import config.Helper;
 import config.StatFormatter;
-import entity.order.Order;
 import entity.product.Product;
 import entity.worker.Worker;
 import entity.workstation.Workstation;
@@ -257,7 +256,7 @@ public class MainWindow extends JFrame {
 
                 int rep = simData.currentReplication();
                 Stat ds = simData.statOrder()[1];
-                double[] is = rep > 2 ? ds.confidenceInterval_95() : new double[] {0,0};
+                double[] is = rep > 2 ? ds.confidenceInterval_95() : new double[]{0, 0};
 
                 seriesMain.add(rep, ds.mean());
 
@@ -331,7 +330,7 @@ public class MainWindow extends JFrame {
     }
 
     private double calculateWorkloadForGroupReplication(SimulationData simData, int i) {
-        OptionalDouble average =  Arrays.stream(simData.workers()[i])
+        OptionalDouble average = Arrays.stream(simData.workers()[i])
                 .mapToDouble(w -> w.getStatWorkload().mean())
                 .average();
         return average.isPresent() ? average.getAsDouble() : 0;

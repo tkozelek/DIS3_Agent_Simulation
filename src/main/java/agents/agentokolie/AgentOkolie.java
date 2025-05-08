@@ -5,7 +5,6 @@ import OSPABA.Simulation;
 import OSPRNG.UniformDiscreteRNG;
 import agents.agentokolie.continualassistants.SchedulerOrderArrival;
 import config.Constants;
-import entity.order.Order;
 import entity.product.ProductType;
 import generator.EnumGenerator;
 import simulation.Id;
