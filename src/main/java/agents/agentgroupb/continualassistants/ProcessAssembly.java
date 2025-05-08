@@ -62,6 +62,7 @@ public class ProcessAssembly extends OSPABA.Process {
 
         product.setProductActivity(ProductActivity.ASSEMBLING);
         product.setStartAssemblyTime(mySim().currentTime());
+        product.getAnimImageItem().setToolTip(product + " ASSEMBLING");
 
         Worker worker = product.getWorker();
         worker.setCurrentWork(WorkerWork.ASSEMBLING);
@@ -85,6 +86,7 @@ public class ProcessAssembly extends OSPABA.Process {
                     // nie je cupboard
                     // produkt je hotovy
                     product.setProductAsDone(mySim().currentTime());
+                    product.getAnimImageItem().remove(mySim().currentTime());
                 } else {
                     // je to cupboard, este nie je hotovy
                     // nechame workstation
@@ -103,6 +105,8 @@ public class ProcessAssembly extends OSPABA.Process {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     @Override
     public void processMessage(MessageForm message) {
+        ((MySimulation) mySim()).updateAnimatorTime();
+
         switch (message.code()) {
             case Mc.start:
                 processStart(message);

@@ -25,9 +25,6 @@ public class AgentWorkplace extends OSPABA.Agent {
 
     public void initAnimator()
     {
-        Flags.DEBUG_QUEUE = true;
-        Flags.DEBUG_ANIM = true;
-
         imgStorage = new AnimImageItem(Data.STORAGE, Data.STORAGE_WIDTH, Data.STORAGE_HEIGHT);
         imgStorage.setPosition(Data.STORAGE_POSITION);
         imgStorage.setZIndex(10);

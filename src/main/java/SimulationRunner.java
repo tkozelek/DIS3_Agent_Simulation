@@ -11,12 +11,12 @@ public class SimulationRunner {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         // rozsah
-        int a_min = 6, a_max = 6;
-        int b_min = 6, b_max = 6;
-        int c_min = 39, c_max = 39;
-        int w_min = 51, w_max = 51;
+        int a_min = 4, a_max = 6;
+        int b_min = 4, b_max = 6;
+        int c_min = 38, c_max = 40;
+        int w_min = 55, w_max = 60;
 
-        int repeat = 4;
+        int repeat = 1;
         // zoznam vysledkov buducich
         List<Future<SimulationData>> futures = new ArrayList<>();
         // vytvorenie vlakien
@@ -33,7 +33,7 @@ public class SimulationRunner {
                             futures.add(executor.submit(() -> {
                                 MySimulation sim = new MySimulation(null, new int[]{aFinal, bFinal, cFinal}, wFinal);
                                 sim.setSpeed(Constants.MAX_SPEED);
-                                sim.simulate(100, Constants.SIMULATION_TIME);
+                                sim.simulate(150, Constants.SIMULATION_TIME);
                                 return sim.getSimulationData();
                             }));
                         }

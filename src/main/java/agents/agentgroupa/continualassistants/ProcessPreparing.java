@@ -44,6 +44,7 @@ public class ProcessPreparing extends OSPABA.Process {
         product.setProductActivity(ProductActivity.PREPARING);
         Worker worker = productMessage.getProduct().getWorker();
         worker.setCurrentWork(WorkerWork.PREPARING_MATERIAL);
+        product.getAnimImageItem().setToolTip(product + " PREPARING");
 
         double offset = this.materialPreparationGenerator.sample();
         message.setCode(Mc.holdPrepareMaterial);
@@ -52,6 +53,7 @@ public class ProcessPreparing extends OSPABA.Process {
 
     //meta! userInfo="Process messages defined in code", id="0"
     public void processDefault(MessageForm message) {
+
         switch (message.code()) {
             case Mc.holdPrepareMaterial:
                 MyMessage productMessage = (MyMessage) message;
@@ -70,6 +72,7 @@ public class ProcessPreparing extends OSPABA.Process {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     @Override
     public void processMessage(MessageForm message) {
+        ((MySimulation) mySim()).updateAnimatorTime();
         switch (message.code()) {
             case Mc.start:
                 processStart(message);

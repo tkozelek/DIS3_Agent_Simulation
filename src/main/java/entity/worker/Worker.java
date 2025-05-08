@@ -8,6 +8,7 @@ import entity.ILocation;
 import entity.Ids;
 import entity.Storage;
 import entity.product.Product;
+import entity.workstation.Workstation;
 import simulation.Data;
 
 public class Worker {
@@ -36,9 +37,9 @@ public class Worker {
 
     private AnimImageItem getImage() {
         return switch (group) {
-            case GROUP_A -> new AnimImageItem(Data.WORKER_A, 40, 60);
-            case GROUP_B -> new AnimImageItem(Data.WORKER_B, 40, 60);
-            case GROUP_C -> new AnimImageItem(Data.WORKER_C, 40, 60);
+            case GROUP_A -> new AnimImageItem(Data.WORKER_A, Data.WORKER_WIDTH, Data.WORKER_HEIGHT);
+            case GROUP_B -> new AnimImageItem(Data.WORKER_B, Data.WORKER_WIDTH, Data.WORKER_HEIGHT);
+            case GROUP_C -> new AnimImageItem(Data.WORKER_C, Data.WORKER_WIDTH, Data.WORKER_HEIGHT);
         };
     }
 
@@ -110,5 +111,16 @@ public class Worker {
     public String toString() {
         String gr = group.toString();
         return String.format("W(%s) #%d", gr.charAt(gr.length() - 1), this.id);
+    }
+
+    public void setAnimItemPosition() {
+        if (location instanceof Workstation workstation) {
+            int x = (int) workstation.getAnimImageItem().getPosX();
+            int y = (int) workstation.getAnimImageItem().getPosY();
+            this.animImageItem.setPosition(x + (double) Data.WORKSTATION_WIDTH / 2, y + (double) Data.WORKSTATION_HEIGHT / 2 );
+        }
+        if (location instanceof Storage storage) {
+           this.animImageItem.setPosition(Data.getRandomStoragePoiunt());
+        }
     }
 }

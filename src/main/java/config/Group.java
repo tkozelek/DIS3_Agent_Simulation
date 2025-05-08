@@ -4,9 +4,11 @@ import OSPABA.Simulation;
 import OSPDataStruct.SimQueue;
 import OSPStat.Stat;
 import OSPStat.WStat;
+import entity.Storage;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
 import entity.worker.WorkerWork;
+import entity.workstation.Workstation;
 import simulation.Data;
 import simulation.MyMessage;
 import simulation.MySimulation;
@@ -120,7 +122,7 @@ public class Group {
     public void initWorkers(MySimulation sim) {
         if (sim.animatorExists()) {
             for (Worker w : workers) {
-                w.getAnimImageItem().setPosition(Data.getRandomStoragePoiunt());
+                w.setAnimItemPosition();
                 sim.animator().register(w.getAnimImageItem());
             }
         }

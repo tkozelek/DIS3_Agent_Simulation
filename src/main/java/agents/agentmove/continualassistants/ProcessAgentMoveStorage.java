@@ -47,14 +47,15 @@ public class ProcessAgentMoveStorage extends OSPABA.Process {
 
         double offset = moveToStorageGenerator.sample();
 
-        if (target instanceof Workstation workstation) {
-            worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
-                    workstation.getAnimImageItem().getPosX(),
-                    workstation.getAnimImageItem().getPosY());
-        } else if (target instanceof Storage) {
-            worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
-                    Data.getRandomStoragePoiunt());
-        }
+        if (mySim().animatorExists())
+            if (target instanceof Workstation workstation) {
+                worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
+                        workstation.getAnimImageItem().getPosX() + Data.WORKER_WORKSTATION_OFFSET_X,
+                        workstation.getAnimImageItem().getPosY() + Data.WORKER_WORKSTATION_OFFSET_Y);
+            } else if (target instanceof Storage) {
+                worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
+                        Data.getRandomStoragePoiunt());
+            }
 
 
         message.setCode(Mc.holdMoveStorage);

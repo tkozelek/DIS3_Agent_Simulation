@@ -10,6 +10,7 @@ import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosTriangularGenerator;
+import simulation.Data;
 import simulation.Mc;
 import simulation.MyMessage;
 import simulation.MySimulation;
@@ -43,10 +44,10 @@ public class ProcessAgentMove extends OSPABA.Process {
 
         double offset = this.moveStationsGenerator.sample();
 
-
-        worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
-                workstation.getAnimImageItem().getPosX(),
-                workstation.getAnimImageItem().getPosY());
+        if (mySim().animatorExists())
+            worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
+                workstation.getAnimImageItem().getPosX() + Data.WORKER_WORKSTATION_OFFSET_X,
+                workstation.getAnimImageItem().getPosY() + Data.WORKER_WORKSTATION_OFFSET_Y);
 
         message.setCode(Mc.holdMove);
         this.hold(offset, message);

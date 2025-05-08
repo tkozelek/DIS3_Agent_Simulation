@@ -57,6 +57,7 @@ public class ProcessMorenie extends OSPABA.Process {
 
         product.setProductActivity(ProductActivity.STAINING);
         product.setStartStainingTime(mySim().currentTime());
+        product.getAnimImageItem().setToolTip(product + " STAINING");
 
         Worker worker = product.getWorker();
         worker.setCurrentWork(WorkerWork.STAINING);
@@ -92,6 +93,7 @@ public class ProcessMorenie extends OSPABA.Process {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     @Override
     public void processMessage(MessageForm message) {
+        ((MySimulation) mySim()).updateAnimatorTime();
         switch (message.code()) {
             case Mc.start:
                 processStart(message);

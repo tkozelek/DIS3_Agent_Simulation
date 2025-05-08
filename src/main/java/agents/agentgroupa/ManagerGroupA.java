@@ -61,9 +61,9 @@ public class ManagerGroupA extends OSPABA.Manager {
             product.setWorker(worker);
             if (_mySim.animatorExists()) {
                 myAgent().getAnimQueue().removeFirst();
-                product.getAnimImageItem().moveTo(sim.currentTime(), 0,
+                product.getAnimImageItem().moveTo(mySim().currentTime(), 0,
                         workstation.getAnimImageItem().getPosX() + (double) Data.WORKSTATION_WIDTH / 2,
-                        workstation.getAnimImageItem().getPosY() + (double) Data.WORKSTATION_HEIGHT / 3);
+                        workstation.getAnimImageItem().getPosY() + (double) Data.WORKSTATION_HEIGHT / 4);
             }
 
             workstation.setCurrentProduct(product);

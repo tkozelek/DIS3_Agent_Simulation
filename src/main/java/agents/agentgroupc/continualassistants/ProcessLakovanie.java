@@ -63,6 +63,7 @@ public class ProcessLakovanie extends OSPABA.Process {
 
         product.setProductActivity(ProductActivity.PAINTING);
         product.setStartPaintingTime(mySim().currentTime());
+        product.getAnimImageItem().setToolTip(product + " PAINTING");
 
         Worker worker = product.getWorker();
         worker.setCurrentWork(WorkerWork.PAINTING);
@@ -96,6 +97,7 @@ public class ProcessLakovanie extends OSPABA.Process {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     @Override
     public void processMessage(MessageForm message) {
+        ((MySimulation) mySim()).updateAnimatorTime();
         switch (message.code()) {
             case Mc.start:
                 processStart(message);

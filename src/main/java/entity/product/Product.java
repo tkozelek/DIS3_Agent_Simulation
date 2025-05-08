@@ -3,6 +3,7 @@ package entity.product;
 
 import OSPAnimator.AnimImageItem;
 import OSPAnimator.AnimItem;
+import OSPAnimator.AnimTextItem;
 import config.Constants;
 import entity.Ids;
 import entity.order.Order;
@@ -10,6 +11,8 @@ import entity.worker.Worker;
 import entity.worker.WorkerWork;
 import entity.workstation.Workstation;
 import simulation.Data;
+
+import java.awt.*;
 
 public class Product implements Comparable<Product> {
     private final int id;
@@ -43,7 +46,7 @@ public class Product implements Comparable<Product> {
 
     private boolean shouldBePainted;
 
-    private AnimImageItem animItem;
+    private final AnimImageItem animItem;
 
     public Product(ProductType productType) {
         this.id = Ids.getProductId();
@@ -107,8 +110,6 @@ public class Product implements Comparable<Product> {
 
     public void setWorkstation(Workstation workstation) {
         this.workstation = workstation;
-
-
     }
 
     public ProductActivity getProductActivity() {

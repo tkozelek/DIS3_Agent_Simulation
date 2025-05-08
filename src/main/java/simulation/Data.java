@@ -35,7 +35,13 @@ public class Data {
     public static final int WORKSTATION_Y_OFFSET_PER_ROW = WORKSTATION_HEIGHT + WORKSTATION_VERTICAL_GAP_BETWEEN_ROWS;
 
     public static final int WORKSTATION_PRODUCT_OFFSET_X = 30;
-    public static final int WORKSTATION_PRODUCT_OFFSET_Y = -20;
+    public static final int WORKSTATION_PRODUCT_OFFSET_Y = 20;
+
+    public static final int WORKER_WORKSTATION_OFFSET_Y = 50;
+    public static final int WORKER_WORKSTATION_OFFSET_X = 55;
+
+    public static final int WORKER_WIDTH = 50;
+    public static final int WORKER_HEIGHT = 65;
 
 
     public static Point2D getRandomStoragePoiunt() {
