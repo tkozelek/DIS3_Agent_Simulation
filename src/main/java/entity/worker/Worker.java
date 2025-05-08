@@ -15,13 +15,12 @@ public class Worker {
     private final int id;
     private final WorkerGroup group;
     private final Stat statWorkloadTotal;
+    private final AnimImageItem animImageItem;
     private WorkerWork currentWork;
     private ILocation location;
     private Product currentProduct;
     private int finishedTasks = 0;
     private WStat statWorkload;
-
-    private final AnimImageItem animImageItem;
 
     public Worker(WorkerGroup group, Simulation sim) {
         this.id = Ids.getWorkerId();

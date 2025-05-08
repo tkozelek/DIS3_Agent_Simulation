@@ -205,6 +205,10 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         _agentWorkplace.updateTime();
     }
 
+    public void updateQueueSize(int size) {
+        _agentWorkplace.updateQueueSize(size);
+    }
+
     private void initReplicationStats() {
         this.statProductTimeInSystemReplication = new Stat();
         this.statOrderTimeInSystemReplication = new Stat();

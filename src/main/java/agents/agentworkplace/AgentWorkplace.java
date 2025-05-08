@@ -56,6 +56,10 @@ public class AgentWorkplace extends OSPABA.Agent {
         // Setup component for the next replication
     }
 
+    public void updateQueueSize(int newQueueSize) {
+        this.textQueueSize.setText("Počet produktov v rade: " + newQueueSize);
+    }
+
     //meta! userInfo="Generated code: do not modify", tag="begin"
     private void init() {
         new ManagerWorkplace(Id.managerWorkplace, mySim(), this);

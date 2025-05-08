@@ -67,6 +67,7 @@ public class ManagerGroupA extends OSPABA.Manager {
             }
 
             workstation.setCurrentProduct(product);
+            sim.updateQueueSize(myAgent().group().queueSize());
 
             // pozrieme ci worker je na mieste
             if (worker.getLocation() != Storage.STORAGE) {

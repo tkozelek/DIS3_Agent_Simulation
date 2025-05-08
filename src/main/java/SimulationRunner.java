@@ -12,10 +12,10 @@ public class SimulationRunner {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         // rozsah
-        int a_min = 4, a_max = 6;
-        int b_min = 4, b_max = 6;
-        int c_min = 38, c_max = 40;
-        int w_min = 55, w_max = 60;
+        int a_min = 5, a_max = 6;
+        int b_min = 5, b_max = 6;
+        int c_min = 35, c_max = 38;
+        int w_min = 50, w_max = 55;
 
         int repeat = 1;
         // zoznam vysledkov buducich

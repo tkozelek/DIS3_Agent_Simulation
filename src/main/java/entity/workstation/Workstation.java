@@ -12,10 +12,9 @@ import simulation.Data;
 public class Workstation implements ILocation {
     private final int id;
     private final Stat statWorkloadTotal;
+    private final AnimImageItem animImageItem;
     private Product currentProduct;
     private WStat statWorkload;
-
-    private final AnimImageItem animImageItem;
 
     public Workstation(Simulation sim) {
         this.id = Ids.getWorkstationId();
