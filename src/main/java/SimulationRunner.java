@@ -3,20 +3,21 @@ import config.FileExporter;
 import gui.model.SimulationData;
 import simulation.MySimulation;
 
-import java.sql.Time;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class SimulationRunner {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         // rozsah
-        int a_min = 5, a_max = 5;
-        int b_min = 5, b_max = 5;
-        int c_min = 40, c_max = 40;
-        int w_min = 58, w_max = 58;
+        int a_min = 5, a_max = 6;
+        int b_min = 5, b_max = 6;
+        int c_min = 35, c_max = 38;
+        int w_min = 50, w_max = 55;
 
-        int repeat = 4;
+        int repeat = 1;
         // zoznam vysledkov buducich
         List<Future<SimulationData>> futures = new ArrayList<>();
         // vytvorenie vlakien
@@ -33,7 +34,7 @@ public class SimulationRunner {
                             futures.add(executor.submit(() -> {
                                 MySimulation sim = new MySimulation(null, new int[]{aFinal, bFinal, cFinal}, wFinal);
                                 sim.setSpeed(Constants.MAX_SPEED);
-                                sim.simulate(100, Constants.SIMULATION_TIME);
+                                sim.simulate(150, Constants.SIMULATION_TIME);
                                 return sim.getSimulationData();
                             }));
                         }

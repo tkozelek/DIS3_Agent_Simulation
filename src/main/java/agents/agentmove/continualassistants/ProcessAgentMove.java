@@ -7,8 +7,10 @@ import agents.agentmove.AgentMove;
 import config.Constants;
 import entity.worker.Worker;
 import entity.worker.WorkerWork;
+import entity.workstation.Workstation;
 import generator.SeedGenerator;
 import generator.continuos.ContinuosTriangularGenerator;
+import simulation.Data;
 import simulation.Mc;
 import simulation.MyMessage;
 import simulation.MySimulation;
@@ -33,12 +35,20 @@ public class ProcessAgentMove extends OSPABA.Process {
     //meta! sender="AgentMove", id="43", type="Start"
     public void processStart(MessageForm message) {
         MyMessage msg = (MyMessage) message;
-        msg.getWorker().setCurrentWork(WorkerWork.MOVING);
+        Worker worker = msg.getWorker();
+        worker.setCurrentWork(WorkerWork.MOVING);
+        Workstation workstation = (Workstation) msg.getTargetLocation();
 
         if (Constants.DEBUG_PROCESS)
             System.out.printf("[%s] [%s] P. move started -> %s\n", ((MySimulation) mySim()).workdayTime(), msg.getWorker(), msg.getTargetLocation());
 
         double offset = this.moveStationsGenerator.sample();
+
+        if (mySim().animatorExists())
+            worker.getAnimImageItem().moveTo(mySim().currentTime(), offset,
+                    workstation.getAnimImageItem().getPosX() + Data.WORKER_WORKSTATION_OFFSET_X,
+                    workstation.getAnimImageItem().getPosY() + Data.WORKER_WORKSTATION_OFFSET_Y);
+
         message.setCode(Mc.holdMove);
         this.hold(offset, message);
     }

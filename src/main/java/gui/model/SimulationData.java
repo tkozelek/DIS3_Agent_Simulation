@@ -2,7 +2,6 @@ package gui.model;
 
 import OSPStat.Stat;
 import config.Group;
-import entity.order.Order;
 import entity.worker.Worker;
 import entity.workstation.Workstation;
 
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 public record SimulationData(
         double time,
         Worker[][] workers,
-        ArrayList<Order> orders,
+        ArrayList<simulation.MyMessage> orders,
         ArrayList<Workstation> workstations,
         int currentReplication,
         Group[] groups,

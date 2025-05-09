@@ -46,6 +46,7 @@ public class ProcessFittingGroupC extends OSPABA.Process {
         if (product.getProductActivity() != ProductActivity.ASSEMBLED)
             throw new IllegalStateException("Manager C product isnt assembled");
 
+        product.getAnimImageItem().setToolTip(product + " FITTING C");
         product.setProductActivity(ProductActivity.FITTING);
         product.setStartFittingAssemblyTime(mySim().currentTime());
 
@@ -68,6 +69,7 @@ public class ProcessFittingGroupC extends OSPABA.Process {
                     System.out.printf("[%s] [%s] P. fitting C finished %s\n", ((MySimulation) mySim()).workdayTime(), product.getWorker(), product);
 
                 product.setProductAsDone(mySim().currentTime());
+                product.getAnimImageItem().remove(mySim().currentTime());
 
                 // finish fitting time
                 product.setFinishFittingAssemblyTime(mySim().currentTime());
@@ -80,6 +82,7 @@ public class ProcessFittingGroupC extends OSPABA.Process {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     @Override
     public void processMessage(MessageForm message) {
+        ((MySimulation) mySim()).updateAnimatorTime();
         switch (message.code()) {
             case Mc.start:
                 processStart(message);

@@ -3,6 +3,7 @@ package gui.controller;
 import gui.interfaces.Observer;
 import gui.model.SimulationData;
 import gui.model.SimulationManager;
+import gui.view.AnimationWindow;
 import gui.view.MainWindow;
 
 import javax.swing.*;
@@ -26,6 +27,13 @@ public class MainController implements Observer {
         this.view.getStopButton().addActionListener(_ -> stopSimulation());
 
         this.view.getSliderSpeed().addChangeListener(_ -> this.changeSpeed());
+        this.view.getButtonAnimation().addActionListener(_ -> this.showAnimationWindow());
+    }
+
+    private void showAnimationWindow() {
+        AnimationWindow animView = new AnimationWindow();
+        new AnimationController(animView, simulationManager);
+        animView.setVisible(true);
     }
 
     private void changeSpeed() {

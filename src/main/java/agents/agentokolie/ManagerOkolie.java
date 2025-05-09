@@ -78,7 +78,7 @@ public class ManagerOkolie extends OSPABA.Manager {
             throw new IllegalStateException("Manazer okolie prisiel zakaznik po case simulacie");
         }
 
-        myAgent().addOrder(orderMessage.getOrder());
+        myAgent().addOrder(orderMessage);
 
         // musíme ju poslat agentovi bossovi
         message.setCode(Mc.requestResponseOrderArrival);

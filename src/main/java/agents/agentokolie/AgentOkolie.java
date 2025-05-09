@@ -5,11 +5,11 @@ import OSPABA.Simulation;
 import OSPRNG.UniformDiscreteRNG;
 import agents.agentokolie.continualassistants.SchedulerOrderArrival;
 import config.Constants;
-import entity.order.Order;
 import entity.product.ProductType;
 import generator.EnumGenerator;
 import simulation.Id;
 import simulation.Mc;
+import simulation.MyMessage;
 import simulation.MySimulation;
 
 import java.util.ArrayList;
@@ -20,7 +20,9 @@ import java.util.Random;
 //meta! id="1"
 public class AgentOkolie extends OSPABA.Agent {
     private final UniformDiscreteRNG productAmountGenerator;
-    private final ArrayList<Order> ordersInSystem;
+
+    private final ArrayList<MyMessage> ordersInSystem;
+
     private final Random randPaintingGenerator;
     private EnumGenerator productTypeGenerator;
 
@@ -47,17 +49,17 @@ public class AgentOkolie extends OSPABA.Agent {
         return productTypeGenerator;
     }
 
-    public void addOrder(Order order) {
-        order.setArrivalTime(this.mySim().currentTime());
-        ordersInSystem.add(order);
+    public void addOrder(MyMessage message) {
+        message.getOrder().setArrivalTime(this.mySim().currentTime());
+        ordersInSystem.add(message);
     }
 
-    public void removeOrder(Order order) {
-        ordersInSystem.remove(order);
+    public void removeOrder(MyMessage message) {
+        ordersInSystem.remove(message);
     }
 
 
-    public ArrayList<Order> getOrdersInSystem() {
+    public ArrayList<MyMessage> getOrdersInSystem() {
         return ordersInSystem;
     }
 

@@ -1,6 +1,5 @@
 package config;
 
-import entity.product.ProductType;
 import entity.worker.Worker;
 import gui.model.SimulationData;
 

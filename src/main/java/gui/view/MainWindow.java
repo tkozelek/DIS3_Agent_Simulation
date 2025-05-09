@@ -5,7 +5,6 @@ import config.Constants;
 import config.Group;
 import config.Helper;
 import config.StatFormatter;
-import entity.order.Order;
 import entity.product.Product;
 import entity.worker.Worker;
 import entity.workstation.Workstation;
@@ -15,6 +14,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import simulation.MyMessage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,6 +68,7 @@ public class MainWindow extends JFrame {
     private JTable tableWorkstationTotal;
     private JLabel workstationLabel;
     private JLabel labelAverageProductReplication;
+    private JButton buttonAnimation;
     private JFreeChart chart1;
     private Chart chart;
 
@@ -255,7 +256,7 @@ public class MainWindow extends JFrame {
 
                 int rep = simData.currentReplication();
                 Stat ds = simData.statOrder()[1];
-                double[] is = rep > 2 ? ds.confidenceInterval_95() : new double[] {0,0};
+                double[] is = rep > 2 ? ds.confidenceInterval_95() : new double[]{0, 0};
 
                 seriesMain.add(rep, ds.mean());
 
@@ -329,7 +330,7 @@ public class MainWindow extends JFrame {
     }
 
     private double calculateWorkloadForGroupReplication(SimulationData simData, int i) {
-        OptionalDouble average =  Arrays.stream(simData.workers()[i])
+        OptionalDouble average = Arrays.stream(simData.workers()[i])
                 .mapToDouble(w -> w.getStatWorkload().mean())
                 .average();
         return average.isPresent() ? average.getAsDouble() : 0;
@@ -367,8 +368,9 @@ public class MainWindow extends JFrame {
             workstationTable.addRows(simData.workstations());
         if (simData.orders() != null) {
             List<Product> products = new ArrayList<>();
-            for (Order order : simData.orders()) {
-                products.addAll(order.getProducts());
+
+            for (MyMessage message : simData.orders()) {
+                products.addAll(message.getOrder().getProducts());
             }
             productTable.addRows(products);
         }
@@ -380,10 +382,6 @@ public class MainWindow extends JFrame {
 
     public int getSpeed() {
         return getSliderSpeed().getValue();
-    }
-
-    public JPanel getPanel1() {
-        return panel1;
     }
 
     public JTextField getFieldReplicationCount() {
@@ -418,56 +416,8 @@ public class MainWindow extends JFrame {
         return stopButton;
     }
 
-    public JTable getTable4() {
-        return tableOrder;
-    }
-
-    public JTable getTable5() {
-        return tableWorkstation;
-    }
-
     public JLabel getLabelSpeed() {
         return labelSpeed;
-    }
-
-    public WorkerTable getWorkerTable1() {
-        return workerTableARep;
-    }
-
-    public WorkerTable getWorkerTable2() {
-        return workerTableBRep;
-    }
-
-    public WorkerTable getWorkerTable3() {
-        return workerTableCRep;
-    }
-
-    public ProductTable getOrderTable() {
-        return productTable;
-    }
-
-    public WorkstationTable getWorkstationTable() {
-        return workstationTable;
-    }
-
-    public JTable getTable1() {
-        return tableARep;
-    }
-
-    public JTable getTable2() {
-        return tableBRep;
-    }
-
-    public JTable getTable3() {
-        return tableCRep;
-    }
-
-    public JLabel getLabelTime() {
-        return labelTime;
-    }
-
-    public JLabel getLabelReplication() {
-        return labelReplication;
     }
 
     public JSlider getSliderSpeed() {
@@ -478,27 +428,7 @@ public class MainWindow extends JFrame {
         return chart;
     }
 
-    public JFreeChart getChart1() {
-        return chart1;
-    }
-
-    public ChartPanel getChartPanel1() {
-        return chartPanel1;
-    }
-
-    public JLabel getCurrentRepLabel() {
-        return currentRepLabel;
-    }
-
-    public JTabbedPane getTabbedPanel2() {
-        return tabbedPanel2;
-    }
-
-    public JTabbedPane getTabbedPanel3() {
-        return tabbedPanel3;
-    }
-
-    public JTabbedPane getTabbedPanel1() {
-        return tabbedPanel1;
+    public JButton getButtonAnimation() {
+        return buttonAnimation;
     }
 }

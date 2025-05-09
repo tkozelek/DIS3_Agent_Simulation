@@ -76,4 +76,8 @@ public class SimulationManager {
             simulation.setSpeed(speed);
         }
     }
+
+    public MySimulation getSimulation() {
+        return this.simulation;
+    }
 }

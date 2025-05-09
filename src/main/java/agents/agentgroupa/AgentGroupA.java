@@ -2,11 +2,13 @@ package agents.agentgroupa;
 
 import OSPABA.Agent;
 import OSPABA.Simulation;
+import OSPAnimator.AnimQueue;
 import agents.agentgroupa.continualassistants.ProcessCutting;
 import agents.agentgroupa.continualassistants.ProcessFittingGroupA;
 import agents.agentgroupa.continualassistants.ProcessPreparing;
 import config.Group;
 import entity.worker.WorkerGroup;
+import simulation.Data;
 import simulation.Id;
 import simulation.Mc;
 import simulation.MySimulation;
@@ -15,6 +17,8 @@ import simulation.MySimulation;
 //meta! id="7"
 public class AgentGroupA extends OSPABA.Agent {
     private final Group group;
+
+    private AnimQueue animQueue;
 
     public AgentGroupA(int id, Simulation mySim, Agent parent) {
         super(id, mySim, parent);
@@ -27,6 +31,16 @@ public class AgentGroupA extends OSPABA.Agent {
         MySimulation sim = (MySimulation) mySim;
 
         this.group = new Group(sim.getWorkerCountForGroup(WorkerGroup.GROUP_A), WorkerGroup.GROUP_A, mySim());
+    }
+
+    public void initQueue() {
+        this.animQueue = new AnimQueue(_mySim.animator(), Data.QUEUE_START, Data.QUEUE_END, 0);
+        animQueue.setGap(5);
+        this.animQueue.setVisible(true);
+    }
+
+    public AnimQueue getAnimQueue() {
+        return animQueue;
     }
 
     public Group group() {

@@ -16,6 +16,7 @@ import config.Constants;
 import config.Group;
 import config.Helper;
 import entity.Ids;
+import entity.product.Product;
 import entity.product.ProductType;
 import entity.worker.Worker;
 import entity.worker.WorkerGroup;
@@ -152,15 +153,60 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         super.prepareReplication();
         // Reset entities, queues, local statistics, etc...
 
+        initAnimator();
         for (Workstation w : workstations) {
             w.reset(this);
         }
-
         _agentBoss.initOkolie();
         this.initReplicationStats();
         Ids.resetAll();
         this.setSpeed(speed);
         this.notifyObservers();
+    }
+
+    public void initAnimator() {
+        _agentWorkplace.initAnimator();
+        _agentGroupA.initQueue();
+        this.initWorkers();
+        this.initWorkstations();
+    }
+
+    public void initWorkstations() {
+        if (this.animatorExists()) {
+            int row = 0;
+            int currentX = Data.WORKSTATION_X_START;
+
+            for (int i = 0; i < workstations.size(); i++) {
+                Workstation w = workstations.get(i);
+
+                if (currentX >= Data.WORKSTATION_X_ROW_END_BOUNDARY && currentX != Data.WORKSTATION_X_START) {
+                    row++;
+                    currentX = Data.WORKSTATION_X_START;
+                }
+
+                w.getAnimImageItem().setPosition(currentX,
+                        Data.WORKSTATION_Y_START + (Data.WORKSTATION_Y_OFFSET_PER_ROW * row));
+
+                currentX += Data.WORKSTATION_WIDTH + Data.WORKSTATION_X_OFFSET;
+
+                this.animator().register(w.getAnimImageItem());
+            }
+        }
+    }
+
+
+    private void initWorkers() {
+        _agentGroupA.group().initWorkers(this);
+        _agentGroupB.group().initWorkers(this);
+        _agentGroupC.group().initWorkers(this);
+    }
+
+    public void updateAnimatorTime() {
+        _agentWorkplace.updateTime();
+    }
+
+    public void updateQueueSize(int size) {
+        _agentWorkplace.updateQueueSize(size);
     }
 
     private void initReplicationStats() {
@@ -193,6 +239,16 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     public void replicationFinished() {
         // Collect local statistics into global, update UI, etc...
         super.replicationFinished();
+
+        if (animatorExists())
+            animator().clearAll();
+
+        ArrayList<MyMessage> orders = _agentOkolie.getOrdersInSystem();
+        for (MyMessage o : orders) {
+            for (Product p : o.getOrder().getProducts()) {
+                p.getAnimImageItem().remove();
+            }
+        }
 
         this.statProductTimeInSystemTotal.addSample(this.statProductTimeInSystemReplication.mean());
         this.statOrderTimeInSystemTotal.addSample(this.statOrderTimeInSystemReplication.mean());
@@ -364,7 +420,7 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
                 },
                 _agentOkolie.getOrdersInSystem(),
                 this.workstations,
-                currentReplication()+1,
+                currentReplication() + 1,
                 new Group[]{
                         _agentGroupA.group(),
                         _agentGroupB.group(),

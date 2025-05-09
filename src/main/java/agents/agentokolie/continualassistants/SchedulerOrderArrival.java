@@ -76,6 +76,9 @@ public class SchedulerOrderArrival extends OSPABA.Scheduler {
         if (Constants.DEBUG_SCHEDULER)
             System.out.printf("%.2f: Order arrived\n", mySim().currentTime());
 
+        MySimulation sim = (MySimulation) mySim();
+        sim.updateAnimatorTime();
+
         // objednávka prišla po holde
         MyMessage orderMessage = (MyMessage) message;
 

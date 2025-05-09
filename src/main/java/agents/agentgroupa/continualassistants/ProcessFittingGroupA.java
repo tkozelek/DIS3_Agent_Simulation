@@ -50,6 +50,7 @@ public class ProcessFittingGroupA extends OSPABA.Process {
         if (product.getProductType() != ProductType.CUPBOARD)
             throw new IllegalStateException("Manager A product isnt cupboard");
 
+        product.getAnimImageItem().setToolTip(product + " FITTING A");
         product.setProductActivity(ProductActivity.FITTING);
         product.setStartFittingAssemblyTime(mySim().currentTime());
 
@@ -72,6 +73,7 @@ public class ProcessFittingGroupA extends OSPABA.Process {
                     System.out.printf("[%s] [%s] P. fitting A finished %s\n", ((MySimulation) mySim()).workdayTime(), product.getWorker(), product);
 
                 product.setProductAsDone(mySim().currentTime());
+                product.getAnimImageItem().remove(mySim().currentTime());
 
                 product.validateTimes();
 
@@ -85,6 +87,8 @@ public class ProcessFittingGroupA extends OSPABA.Process {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     @Override
     public void processMessage(MessageForm message) {
+        ((MySimulation) mySim()).updateAnimatorTime();
+
         switch (message.code()) {
             case Mc.start:
                 processStart(message);

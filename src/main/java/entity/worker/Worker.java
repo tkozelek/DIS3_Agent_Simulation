@@ -1,17 +1,21 @@
 package entity.worker;
 
 import OSPABA.Simulation;
+import OSPAnimator.AnimImageItem;
 import OSPStat.Stat;
 import OSPStat.WStat;
 import entity.ILocation;
 import entity.Ids;
 import entity.Storage;
 import entity.product.Product;
+import entity.workstation.Workstation;
+import simulation.Data;
 
 public class Worker {
     private final int id;
     private final WorkerGroup group;
     private final Stat statWorkloadTotal;
+    private final AnimImageItem animImageItem;
     private WorkerWork currentWork;
     private ILocation location;
     private Product currentProduct;
@@ -25,6 +29,21 @@ public class Worker {
         this.location = Storage.STORAGE;
         this.statWorkload = new WStat(sim);
         this.statWorkloadTotal = new Stat();
+        this.animImageItem = getImage();
+        this.animImageItem.setZIndex(10);
+        this.animImageItem.setToolTip(this.toString());
+    }
+
+    private AnimImageItem getImage() {
+        return switch (group) {
+            case GROUP_A -> new AnimImageItem(Data.WORKER_A, Data.WORKER_WIDTH, Data.WORKER_HEIGHT);
+            case GROUP_B -> new AnimImageItem(Data.WORKER_B, Data.WORKER_WIDTH, Data.WORKER_HEIGHT);
+            case GROUP_C -> new AnimImageItem(Data.WORKER_C, Data.WORKER_WIDTH, Data.WORKER_HEIGHT);
+        };
+    }
+
+    public AnimImageItem getAnimImageItem() {
+        return animImageItem;
     }
 
     public void reset(Simulation sim) {
@@ -91,5 +110,16 @@ public class Worker {
     public String toString() {
         String gr = group.toString();
         return String.format("W(%s) #%d", gr.charAt(gr.length() - 1), this.id);
+    }
+
+    public void setAnimItemPosition() {
+        if (location instanceof Workstation workstation) {
+            int x = (int) workstation.getAnimImageItem().getPosX();
+            int y = (int) workstation.getAnimImageItem().getPosY();
+            this.animImageItem.setPosition(x + (double) Data.WORKSTATION_WIDTH / 2, y + (double) Data.WORKSTATION_HEIGHT / 2);
+        }
+        if (location instanceof Storage storage) {
+            this.animImageItem.setPosition(Data.getRandomStoragePoiunt());
+        }
     }
 }

@@ -58,6 +58,7 @@ public class ProcessCutting extends OSPABA.Process {
 
         product.setProductActivity(ProductActivity.CUTTING);
         product.setStartCuttingTime(mySim().currentTime());
+        product.getAnimImageItem().setToolTip(product + " CUTTING");
 
         Worker worker = product.getWorker();
         worker.setCurrentWork(WorkerWork.CUTTING);
@@ -102,6 +103,8 @@ public class ProcessCutting extends OSPABA.Process {
     //meta! userInfo="Generated code: do not modify", tag="begin"
     @Override
     public void processMessage(MessageForm message) {
+        ((MySimulation) mySim()).updateAnimatorTime();
+
         switch (message.code()) {
             case Mc.start:
                 processStart(message);
