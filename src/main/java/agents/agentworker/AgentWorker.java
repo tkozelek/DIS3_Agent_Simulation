@@ -1,11 +1,8 @@
 package agents.agentworker;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
+import OSPABA.*;
+import simulation.*;
 import config.Group;
-import simulation.Id;
-import simulation.Mc;
-
 
 //meta! id="6"
 public class AgentWorker extends OSPABA.Agent {
@@ -30,18 +27,19 @@ public class AgentWorker extends OSPABA.Agent {
         this.group.reset(mySim());
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerWorker(Id.managerWorker, mySim(), this);
-        addOwnMessage(Mc.noticeAgentAFreed);
-        addOwnMessage(Mc.requestResponseMoveWorker);
-        addOwnMessage(Mc.requestResponseWorkOnOrderWorkplace);
-        addOwnMessage(Mc.requestResponseTryFitGroupC);
-        addOwnMessage(Mc.requestResponseWorkAgentA);
-        addOwnMessage(Mc.requestResponseWorkAgentB);
-        addOwnMessage(Mc.requestResponseTryFitGroupA);
-        addOwnMessage(Mc.requestResponseWorkAgentC);
-        addOwnMessage(Mc.noticeAgentCFreed);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerWorker(Id.managerWorker, mySim(), this);
+		addOwnMessage(Mc.noticeAgentAFreed);
+		addOwnMessage(Mc.requestResponseMoveWorker);
+		addOwnMessage(Mc.requestResponseWorkOnOrderWorkplace);
+		addOwnMessage(Mc.requestResponseTryFitGroupC);
+		addOwnMessage(Mc.requestResponseWorkAgentA);
+		addOwnMessage(Mc.requestResponseWorkAgentB);
+		addOwnMessage(Mc.requestResponseWorkAgentC);
+		addOwnMessage(Mc.requestResponseTryFitGroupA);
+		addOwnMessage(Mc.noticeAgentCFreed);
+	}
+	//meta! tag="end"
 }

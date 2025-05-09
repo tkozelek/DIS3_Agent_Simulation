@@ -28,8 +28,8 @@ public class ManagerGroupB extends OSPABA.Manager {
         }
     }
 
-    //meta! sender="AgentWorker", id="63", type="Request"
-    public void processRequestResponseWorkAgentB(MessageForm message) {
+	//meta! sender="AgentWorker", id="63", type="Request"
+	public void processRequestResponseWorkAgentB(MessageForm message) {
         if (Constants.DEBUG_MANAGER)
             System.out.format("[%s] M. B received order", mySim().currentTime());
 
@@ -77,20 +77,20 @@ public class ManagerGroupB extends OSPABA.Manager {
         startContinualAssistant(msgProduct);
     }
 
-    //meta! userInfo="Process messages defined in code", id="0"
-    public void processDefault(MessageForm message) {
+	//meta! userInfo="Process messages defined in code", id="0"
+	public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
     }
 
-    //meta! sender="AgentWorker", id="66", type="Response"
-    public void processRequestResponseMoveWorker(MessageForm message) {
+	//meta! sender="AgentWorker", id="66", type="Response"
+	public void processRequestResponseMoveWorker(MessageForm message) {
         MyMessage msg = (MyMessage) message;
         this.startProcess(message, msg.getWorker().getCurrentProduct(), Id.processAssembly);
     }
 
-    //meta! sender="ProcessAssembly", id="79", type="Finish"
-    public void processFinish(MessageForm message) {
+	//meta! sender="ProcessAssembly", id="79", type="Finish"
+	public void processFinish(MessageForm message) {
         MyMessage msg = (MyMessage) message;
 
         message.setCode(Mc.requestResponseWorkAgentB);
@@ -101,31 +101,34 @@ public class ManagerGroupB extends OSPABA.Manager {
             this.tryStartWorkOnOrder();
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    public void init() {
-    }
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	public void init()
+	{
+	}
 
-    @Override
-    public void processMessage(MessageForm message) {
-        switch (message.code()) {
-            case Mc.requestResponseWorkAgentB:
-                processRequestResponseWorkAgentB(message);
-                break;
+	@Override
+	public void processMessage(MessageForm message)
+	{
+		switch (message.code())
+		{
+		case Mc.requestResponseWorkAgentB:
+			processRequestResponseWorkAgentB(message);
+		break;
 
-            case Mc.requestResponseMoveWorker:
-                processRequestResponseMoveWorker(message);
-                break;
+		case Mc.requestResponseMoveWorker:
+			processRequestResponseMoveWorker(message);
+		break;
 
-            case Mc.finish:
-                processFinish(message);
-                break;
+		case Mc.finish:
+			processFinish(message);
+		break;
 
-            default:
-                processDefault(message);
-                break;
-        }
-    }
-    //meta! tag="end"
+		default:
+			processDefault(message);
+		break;
+		}
+	}
+	//meta! tag="end"
 
     @Override
     public AgentGroupB myAgent() {

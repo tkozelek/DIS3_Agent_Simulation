@@ -32,8 +32,8 @@ public class ManagerWorker extends OSPABA.Manager {
         }
     }
 
-    //meta! sender="AgentWorkplace", id="40", type="Request"
-    public void processRequestResponseWorkOnOrderWorkplace(MessageForm message) {
+	//meta! sender="AgentWorkplace", id="40", type="Request"
+	public void processRequestResponseWorkOnOrderWorkplace(MessageForm message) {
         // poslal workplace, nova objednavka
         // posleme workerovi A
         if (Constants.DEBUG_MANAGER)
@@ -44,8 +44,8 @@ public class ManagerWorker extends OSPABA.Manager {
         this.request(message);
     }
 
-    //meta! sender="AgentGroupA", id="39", type="Response"
-    public void processRequestResponseWorkAgentA(MessageForm message) {
+	//meta! sender="AgentGroupA", id="39", type="Response"
+	public void processRequestResponseWorkAgentA(MessageForm message) {
         // worker A dokoncil pracu
         // request worker C začiatok práce
         message.setCode(Mc.requestResponseWorkAgentC);
@@ -53,22 +53,22 @@ public class ManagerWorker extends OSPABA.Manager {
         this.request(message);
     }
 
-    //meta! sender="AgentGroupA", id="53", type="Request"
-    public void processRequestResponseMoveWorkerAgentGroupA(MessageForm message) {
+	//meta! sender="AgentGroupA", id="53", type="Request"
+	public void processRequestResponseMoveWorkerAgentGroupA(MessageForm message) {
         // worker dal ziadost o move
         message.setCode(Mc.requestResponseMoveWorker);
         message.setAddressee(Id.agentWorkplace);
         this.request(message);
     }
 
-    //meta! userInfo="Process messages defined in code", id="0"
-    public void processDefault(MessageForm message) {
+	//meta! userInfo="Process messages defined in code", id="0"
+	public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
     }
 
-    //meta! sender="AgentGroupB", id="63", type="Response"
-    public void processRequestResponseWorkAgentB(MessageForm message) {
+	//meta! sender="AgentGroupB", id="63", type="Response"
+	public void processRequestResponseWorkAgentB(MessageForm message) {
         // worker B dokoncil pracu
         // assembled
         MyMessage msgProduct = (MyMessage) message;
@@ -100,23 +100,23 @@ public class ManagerWorker extends OSPABA.Manager {
         }
     }
 
-    //meta! sender="AgentGroupC", id="71", type="Request"
-    public void processRequestResponseMoveWorkerAgentGroupC(MessageForm message) {
+	//meta! sender="AgentGroupC", id="71", type="Request"
+	public void processRequestResponseMoveWorkerAgentGroupC(MessageForm message) {
         // group C žiadost o move
         message.setCode(Mc.requestResponseMoveWorker);
         message.setAddressee(Id.agentWorkplace);
         this.request(message);
     }
 
-    //meta! sender="AgentGroupB", id="66", type="Request"
-    public void processRequestResponseMoveWorkerAgentGroupB(MessageForm message) {
+	//meta! sender="AgentGroupB", id="66", type="Request"
+	public void processRequestResponseMoveWorkerAgentGroupB(MessageForm message) {
         message.setCode(Mc.requestResponseMoveWorker);
         message.setAddressee(Id.agentWorkplace);
         this.request(message);
     }
 
-    //meta! sender="AgentGroupC", id="72", type="Response"
-    public void processRequestResponseWorkAgentC(MessageForm message) {
+	//meta! sender="AgentGroupC", id="72", type="Response"
+	public void processRequestResponseWorkAgentC(MessageForm message) {
         // worker C dokoncil pracu
         // zacni B
         if (Constants.DEBUG_MANAGER)
@@ -127,8 +127,8 @@ public class ManagerWorker extends OSPABA.Manager {
         this.request(message);
     }
 
-    //meta! sender="AgentWorkplace", id="75", type="Response"
-    public void processRequestResponseMoveWorkerAgentWorkplace(MessageForm message) {
+	//meta! sender="AgentWorkplace", id="75", type="Response"
+	public void processRequestResponseMoveWorkerAgentWorkplace(MessageForm message) {
         MyMessage msgMove = (MyMessage) message;
         Worker worker = msgMove.getWorker();
         int agentId = switch (worker.getGroup()) {
@@ -140,8 +140,8 @@ public class ManagerWorker extends OSPABA.Manager {
         this.response(message);
     }
 
-    //meta! sender="AgentGroupA", id="119", type="Notice"
-    public void processNoticeAgentAFreed(MessageForm message) {
+	//meta! sender="AgentGroupA", id="119", type="Notice"
+	public void processNoticeAgentAFreed(MessageForm message) {
         if (myAgent().group().queueSize() > 0) {
             MyMessage msg = myAgent().group().pollQueue(mySim().currentTime());
             msg.setCode(Mc.requestResponseTryFitGroupA);
@@ -155,8 +155,8 @@ public class ManagerWorker extends OSPABA.Manager {
         this.request(msgProduct);
     }
 
-    //meta! sender="AgentGroupA", id="117", type="Response"
-    public void processRequestResponseTryFitGroupA(MessageForm message) {
+	//meta! sender="AgentGroupA", id="117", type="Response"
+	public void processRequestResponseTryFitGroupA(MessageForm message) {
         MyMessage msg = (MyMessage) message;
         Product product = msg.getProduct();
 
@@ -180,8 +180,8 @@ public class ManagerWorker extends OSPABA.Manager {
         }
     }
 
-    //meta! sender="AgentGroupC", id="118", type="Response"
-    public void processRequestResponseTryFitGroupC(MessageForm message) {
+	//meta! sender="AgentGroupC", id="118", type="Response"
+	public void processRequestResponseTryFitGroupC(MessageForm message) {
         MyMessage msg = (MyMessage) message;
         Product product = msg.getProduct();
 
@@ -203,8 +203,8 @@ public class ManagerWorker extends OSPABA.Manager {
         }
     }
 
-    //meta! sender="AgentGroupC", id="120", type="Notice"
-    public void processNoticeAgentCFreed(MessageForm message) {
+	//meta! sender="AgentGroupC", id="120", type="Notice"
+	public void processNoticeAgentCFreed(MessageForm message) {
         if (myAgent().group().queueSize() > 0) {
             MyMessage msgProduct = myAgent().group().pollQueue(mySim().currentTime());
             msgProduct.setCode(Mc.requestResponseTryFitGroupC);
@@ -218,71 +218,75 @@ public class ManagerWorker extends OSPABA.Manager {
         this.request(msgProduct);
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    public void init() {
-    }
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	public void init()
+	{
+	}
 
-    @Override
-    public void processMessage(MessageForm message) {
-        switch (message.code()) {
-            case Mc.requestResponseTryFitGroupA:
-                processRequestResponseTryFitGroupA(message);
-                break;
+	@Override
+	public void processMessage(MessageForm message)
+	{
+		switch (message.code())
+		{
+		case Mc.requestResponseWorkAgentC:
+			processRequestResponseWorkAgentC(message);
+		break;
 
-            case Mc.requestResponseWorkAgentB:
-                processRequestResponseWorkAgentB(message);
-                break;
+		case Mc.requestResponseTryFitGroupC:
+			processRequestResponseTryFitGroupC(message);
+		break;
 
-            case Mc.requestResponseMoveWorker:
-                switch (message.sender().id()) {
-                    case Id.agentWorkplace:
-                        processRequestResponseMoveWorkerAgentWorkplace(message);
-                        break;
+		case Mc.requestResponseWorkAgentA:
+			processRequestResponseWorkAgentA(message);
+		break;
 
-                    case Id.agentGroupA:
-                        processRequestResponseMoveWorkerAgentGroupA(message);
-                        break;
+		case Mc.requestResponseMoveWorker:
+			switch (message.sender().id())
+			{
+			case Id.agentGroupC:
+				processRequestResponseMoveWorkerAgentGroupC(message);
+			break;
 
-                    case Id.agentGroupC:
-                        processRequestResponseMoveWorkerAgentGroupC(message);
-                        break;
+			case Id.agentWorkplace:
+				processRequestResponseMoveWorkerAgentWorkplace(message);
+			break;
 
-                    case Id.agentGroupB:
-                        processRequestResponseMoveWorkerAgentGroupB(message);
-                        break;
-                }
-                break;
+			case Id.agentGroupA:
+				processRequestResponseMoveWorkerAgentGroupA(message);
+			break;
 
-            case Mc.requestResponseTryFitGroupC:
-                processRequestResponseTryFitGroupC(message);
-                break;
+			case Id.agentGroupB:
+				processRequestResponseMoveWorkerAgentGroupB(message);
+			break;
+			}
+		break;
 
-            case Mc.requestResponseWorkOnOrderWorkplace:
-                processRequestResponseWorkOnOrderWorkplace(message);
-                break;
+		case Mc.requestResponseWorkOnOrderWorkplace:
+			processRequestResponseWorkOnOrderWorkplace(message);
+		break;
 
-            case Mc.requestResponseWorkAgentA:
-                processRequestResponseWorkAgentA(message);
-                break;
+		case Mc.requestResponseWorkAgentB:
+			processRequestResponseWorkAgentB(message);
+		break;
 
-            case Mc.noticeAgentCFreed:
-                processNoticeAgentCFreed(message);
-                break;
+		case Mc.noticeAgentAFreed:
+			processNoticeAgentAFreed(message);
+		break;
 
-            case Mc.requestResponseWorkAgentC:
-                processRequestResponseWorkAgentC(message);
-                break;
+		case Mc.noticeAgentCFreed:
+			processNoticeAgentCFreed(message);
+		break;
 
-            case Mc.noticeAgentAFreed:
-                processNoticeAgentAFreed(message);
-                break;
+		case Mc.requestResponseTryFitGroupA:
+			processRequestResponseTryFitGroupA(message);
+		break;
 
-            default:
-                processDefault(message);
-                break;
-        }
-    }
-    //meta! tag="end"
+		default:
+			processDefault(message);
+		break;
+		}
+	}
+	//meta! tag="end"
 
     @Override
     public AgentWorker myAgent() {

@@ -1,16 +1,11 @@
 package agents.agentworkplace;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
+import OSPABA.*;
+import simulation.*;
 import OSPAnimator.AnimImageItem;
 import OSPAnimator.AnimTextItem;
 import config.Helper;
-import simulation.Data;
-import simulation.Id;
-import simulation.Mc;
-
 import java.awt.*;
-
 
 //meta! id="3"
 public class AgentWorkplace extends OSPABA.Agent {
@@ -60,12 +55,13 @@ public class AgentWorkplace extends OSPABA.Agent {
         this.textQueueSize.setText("Počet produktov v rade: " + newQueueSize);
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerWorkplace(Id.managerWorkplace, mySim(), this);
-        addOwnMessage(Mc.requestResponseOrderArrived);
-        addOwnMessage(Mc.requestResponseMoveWorker);
-        addOwnMessage(Mc.requestResponseWorkOnOrderWorkplace);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerWorkplace(Id.managerWorkplace, mySim(), this);
+		addOwnMessage(Mc.requestResponseOrderArrived);
+		addOwnMessage(Mc.requestResponseMoveWorker);
+		addOwnMessage(Mc.requestResponseWorkOnOrderWorkplace);
+	}
+	//meta! tag="end"
 }

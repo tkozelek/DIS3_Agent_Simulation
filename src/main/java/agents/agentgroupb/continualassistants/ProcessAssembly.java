@@ -49,8 +49,8 @@ public class ProcessAssembly extends OSPABA.Process {
         // Setup component for the next replication
     }
 
-    //meta! sender="AgentGroupB", id="79", type="Start"
-    public void processStart(MessageForm message) {
+	//meta! sender="AgentGroupB", id="79", type="Start"
+	public void processStart(MessageForm message) {
         MyMessage productMessage = (MyMessage) message;
         Product product = productMessage.getProduct();
 
@@ -72,8 +72,8 @@ public class ProcessAssembly extends OSPABA.Process {
         this.hold(offset, productMessage);
     }
 
-    //meta! userInfo="Process messages defined in code", id="0"
-    public void processDefault(MessageForm message) {
+	//meta! userInfo="Process messages defined in code", id="0"
+	public void processDefault(MessageForm message) {
         switch (message.code()) {
             case Mc.holdAssembly:
                 MyMessage productMessage = (MyMessage) message;
@@ -102,22 +102,22 @@ public class ProcessAssembly extends OSPABA.Process {
         }
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    @Override
-    public void processMessage(MessageForm message) {
-        ((MySimulation) mySim()).updateAnimatorTime();
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	@Override
+	public void processMessage(MessageForm message)
+	{
+		switch (message.code())
+		{
+		case Mc.start:
+			processStart(message);
+		break;
 
-        switch (message.code()) {
-            case Mc.start:
-                processStart(message);
-                break;
-
-            default:
-                processDefault(message);
-                break;
-        }
-    }
-    //meta! tag="end"
+		default:
+			processDefault(message);
+		break;
+		}
+	}
+	//meta! tag="end"
 
     @Override
     public AgentGroupB myAgent() {

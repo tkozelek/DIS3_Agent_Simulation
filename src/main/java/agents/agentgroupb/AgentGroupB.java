@@ -1,14 +1,10 @@
 package agents.agentgroupb;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
-import agents.agentgroupb.continualassistants.ProcessAssembly;
+import OSPABA.*;
+import simulation.*;
+import agents.agentgroupb.continualassistants.*;
 import config.Group;
 import entity.worker.WorkerGroup;
-import simulation.Id;
-import simulation.Mc;
-import simulation.MySimulation;
-
 
 //meta! id="61"
 public class AgentGroupB extends OSPABA.Agent {
@@ -36,12 +32,13 @@ public class AgentGroupB extends OSPABA.Agent {
         this.group.reset(mySim());
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerGroupB(Id.managerGroupB, mySim(), this);
-        new ProcessAssembly(Id.processAssembly, mySim(), this);
-        addOwnMessage(Mc.requestResponseMoveWorker);
-        addOwnMessage(Mc.requestResponseWorkAgentB);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerGroupB(Id.managerGroupB, mySim(), this);
+		new ProcessAssembly(Id.processAssembly, mySim(), this);
+		addOwnMessage(Mc.requestResponseMoveWorker);
+		addOwnMessage(Mc.requestResponseWorkAgentB);
+	}
+	//meta! tag="end"
 }

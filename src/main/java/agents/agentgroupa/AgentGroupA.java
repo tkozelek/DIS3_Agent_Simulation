@@ -1,18 +1,11 @@
 package agents.agentgroupa;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
+import OSPABA.*;
+import simulation.*;
+import agents.agentgroupa.continualassistants.*;
 import OSPAnimator.AnimQueue;
-import agents.agentgroupa.continualassistants.ProcessCutting;
-import agents.agentgroupa.continualassistants.ProcessFittingGroupA;
-import agents.agentgroupa.continualassistants.ProcessPreparing;
 import config.Group;
 import entity.worker.WorkerGroup;
-import simulation.Data;
-import simulation.Id;
-import simulation.Mc;
-import simulation.MySimulation;
-
 
 //meta! id="7"
 public class AgentGroupA extends OSPABA.Agent {
@@ -55,16 +48,17 @@ public class AgentGroupA extends OSPABA.Agent {
         this.group.reset(mySim());
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerGroupA(Id.managerGroupA, mySim(), this);
-        new ProcessPreparing(Id.processPreparing, mySim(), this);
-        new ProcessFittingGroupA(Id.processFittingGroupA, mySim(), this);
-        new ProcessCutting(Id.processCutting, mySim(), this);
-        addOwnMessage(Mc.noticeWorkstationFreed);
-        addOwnMessage(Mc.requestResponseMoveWorker);
-        addOwnMessage(Mc.requestResponseWorkAgentA);
-        addOwnMessage(Mc.requestResponseTryFitGroupA);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerGroupA(Id.managerGroupA, mySim(), this);
+		new ProcessFittingGroupA(Id.processFittingGroupA, mySim(), this);
+		new ProcessPreparing(Id.processPreparing, mySim(), this);
+		new ProcessCutting(Id.processCutting, mySim(), this);
+		addOwnMessage(Mc.noticeWorkstationFreed);
+		addOwnMessage(Mc.requestResponseMoveWorker);
+		addOwnMessage(Mc.requestResponseWorkAgentA);
+		addOwnMessage(Mc.requestResponseTryFitGroupA);
+	}
+	//meta! tag="end"
 }

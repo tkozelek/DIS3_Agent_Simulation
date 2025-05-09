@@ -1,11 +1,7 @@
 package agents.agentboss;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
-import simulation.Id;
-import simulation.Mc;
-import simulation.MyMessage;
-
+import OSPABA.*;
+import simulation.*;
 
 //meta! id="2"
 public class AgentBoss extends OSPABA.Agent {
@@ -27,11 +23,12 @@ public class AgentBoss extends OSPABA.Agent {
         // Setup component for the next replication
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerBoss(Id.managerBoss, mySim(), this);
-        addOwnMessage(Mc.requestResponseOrderArrival);
-        addOwnMessage(Mc.requestResponseOrderArrived);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerBoss(Id.managerBoss, mySim(), this);
+		addOwnMessage(Mc.requestResponseOrderArrival);
+		addOwnMessage(Mc.requestResponseOrderArrived);
+	}
+	//meta! tag="end"
 }

@@ -29,8 +29,8 @@ public class ManagerOkolie extends OSPABA.Manager {
         }
     }
 
-    //meta! sender="AgentBoss", id="21", type="Response"
-    public void processRequestResponseOrderArrival(MessageForm message) {
+	//meta! sender="AgentBoss", id="21", type="Response"
+	public void processRequestResponseOrderArrival(MessageForm message) {
         // response na prichod objednavky
         // tzn. objednavka hotova cela
         if (Constants.DEBUG_MANAGER)
@@ -61,14 +61,14 @@ public class ManagerOkolie extends OSPABA.Manager {
     }
 
 
-    //meta! sender="SchedulerOrderArrival", id="18", type="Finish"
-    public void processFinish(MessageForm message) {
+	//meta! sender="SchedulerOrderArrival", id="18", type="Finish"
+	public void processFinish(MessageForm message) {
         if (Constants.DEBUG_MANAGER)
             System.out.println("Scheduler finished");
     }
 
-    //meta! sender="SchedulerOrderArrival", id="20", type="Notice"
-    public void processNoticeOrderArrival(MessageForm message) {
+	//meta! sender="SchedulerOrderArrival", id="20", type="Notice"
+	public void processNoticeOrderArrival(MessageForm message) {
         if (Constants.DEBUG_MANAGER)
             System.out.printf("[%s] M. okolie objednávka prišla\n", Helper.timeToDateString(mySim().currentTime(), 6));
 
@@ -86,48 +86,51 @@ public class ManagerOkolie extends OSPABA.Manager {
         this.request(message);
     }
 
-    //meta! userInfo="Process messages defined in code", id="0"
-    public void processDefault(MessageForm message) {
+	//meta! userInfo="Process messages defined in code", id="0"
+	public void processDefault(MessageForm message) {
         switch (message.code()) {
         }
     }
 
-    //meta! sender="AgentBoss", id="86", type="Notice"
-    public void processNoticeInitAgentOkolie(MessageForm message) {
+	//meta! sender="AgentBoss", id="86", type="Notice"
+	public void processNoticeInitAgentOkolie(MessageForm message) {
         MyMessage myMessage = new MyMessage(this.mySim());
         myMessage.setAddressee(myAgent().findAssistant(Id.schedulerOrderArrival));
         startContinualAssistant(myMessage);
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    public void init() {
-    }
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	public void init()
+	{
+	}
 
-    @Override
-    public void processMessage(MessageForm message) {
-        switch (message.code()) {
-            case Mc.requestResponseOrderArrival:
-                processRequestResponseOrderArrival(message);
-                break;
+	@Override
+	public void processMessage(MessageForm message)
+	{
+		switch (message.code())
+		{
+		case Mc.noticeInitAgentOkolie:
+			processNoticeInitAgentOkolie(message);
+		break;
 
-            case Mc.finish:
-                processFinish(message);
-                break;
+		case Mc.requestResponseOrderArrival:
+			processRequestResponseOrderArrival(message);
+		break;
 
-            case Mc.noticeOrderArrival:
-                processNoticeOrderArrival(message);
-                break;
+		case Mc.finish:
+			processFinish(message);
+		break;
 
-            case Mc.noticeInitAgentOkolie:
-                processNoticeInitAgentOkolie(message);
-                break;
+		case Mc.noticeOrderArrival:
+			processNoticeOrderArrival(message);
+		break;
 
-            default:
-                processDefault(message);
-                break;
-        }
-    }
-    //meta! tag="end"
+		default:
+			processDefault(message);
+		break;
+		}
+	}
+	//meta! tag="end"
 
     @Override
     public AgentOkolie myAgent() {

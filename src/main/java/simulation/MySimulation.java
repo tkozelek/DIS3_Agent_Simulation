@@ -1,17 +1,15 @@
 package simulation;
 
-import OSPABA.ISimDelegate;
-import OSPABA.SimState;
-import OSPABA.Simulation;
+import OSPABA.*;
+import agents.agentworkplace.*;
+import agents.agentworker.*;
+import agents.agentgroupa.*;
+import agents.agentboss.*;
+import agents.agentgroupb.*;
+import agents.agentgroupc.*;
+import agents.agentmove.*;
+import agents.agentokolie.*;
 import OSPStat.Stat;
-import agents.agentboss.AgentBoss;
-import agents.agentgroupa.AgentGroupA;
-import agents.agentgroupb.AgentGroupB;
-import agents.agentgroupc.AgentGroupC;
-import agents.agentmove.AgentMove;
-import agents.agentokolie.AgentOkolie;
-import agents.agentworker.AgentWorker;
-import agents.agentworkplace.AgentWorkplace;
 import config.Constants;
 import config.Group;
 import config.Helper;
@@ -25,9 +23,7 @@ import generator.SeedGenerator;
 import gui.interfaces.Observable;
 import gui.interfaces.Observer;
 import gui.model.SimulationData;
-
 import java.util.ArrayList;
-
 import static config.StatFormatter.*;
 
 public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Observable {
@@ -58,14 +54,6 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
     private Stat statOrderNotWorkerOnTotal;
 
     private boolean updateChart;
-    private AgentBoss _agentBoss;
-    private AgentWorkplace _agentWorkplace;
-    private AgentMove _agentMove;
-    private AgentWorker _agentWorker;
-    private AgentGroupA _agentGroupA;
-    private AgentGroupB _agentGroupB;
-    private AgentOkolie _agentOkolie;
-    private AgentGroupC _agentGroupC;
 
     public MySimulation(Long seed, int[] groups, int wCount) {
         seedGen = seed == null ? new SeedGenerator() : new SeedGenerator(seed);
@@ -307,82 +295,83 @@ public class MySimulation extends OSPABA.Simulation implements ISimDelegate, Obs
         }
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        setAgentBoss(new AgentBoss(Id.agentBoss, this, null));
-        setAgentWorkplace(new AgentWorkplace(Id.agentWorkplace, this, agentBoss()));
-        setAgentMove(new AgentMove(Id.agentMove, this, agentWorkplace()));
-        setAgentWorker(new AgentWorker(Id.agentWorker, this, agentWorkplace()));
-        setAgentGroupA(new AgentGroupA(Id.agentGroupA, this, agentWorker()));
-        setAgentGroupB(new AgentGroupB(Id.agentGroupB, this, agentWorker()));
-        setAgentOkolie(new AgentOkolie(Id.agentOkolie, this, agentBoss()));
-        setAgentGroupC(new AgentGroupC(Id.agentGroupC, this, agentWorker()));
-    }
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		setAgentBoss(new AgentBoss(Id.agentBoss, this, null));
+		setAgentWorkplace(new AgentWorkplace(Id.agentWorkplace, this, agentBoss()));
+		setAgentMove(new AgentMove(Id.agentMove, this, agentWorkplace()));
+		setAgentWorker(new AgentWorker(Id.agentWorker, this, agentWorkplace()));
+		setAgentGroupA(new AgentGroupA(Id.agentGroupA, this, agentWorker()));
+		setAgentGroupB(new AgentGroupB(Id.agentGroupB, this, agentWorker()));
+		setAgentOkolie(new AgentOkolie(Id.agentOkolie, this, agentBoss()));
+		setAgentGroupC(new AgentGroupC(Id.agentGroupC, this, agentWorker()));
+	}
 
-    public AgentBoss agentBoss() {
-        return _agentBoss;
-    }
+	private AgentBoss _agentBoss;
 
-    public void setAgentBoss(AgentBoss agentBoss) {
-        _agentBoss = agentBoss;
-    }
+public AgentBoss agentBoss()
+	{ return _agentBoss; }
 
-    public AgentWorkplace agentWorkplace() {
-        return _agentWorkplace;
-    }
+	public void setAgentBoss(AgentBoss agentBoss)
+	{_agentBoss = agentBoss; }
 
-    public void setAgentWorkplace(AgentWorkplace agentWorkplace) {
-        _agentWorkplace = agentWorkplace;
-    }
+	private AgentWorkplace _agentWorkplace;
 
-    public AgentMove agentMove() {
-        return _agentMove;
-    }
+public AgentWorkplace agentWorkplace()
+	{ return _agentWorkplace; }
 
-    public void setAgentMove(AgentMove agentMove) {
-        _agentMove = agentMove;
-    }
+	public void setAgentWorkplace(AgentWorkplace agentWorkplace)
+	{_agentWorkplace = agentWorkplace; }
 
-    public AgentWorker agentWorker() {
-        return _agentWorker;
-    }
+	private AgentMove _agentMove;
 
-    public void setAgentWorker(AgentWorker agentWorker) {
-        _agentWorker = agentWorker;
-    }
+public AgentMove agentMove()
+	{ return _agentMove; }
 
-    public AgentGroupA agentGroupA() {
-        return _agentGroupA;
-    }
+	public void setAgentMove(AgentMove agentMove)
+	{_agentMove = agentMove; }
 
-    public void setAgentGroupA(AgentGroupA agentGroupA) {
-        _agentGroupA = agentGroupA;
-    }
+	private AgentWorker _agentWorker;
 
-    public AgentGroupB agentGroupB() {
-        return _agentGroupB;
-    }
+public AgentWorker agentWorker()
+	{ return _agentWorker; }
 
-    public void setAgentGroupB(AgentGroupB agentGroupB) {
-        _agentGroupB = agentGroupB;
-    }
+	public void setAgentWorker(AgentWorker agentWorker)
+	{_agentWorker = agentWorker; }
 
-    public AgentOkolie agentOkolie() {
-        return _agentOkolie;
-    }
+	private AgentGroupA _agentGroupA;
 
-    public void setAgentOkolie(AgentOkolie agentOkolie) {
-        _agentOkolie = agentOkolie;
-    }
+public AgentGroupA agentGroupA()
+	{ return _agentGroupA; }
 
-    public AgentGroupC agentGroupC() {
-        return _agentGroupC;
-    }
+	public void setAgentGroupA(AgentGroupA agentGroupA)
+	{_agentGroupA = agentGroupA; }
 
-    public void setAgentGroupC(AgentGroupC agentGroupC) {
-        _agentGroupC = agentGroupC;
-    }
-    //meta! tag="end"
+	private AgentGroupB _agentGroupB;
+
+public AgentGroupB agentGroupB()
+	{ return _agentGroupB; }
+
+	public void setAgentGroupB(AgentGroupB agentGroupB)
+	{_agentGroupB = agentGroupB; }
+
+	private AgentOkolie _agentOkolie;
+
+public AgentOkolie agentOkolie()
+	{ return _agentOkolie; }
+
+	public void setAgentOkolie(AgentOkolie agentOkolie)
+	{_agentOkolie = agentOkolie; }
+
+	private AgentGroupC _agentGroupC;
+
+public AgentGroupC agentGroupC()
+	{ return _agentGroupC; }
+
+	public void setAgentGroupC(AgentGroupC agentGroupC)
+	{_agentGroupC = agentGroupC; }
+	//meta! tag="end"
 
     @Override
     public void simStateChanged(Simulation simulation, SimState simState) {

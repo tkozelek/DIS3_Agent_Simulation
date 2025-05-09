@@ -22,6 +22,8 @@ public class Product implements Comparable<Product> {
     private double finishTime;
     private double startCuttingTime;
     private double finishCuttingTime;
+    private double startVerifyParts;
+    private double finishVerifyParts;
     private double startStainingTime;
     private double finishStainingTime;
     private double startPaintingTime;
@@ -69,6 +71,22 @@ public class Product implements Comparable<Product> {
             totalQueueTime += timeInQueue;
             queueEntryTime = -1;
         }
+    }
+
+    public double getStartVerifyParts() {
+        return startVerifyParts;
+    }
+
+    public void setStartVerifyParts(double startVerifyParts) {
+        this.startVerifyParts = startVerifyParts;
+    }
+
+    public double getFinishVerifyParts() {
+        return finishVerifyParts;
+    }
+
+    public void setFinishVerifyParts(double finishVerifyParts) {
+        this.finishVerifyParts = finishVerifyParts;
     }
 
     public double getTotalQueueTime() {

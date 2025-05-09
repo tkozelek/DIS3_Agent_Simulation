@@ -1,16 +1,10 @@
 package agents.agentgroupc;
 
-import OSPABA.Agent;
-import OSPABA.Simulation;
-import agents.agentgroupc.continualassistants.ProcessFittingGroupC;
-import agents.agentgroupc.continualassistants.ProcessLakovanie;
-import agents.agentgroupc.continualassistants.ProcessMorenie;
+import OSPABA.*;
+import simulation.*;
+import agents.agentgroupc.continualassistants.*;
 import config.Group;
 import entity.worker.WorkerGroup;
-import simulation.Id;
-import simulation.Mc;
-import simulation.MySimulation;
-
 
 //meta! id="67"
 public class AgentGroupC extends OSPABA.Agent {
@@ -22,6 +16,7 @@ public class AgentGroupC extends OSPABA.Agent {
 
         this.addOwnMessage(Mc.holdMorenie);
         this.addOwnMessage(Mc.holdLakovanie);
+        this.addOwnMessage(Mc.holdVerify);
 
         this.addOwnMessage(Mc.holdFitting);
 
@@ -42,15 +37,17 @@ public class AgentGroupC extends OSPABA.Agent {
         this.group.reset(mySim());
     }
 
-    //meta! userInfo="Generated code: do not modify", tag="begin"
-    private void init() {
-        new ManagerGroupC(Id.managerGroupC, mySim(), this);
-        new ProcessLakovanie(Id.processLakovanie, mySim(), this);
-        new ProcessFittingGroupC(Id.processFittingGroupC, mySim(), this);
-        new ProcessMorenie(Id.processMorenie, mySim(), this);
-        addOwnMessage(Mc.requestResponseMoveWorker);
-        addOwnMessage(Mc.requestResponseTryFitGroupC);
-        addOwnMessage(Mc.requestResponseWorkAgentC);
-    }
-    //meta! tag="end"
+	//meta! userInfo="Generated code: do not modify", tag="begin"
+	private void init()
+	{
+		new ManagerGroupC(Id.managerGroupC, mySim(), this);
+		new ProcessFittingGroupC(Id.processFittingGroupC, mySim(), this);
+		new ProcessMorenie(Id.processMorenie, mySim(), this);
+		new ProcessVerifyParts(Id.processVerifyParts, mySim(), this);
+		new ProcessLakovanie(Id.processLakovanie, mySim(), this);
+		addOwnMessage(Mc.requestResponseMoveWorker);
+		addOwnMessage(Mc.requestResponseTryFitGroupC);
+		addOwnMessage(Mc.requestResponseWorkAgentC);
+	}
+	//meta! tag="end"
 }
